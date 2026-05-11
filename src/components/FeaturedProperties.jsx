@@ -82,7 +82,7 @@ const FeaturedProperties = () => {
                   <img
                     src={
                       item.image && item.image.length > 0
-                        ? `https://lightblue-moose-690494.hostingersite.com/${item.image[0]?.path || item.image[0]}`
+                        ? `https://lightblue-moose-690494.hostingersite.com/public/${item.image[0]?.path || item.image[0]}`
                         : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
                     }
                     className="w-full h-full object-cover group-hover:scale-110 transition duration-500"

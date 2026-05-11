@@ -39,7 +39,7 @@ export default function Team() {
             {/* Image */}
             <div className="w-full h-56 overflow-hidden bg-gray-50 flex items-center justify-center">
               <img
-                src={`https://lightblue-moose-690494.hostingersite.com${member.photo}`}
+                src={`https://lightblue-moose-690494.hostingersite.com/public${member.photo}`}
                 alt={member.name}
                 className="w-full h-full object-contain transition duration-300 group-hover:scale-105"
               />

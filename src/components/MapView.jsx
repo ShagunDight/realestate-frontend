@@ -152,7 +152,7 @@ const MapView = ({ properties, location }) => {
               <img
                 src={
                   activeMarker.image
-                    ? `https://lightblue-moose-690494.hostingersite.com/${activeMarker.image}`
+                    ? `https://lightblue-moose-690494.hostingersite.com/public/${activeMarker.image}`
                     : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
                 }
                 style={{

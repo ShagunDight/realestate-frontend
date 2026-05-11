@@ -50,7 +50,7 @@ const PropertyDetails = () => {
           <img
             src={
               images.length
-                ? `https://lightblue-moose-690494.hostingersite.com/${images[currentImage]?.path}`
+                ? `https://lightblue-moose-690494.hostingersite.com/public/${images[currentImage]?.path}`
                 : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
             }
             className="w-full h-full object-cover" alt=""
@@ -84,7 +84,7 @@ const PropertyDetails = () => {
           {images.map((img, i) => (
             <img
               key={i}
-              src={`https://lightblue-moose-690494.hostingersite.com/${img.path}`}
+              src={`https://lightblue-moose-690494.hostingersite.com/public/${img.path}`}
               onClick={() => setCurrentImage(i)}
               className={`w-24 h-16 object-cover rounded cursor-pointer border transition ${
                 i === currentImage
@@ -254,7 +254,7 @@ const PropertyDetails = () => {
                 <img
                   src={
                     images.length
-                      ? `https://lightblue-moose-690494.hostingersite.com/${images[0].path}`
+                      ? `https://lightblue-moose-690494.hostingersite.com/public/${images[0].path}`
                       : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
                   }
                   className="w-full h-full object-cover"

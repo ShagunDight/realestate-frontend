@@ -42,7 +42,7 @@ export default function ServicesPage() {
 
       {/* Icon */}
       <img
-        src={`https://lightblue-moose-690494.hostingersite.com${item.icon}`}
+        src={`https://lightblue-moose-690494.hostingersite.com/public${item.icon}`}
         alt={item.title}
         className="w-10 h-10 mb-4 transition group-hover:scale-110"
       />
