@@ -23,7 +23,7 @@ const Home = () => {
     try {
       const query = new URLSearchParams(filters).toString();
 
-      const res = await fetch(`http://127.0.0.1:8001/api/properties?${query}`);
+      const res = await fetch(`https://lightblue-moose-690494.hostingersite.com/api/properties?${query}`);
 
       const data = await res.json();
 

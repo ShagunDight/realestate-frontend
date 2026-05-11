@@ -7,7 +7,7 @@ const ContactUs = () => {
   useEffect(() => {
     const fetchOffices = async () => {
       try {
-        const res = await fetch("http://127.0.0.1:8001/api/information");
+        const res = await fetch("https://lightblue-moose-690494.hostingersite.com/api/information");
         const data = await res.json();
         setOffices(data);
       } catch (err) {

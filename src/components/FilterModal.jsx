@@ -11,7 +11,7 @@ const FilterModal = ({ filters, setFilters, onClose, onSearch }) => {
 
   // FETCH PROPERTY TYPES
   const fetchTypes = async () => {
-    const res = await fetch("http://127.0.0.1:8001/api/property-types");
+    const res = await fetch("https://lightblue-moose-690494.hostingersite.com/api/property-types");
     const data = await res.json();
     setTypes(data.data || []);
     setFilters({
@@ -51,7 +51,7 @@ const FilterModal = ({ filters, setFilters, onClose, onSearch }) => {
     if (!typeId) return;
 
     const res = await fetch(
-      `http://127.0.0.1:8001/api/space-uses?type_id=${typeId}`
+      `https://lightblue-moose-690494.hostingersite.com/api/space-uses?type_id=${typeId}`
     );
 
     const data = await res.json();
@@ -172,7 +172,7 @@ const FilterModal = ({ filters, setFilters, onClose, onSearch }) => {
 
   // FETCH LOCATIONS
   const fetchLocations = async () => {
-    const res = await fetch("http://127.0.0.1:8001/api/locations");
+    const res = await fetch("https://lightblue-moose-690494.hostingersite.com/api/locations");
     const data = await res.json();
     setLocations(data.data || []);
   };
@@ -182,7 +182,7 @@ const FilterModal = ({ filters, setFilters, onClose, onSearch }) => {
     if (!typeId || !spaceUseIds) return;
 
     const res = await fetch(
-      `http://127.0.0.1:8001/api/filters?type_id=${typeId}&space_use_id=${spaceUseIds}`,
+      `https://lightblue-moose-690494.hostingersite.com/api/filters?type_id=${typeId}&space_use_id=${spaceUseIds}`,
     );
     // FETCH PROPERTY COLUMNS
     const data = await res.json();
@@ -195,7 +195,7 @@ const FilterModal = ({ filters, setFilters, onClose, onSearch }) => {
   }, []);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8001/api/property-columns")
+    fetch("https://lightblue-moose-690494.hostingersite.com/api/property-columns")
       .then((res) => res.json())
       .then((data) => {
         if (data.status) {

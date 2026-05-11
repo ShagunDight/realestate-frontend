@@ -5,7 +5,7 @@ const BlogCard = ({ blog }) => {
   return (
     <div className="bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition duration-300">
       <img
-        src={`http://127.0.0.1:8001${blog.image}`}
+        src={`https://lightblue-moose-690494.hostingersite.com${blog.image}`}
         alt={blog.title}
         className="w-full h-[200px] object-cover"
       />

@@ -22,7 +22,7 @@ const PropertyDetails = () => {
   const [view, setView] = useState("aerial");
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8001/api/properties/${id}`)
+    fetch(`https://lightblue-moose-690494.hostingersite.com/api/properties/${id}`)
       .then((res) => res.json())
       .then((data) => setProperty(data.data || data))
       .catch((err) => console.error(err));
@@ -50,7 +50,7 @@ const PropertyDetails = () => {
           <img
             src={
               images.length
-                ? `http://127.0.0.1:8001/${images[currentImage]?.path}`
+                ? `https://lightblue-moose-690494.hostingersite.com/${images[currentImage]?.path}`
                 : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
             }
             className="w-full h-full object-cover" alt=""
@@ -84,7 +84,7 @@ const PropertyDetails = () => {
           {images.map((img, i) => (
             <img
               key={i}
-              src={`http://127.0.0.1:8001/${img.path}`}
+              src={`https://lightblue-moose-690494.hostingersite.com/${img.path}`}
               onClick={() => setCurrentImage(i)}
               className={`w-24 h-16 object-cover rounded cursor-pointer border transition ${
                 i === currentImage
@@ -254,7 +254,7 @@ const PropertyDetails = () => {
                 <img
                   src={
                     images.length
-                      ? `http://127.0.0.1:8001/${images[0].path}`
+                      ? `https://lightblue-moose-690494.hostingersite.com/${images[0].path}`
                       : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
                   }
                   className="w-full h-full object-cover"
@@ -281,7 +281,7 @@ const PropertyDetails = () => {
               <img
                 src={
                   property.agent?.img
-                    ? `http://127.0.0.1:8001/public/${property.agent.img}`
+                    ? `https://lightblue-moose-690494.hostingersite.com/public/${property.agent.img}`
                     : "https://img.freepik.com/premium-vector/secret-agent-icon-logo-design-illustration_586739-409.jpg"
                 }
                 className="w-20 h-20 rounded-full object-cover border-2 border-sky-500"

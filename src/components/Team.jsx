@@ -4,7 +4,7 @@ export default function Team() {
   const [team, setTeam] = useState([]);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8001/api/team")
+    fetch("https://lightblue-moose-690494.hostingersite.com/api/team")
       .then((res) => res.json())
       .then((data) => setTeam(data.data));
   }, []);
@@ -39,7 +39,7 @@ export default function Team() {
             {/* Image */}
             <div className="w-full h-56 overflow-hidden bg-gray-50 flex items-center justify-center">
               <img
-                src={`http://127.0.0.1:8001${member.photo}`}
+                src={`https://lightblue-moose-690494.hostingersite.com${member.photo}`}
                 alt={member.name}
                 className="w-full h-full object-contain transition duration-300 group-hover:scale-105"
               />

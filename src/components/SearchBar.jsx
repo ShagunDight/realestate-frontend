@@ -53,7 +53,7 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
   }, [types]);
 
   const fetchTypes = async () => {
-    const res = await fetch("http://127.0.0.1:8001/api/property-types");
+    const res = await fetch("https://lightblue-moose-690494.hostingersite.com/api/property-types");
     const data = await res.json();
     setTypes(data.data || []);
   };
@@ -144,7 +144,7 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
   // FETCH SPACE USES
   // =========================
   const fetchSpaceUses = async (typeId) => {
-    const res = await fetch(`http://127.0.0.1:8001/api/space-uses?type_id=${typeId}`);
+    const res = await fetch(`https://lightblue-moose-690494.hostingersite.com/api/space-uses?type_id=${typeId}`);
     const data = await res.json();
     const tree = buildTree(data.data || []);
     setSpaceUses(tree);

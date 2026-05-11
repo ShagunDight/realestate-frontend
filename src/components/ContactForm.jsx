@@ -16,7 +16,7 @@ const ContactForm = () => {
   });
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8001/api/property-types")
+    fetch("https://lightblue-moose-690494.hostingersite.com/api/property-types")
       .then((res) => res.json())
       .then((data) => setTypes(data.data || []));
   }, []);

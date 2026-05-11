@@ -10,14 +10,14 @@ const BlogDetails = () => {
 
   // Current Blog
   useEffect(() => {
-    fetch(`http://127.0.0.1:8001/api/blogs/${slug}`)
+    fetch(`https://lightblue-moose-690494.hostingersite.com/api/blogs/${slug}`)
       .then((res) => res.json())
       .then((data) => setBlog(data.data));
   }, [slug]);
 
   // All Blogs
   useEffect(() => {
-    fetch(`http://127.0.0.1:8001/api/blogs`)
+    fetch(`https://lightblue-moose-690494.hostingersite.com/api/blogs`)
       .then((res) => res.json())
       .then((data) => setAllBlogs(data.data || []));
   }, []);
@@ -37,7 +37,7 @@ const BlogDetails = () => {
           <div className="lg:col-span-2">
             <h1 className="text-3xl font-bold mb-4"> {blog.title?.replace(/[\r\n]+/g, "").trim()} </h1>
 
-            <img src={`http://127.0.0.1:8001${blog.image}`} className="w-full h-[350px] object-cover rounded-lg mb-6" />
+            <img src={`https://lightblue-moose-690494.hostingersite.com${blog.image}`} className="w-full h-[350px] object-cover rounded-lg mb-6" />
 
             <div className="text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: blog.content }} ></div>
           </div>
@@ -52,7 +52,7 @@ const BlogDetails = () => {
               <div className="flex flex-col gap-4">
                 {filteredBlogs.slice(0, 5).map((item) => (
                     <Link key={item._id} to={`/blog/${item.slug}`} className="bg-white border border-sky-100 rounded-xl p-3 hover:shadow-md transition flex gap-3">
-                      <img src={`http://127.0.0.1:8001${item.image}`} className="w-20 h-20 object-cover rounded-md" />
+                      <img src={`https://lightblue-moose-690494.hostingersite.com${item.image}`} className="w-20 h-20 object-cover rounded-md" />
 
                       <p className="text-sm font-semibold text-gray-800 line-clamp-2">
                         {item.title}
@@ -71,7 +71,7 @@ const BlogDetails = () => {
               .filter((item) => item.slug !== slug && item.type === "blog")
               .map((item) => (
                 <Link key={item._id} to={`/blog/${item.slug}`} className="bg-white border border-sky-100 rounded-xl overflow-hidden hover:shadow-lg transition">
-                  <img src={`http://127.0.0.1:8001${item.image}`} className="w-full h-40 object-cover" />
+                  <img src={`https://lightblue-moose-690494.hostingersite.com${item.image}`} className="w-full h-40 object-cover" />
 
                   <div className="p-4">
                     <p className="text-sm font-semibold text-gray-800 line-clamp-2">
