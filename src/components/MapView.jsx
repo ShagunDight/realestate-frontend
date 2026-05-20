@@ -155,7 +155,7 @@ const MapView = ({ properties, location, onBoundsChange }) => {
             <div style={{ position: "relative" }}>
               <img src={
                   activeMarker.image
-                    ? `http://127.0.0.1:8001/public/${activeMarker.image}`
+                    ? `https://lightblue-moose-690494.hostingersite.com/public/${activeMarker.image}`
                     : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
                 }
                 style={{

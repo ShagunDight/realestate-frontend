@@ -37,7 +37,7 @@ const ContactUs = () => {
 
     try {
 
-      const res = await fetch("http://127.0.0.1:8001/api/information");
+      const res = await fetch("https://lightblue-moose-690494.hostingersite.com/api/information");
       const data = await res.json();
 
       setOffices(data);
@@ -56,7 +56,7 @@ const ContactUs = () => {
     try {
 
       const res = await fetch(
-        "http://127.0.0.1:8001/api/property-types"
+        "https://lightblue-moose-690494.hostingersite.com/api/property-types"
       );
 
       const data = await res.json();
@@ -99,7 +99,7 @@ const ContactUs = () => {
       setLoading(true);
 
       const res = await fetch(
-        "http://127.0.0.1:8001/api/contact-inquiry",
+        "https://lightblue-moose-690494.hostingersite.com/api/contact-inquiry",
         {
           method: "POST",
           headers: {

@@ -15,7 +15,7 @@ const MultiImageSlider = () => {
   // =========================
   const fetchNews = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8001/api/blogs");
+      const res = await fetch("https://lightblue-moose-690494.hostingersite.com/api/blogs");
       const data = await res.json();
       
       const filtered = (data.data || []).filter(
@@ -109,7 +109,7 @@ const MultiImageSlider = () => {
                 <div className="h-[320px] rounded-2xl overflow-hidden shadow-lg relative bg-gray-200">
 
                   {/* IMAGE */}
-                  <img src={`http://127.0.0.1:8001/public${n.image}`} alt={n.title} className="w-full h-full object-cover hover:scale-110 transition duration-700"/>
+                  <img src={`https://lightblue-moose-690494.hostingersite.com/public${n.image}`} alt={n.title} className="w-full h-full object-cover hover:scale-110 transition duration-700"/>
 
                   {/* OVERLAY */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-5">

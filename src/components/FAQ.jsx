@@ -5,7 +5,7 @@ const FAQ = () => {
   const [active, setActive] = useState(null);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8001/api/faqs")
+    fetch("https://lightblue-moose-690494.hostingersite.com/api/faqs")
       .then((res) => res.json())
       .then((data) => {
         const finalData = data.data || data;

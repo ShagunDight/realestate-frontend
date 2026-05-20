@@ -28,7 +28,7 @@ const PropertyDetails = () => {
   const sliderRef = useRef(null);
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8001/api/properties/${id}`)
+    fetch(`https://lightblue-moose-690494.hostingersite.com/api/properties/${id}`)
       .then((res) => res.json())
       .then((data) => setProperty(data.data || data))
       .catch((err) => console.error(err));
@@ -79,7 +79,7 @@ const PropertyDetails = () => {
     setLoading(true);
 
     try {
-      const res = await fetch("http://127.0.0.1:8001/api/visit-request", {
+      const res = await fetch("https://lightblue-moose-690494.hostingersite.com/api/visit-request", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -134,7 +134,7 @@ const PropertyDetails = () => {
         <img className="w-full h-full object-cover transition duration-500" alt=""
           src={
             images.length
-              ? `http://127.0.0.1:8001/${images[currentImage]?.path}`
+              ? `https://lightblue-moose-690494.hostingersite.com/public/${images[currentImage]?.path}`
               : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
           }
         />
@@ -173,7 +173,7 @@ const PropertyDetails = () => {
       {/* ================= THUMBNAILS ================= */}
       <div className="flex gap-3 mb-10 overflow-x-auto pb-2 scrollbar-hide">
         {images.map((img, i) => (
-          <img key={i} src={`http://127.0.0.1:8001/${img.path}`} onClick={() => setCurrentImage(i)} alt=""
+          <img key={i} src={`https://lightblue-moose-690494.hostingersite.com/public/${img.path}`} onClick={() => setCurrentImage(i)} alt=""
             className={`w-24 h-16 md:w-28 md:h-20 object-cover rounded-xl cursor-pointer border-2 transition duration-300 shrink-0
             ${
               i === currentImage
@@ -242,7 +242,7 @@ const PropertyDetails = () => {
                 <img className="w-full h-full object-cover" alt=""
                   src={
                     images.length
-                      ? `http://127.0.0.1:8001/${images[0].path}`
+                      ? `https://lightblue-moose-690494.hostingersite.com/public/${images[0].path}`
                       : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
                   }
                 />
@@ -513,7 +513,7 @@ const PropertyDetails = () => {
               <img className="w-24 h-24 rounded-full object-cover border-4 border-sky-100" alt=""
                 src={
                   property.agent?.img
-                    ? `http://127.0.0.1:8001/${property.agent.img}`
+                    ? `https://lightblue-moose-690494.hostingersite.com/public/${property.agent.img}`
                     : "https://img.freepik.com/premium-vector/secret-agent-icon-logo-design-illustration_586739-409.jpg"
                 }/>
 

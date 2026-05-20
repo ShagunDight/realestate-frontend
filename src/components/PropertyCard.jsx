@@ -35,12 +35,12 @@ const PropertyCard = ({ item }) => {
 
     // ✅ OBJECT CASE
     if (typeof firstImage === "object" && firstImage.path) {
-      return `http://127.0.0.1:8001/public/${firstImage.path}`;
+      return `https://lightblue-moose-690494.hostingersite.com/public/${firstImage.path}`;
     }
 
     // ✅ STRING CASE
     if (typeof firstImage === "string") {
-      return `http://127.0.0.1:8001/public/${firstImage}`;
+      return `https://lightblue-moose-690494.hostingersite.com/public/${firstImage}`;
     }
 
     return fallback;

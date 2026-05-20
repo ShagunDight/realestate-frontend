@@ -15,7 +15,7 @@ export default function ServicesPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8001/api/services").then((res) => res.json())
+    fetch("https://lightblue-moose-690494.hostingersite.com/api/services").then((res) => res.json())
       .then((data) => {
 
         setServices(data.data || {});
@@ -38,7 +38,7 @@ export default function ServicesPage() {
       <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-sky-400 via-sky-500 to-transparent"></div>
 
       {/* ICON */}
-      <img src={`http://127.0.0.1:8001${item.icon}`} alt={item.title} className="w-12 h-12 object-contain mb-5 transition group-hover:scale-110"/>
+      <img src={`https://lightblue-moose-690494.hostingersite.com/public${item.icon}`} alt={item.title} className="w-12 h-12 object-contain mb-5 transition group-hover:scale-110"/>
 
       {/* TITLE */}
       <h3 className="text-lg font-semibold text-gray-900 mb-3">
