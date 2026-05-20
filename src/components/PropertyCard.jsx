@@ -35,12 +35,12 @@ const PropertyCard = ({ item }) => {
 
     // ✅ OBJECT CASE
     if (typeof firstImage === "object" && firstImage.path) {
-      return `https://lightblue-moose-690494.hostingersite.com/public/${firstImage.path}`;
+      return `http://127.0.0.1:8001/public/${firstImage.path}`;
     }
 
     // ✅ STRING CASE
     if (typeof firstImage === "string") {
-      return `https://lightblue-moose-690494.hostingersite.com/public/${firstImage}`;
+      return `http://127.0.0.1:8001/public/${firstImage}`;
     }
 
     return fallback;
@@ -51,15 +51,8 @@ const PropertyCard = ({ item }) => {
 
       {/* IMAGE */}
       <div className="relative h-48 overflow-hidden bg-gray-100">
-        <img
-          src={getImage()}
-          alt={item.name}
-          className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
-          onError={(e) => {
-            e.target.src =
-              "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg";
-          }}
-        />
+        <img src={getImage()} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+          onError={(e) => { e.target.src = "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"; }}/>
 
         {/* TOP BADGE */}
         <div className="absolute top-3 left-3 flex gap-2">
@@ -104,7 +97,6 @@ const PropertyCard = ({ item }) => {
           <div className="text-gray-900 font-bold text-sm">
             {(() => {
               const type = item.property_type?.name?.toLowerCase();
-
               const price = type == "lease" ? item.monthly_rent : item.sale_price;
 
               return price ? `₹ ${price}` : "Price on Request";
@@ -117,7 +109,6 @@ const PropertyCard = ({ item }) => {
             View Details
           </button>
         </div>
-
       </div>
     </div>
   );

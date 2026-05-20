@@ -38,8 +38,7 @@ const Testimonials = () => {
               What Our Clients Say
             </h2>
             <p className="text-gray-500 text-sm max-w-xl mx-8">
-              Read the success stories and heartfelt testimonials from our
-              valued clients.
+              Read the success stories and heartfelt testimonials from our valued clients.
             </p>
           </div>
 
@@ -51,18 +50,12 @@ const Testimonials = () => {
         {/* CARDS */}
         <div className="grid md:grid-cols-3 gap-3">
           {testimonials.map((item, index) => (
-            <div
-              key={index}
-              className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-2 transition duration-300"
-            >
+            <div key={index} className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-2 transition duration-300">
               {/* STARS */}
               <div className="flex gap-1 mb-4 text-yellow-400">
                 <div className="flex gap-1">
                   {[...Array(5)].map((_, i) => (
-                    <FaStar
-                      key={i}
-                      className="text-sky-400  hover:scale-110 transition"
-                    />
+                    <FaStar key={i} className="text-sky-400  hover:scale-110 transition"/>
                   ))}
                 </div>
               </div>
@@ -79,11 +72,7 @@ const Testimonials = () => {
 
               {/* USER */}
               <div className="flex items-center gap-3">
-                <img
-                  src={item.image}
-                  alt=""
-                  className="w-10 h-10 rounded-full object-cover"
-                />
+                <img src={item.image} alt="" className="w-10 h-10 rounded-full object-cover"/>
                 <div>
                   <p className="text-sm font-medium text-gray-800">
                     {item.name}

@@ -18,27 +18,15 @@ const SearchBar = ({ filters, setFilters }) => {
       </select>
 
       {/* MIN PRICE */}
-      <input type="number"
-        placeholder="Min Price"
-        className="border border-gray-200 px-4 py-2 rounded-lg text-sm w-[140px] focus:outline-none focus:ring-2 focus:ring-sky-400"
-        value={filters.min_price || ""}
-        onChange={(e) => setFilters({ ...filters, min_price: e.target.value })}
-      />
+      <input type="number" placeholder="Min Price" value={filters.min_price || ""} onChange={(e) => setFilters({ ...filters, min_price: e.target.value })}
+        className="border border-gray-200 px-4 py-2 rounded-lg text-sm w-[140px] focus:outline-none focus:ring-2 focus:ring-sky-400"/>
 
       {/* MAX PRICE */}
-      <input
-        type="number"
-        placeholder="Max Price"
-        className="border border-gray-200 px-4 py-2 rounded-lg text-sm w-[140px] focus:outline-none focus:ring-2 focus:ring-sky-400"
-        value={filters.max_price || ""}
-        onChange={(e) => setFilters({ ...filters, max_price: e.target.value })}
-      />
+      <input type="number" placeholder="Max Price" value={filters.max_price || ""} onChange={(e) => setFilters({ ...filters, max_price: e.target.value })}
+        className="border border-gray-200 px-4 py-2 rounded-lg text-sm w-[140px] focus:outline-none focus:ring-2 focus:ring-sky-400"/>
 
       {/* SEARCH BUTTON */}
-      <button
-        onClick={() => setFilters({ ...filters })}
-        className="bg-sky-500 text-white px-6 py-2 rounded-lg hover:bg-sky-600 transition shadow-md"
-      >
+      <button onClick={() => setFilters({ ...filters })} className="bg-sky-500 text-white px-6 py-2 rounded-lg hover:bg-sky-600 transition shadow-md">
         Search
       </button>
     </div>

@@ -16,7 +16,7 @@ const ContactForm = () => {
   });
 
   useEffect(() => {
-    fetch("https://lightblue-moose-690494.hostingersite.com/api/property-types")
+    fetch("http://127.0.0.1:8001/api/property-types")
       .then((res) => res.json())
       .then((data) => setTypes(data.data || []));
   }, []);
@@ -43,54 +43,23 @@ const ContactForm = () => {
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          
           {/* ROW 1 */}
           <div className="grid md:grid-cols-4 gap-4">
-            <input
-              name="first_name"
-              placeholder="First Name"
-              className="border p-3 rounded-lg focus:ring-2 focus:ring-sky-400"
-              onChange={handleChange}
-            />
-
-            <input
-              name="last_name"
-              placeholder="Last Name"
-              className="border p-3 rounded-lg focus:ring-2 focus:ring-sky-400"
-              onChange={handleChange}
-            />
-
-            <input
-              name="email"
-              placeholder="Email"
-              className="border p-3 rounded-lg focus:ring-2 focus:ring-sky-400"
-              onChange={handleChange}
-            />
-
-            <input
-              name="phone"
-              placeholder="Phone"
-              className="border p-3 rounded-lg focus:ring-2 focus:ring-sky-400"
-              onChange={handleChange}
-            />
+            <input name="first_name" placeholder="First Name" className="border p-3 rounded-lg focus:ring-2 focus:ring-sky-400" onChange={handleChange}/>
+            <input name="last_name" placeholder="Last Name" className="border p-3 rounded-lg focus:ring-2 focus:ring-sky-400" onChange={handleChange}/>
+            <input name="email" placeholder="Email" className="border p-3 rounded-lg focus:ring-2 focus:ring-sky-400" onChange={handleChange}/>
+            <input name="phone" placeholder="Phone" className="border p-3 rounded-lg focus:ring-2 focus:ring-sky-400" onChange={handleChange}/>
           </div>
 
           {/* ROW 2 */}
           <div className="grid md:grid-cols-2 gap-4">
             <div className="relative">
               <FaMapMarkerAlt className="absolute left-3 top-3 text-sky-500" />
-              <input
-                name="location"
-                placeholder="Location"
-                className="border p-3 pl-10 rounded-lg w-full focus:ring-2 focus:ring-sky-400"
-                onChange={handleChange}
-              />
+              <input name="location" placeholder="Location" className="border p-3 pl-10 rounded-lg w-full focus:ring-2 focus:ring-sky-400" onChange={handleChange}/>
             </div>
 
-            <select
-              name="type"
-              className="border p-3 rounded-lg focus:ring-2 focus:ring-sky-400"
-              onChange={handleChange}
-            >
+            <select name="type" className="border p-3 rounded-lg focus:ring-2 focus:ring-sky-400" onChange={handleChange}>
               <option value="">Property Type</option>
               {types.map((t) => (
                 <option key={t.id} value={t.id}>
@@ -104,28 +73,17 @@ const ContactForm = () => {
           <div className="flex gap-4">
             <div className="flex items-center gap-2 border p-3 rounded-lg w-full">
               <FaPhoneAlt className="text-sky-500" />
-              <input
-                placeholder="Enter Phone"
-                className="outline-none w-full"
-              />
+              <input placeholder="Enter Phone" className="outline-none w-full"/>
             </div>
 
             <div className="flex items-center gap-2 border p-3 rounded-lg w-full">
               <FaEnvelope className="text-sky-500" />
-              <input
-                placeholder="Enter Email"
-                className="outline-none w-full"
-              />
+              <input placeholder="Enter Email" className="outline-none w-full"/>
             </div>
           </div>
 
           {/* MESSAGE */}
-          <textarea
-            name="message"
-            placeholder="Your Message"
-            className="border p-3 rounded-lg w-full h-28 focus:ring-2 focus:ring-sky-400"
-            onChange={handleChange}
-          />
+          <textarea name="message" placeholder="Your Message" className="border p-3 rounded-lg w-full h-28 focus:ring-2 focus:ring-sky-400" onChange={handleChange}/>
 
           {/* BUTTON */}
           <div className="flex justify-end">

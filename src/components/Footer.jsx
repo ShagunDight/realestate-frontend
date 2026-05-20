@@ -14,18 +14,14 @@ const Footer = () => {
         <div>
           <h2 className="text-2xl font-bold mb-3">Estatein</h2>
           <p className="text-sm text-white/80 leading-relaxed">
-            Discover premium properties and make your real estate journey smooth
-            and successful with Estatein.
+            Discover premium properties and make your real estate journey smooth and successful with Estatein.
           </p>
 
           {/* SOCIAL */}
           <div className="flex gap-3 mt-4">
             {[FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn].map(
               (Icon, i) => (
-                <div
-                  key={i}
-                  className="w-9 h-9 flex items-center justify-center rounded-full bg-white/20 hover:bg-white hover:text-sky-500 transition cursor-pointer"
-                >
+                <div key={i} className="w-9 h-9 flex items-center justify-center rounded-full bg-white/20 hover:bg-white hover:text-sky-500 transition cursor-pointer">
                   <Icon size={14} />
                 </div>
               ),
@@ -67,11 +63,8 @@ const Footer = () => {
           </p>
 
           <div className="flex bg-white/20 rounded-lg overflow-hidden backdrop-blur">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="bg-transparent px-3 py-2 w-full text-sm outline-none placeholder:text-white/70"
-            />
+            <input type="email" placeholder="Enter your email"
+              className="bg-transparent px-3 py-2 w-full text-sm outline-none placeholder:text-white/70"/>
             <button className="bg-white text-sky-500 px-4 text-sm hover:bg-gray-100 transition">
               →
             </button>

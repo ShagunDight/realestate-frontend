@@ -5,7 +5,7 @@ const FAQ = () => {
   const [active, setActive] = useState(null);
 
   useEffect(() => {
-    fetch("https://lightblue-moose-690494.hostingersite.com/api/faqs")
+    fetch("http://127.0.0.1:8001/api/faqs")
       .then((res) => res.json())
       .then((data) => {
         const finalData = data.data || data;
@@ -51,10 +51,8 @@ const FAQ = () => {
 
           {faqs.length > 0 ? (
             faqs.slice(0, 6).map((item, index) => (
-              <div
-                key={item.id || index}
-                className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-              >
+              <div key={item.id || index}
+                className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
 
                 {/* QUESTION */}
                 <h3 className="text-gray-800 font-semibold text-base mb-3 group-hover:text-sky-500">
@@ -62,20 +60,13 @@ const FAQ = () => {
                 </h3>
 
                 {/* ANSWER */}
-                <p
-                  className={`text-sm text-gray-500 leading-relaxed transition-all duration-300 ${
-                    active === index ? "" : "line-clamp-2"
-                  }`}
-                >
+                <p className={`text-sm text-gray-500 leading-relaxed transition-all duration-300 ${ active === index ? "" : "line-clamp-2" }`}>
                   {item?.answer || "No Answer"}
                 </p>
 
                 {/* BUTTON */}
                 {isLongText(item?.answer) && (
-                  <button
-                    onClick={() => setActive(active === index ? null : index)}
-                    className="mt-3 text-sky-500 text-sm font-medium hover:underline"
-                  >
+                  <button onClick={() => setActive(active === index ? null : index)} className="mt-3 text-sky-500 text-sm font-medium hover:underline">
                     {active === index ? "Show Less" : "Read More"}
                   </button>
                 )}
@@ -91,7 +82,6 @@ const FAQ = () => {
 
         {/* FOOTER */}
         <div className="flex justify-between items-center mt-10 text-sm text-gray-500">
-
           <p>
             Showing <span className="font-medium text-gray-700">1</span> -{" "}
             <span className="font-medium text-gray-700">{faqs.length}</span>
@@ -105,7 +95,6 @@ const FAQ = () => {
               →
             </button>
           </div>
-
         </div>
 
       </div>

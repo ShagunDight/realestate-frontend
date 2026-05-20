@@ -22,7 +22,7 @@ const Blogs = () => {
 
   const fetchBlogs = async () => {
     try {
-      const res = await fetch("https://lightblue-moose-690494.hostingersite.com/api/blogs");
+      const res = await fetch("http://127.0.0.1:8001/api/blogs");
       const data = await res.json();
 
       const filtered = (data.data || []).filter((item) => item.type === "blog");

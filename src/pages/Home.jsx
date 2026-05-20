@@ -23,7 +23,7 @@ const Home = () => {
     try {
       const query = new URLSearchParams(filters).toString();
 
-      const res = await fetch(`https://lightblue-moose-690494.hostingersite.com/api/properties?${query}`);
+      const res = await fetch(`http://127.0.0.1:8001/api/properties?${query}`);
 
       const data = await res.json();
 
@@ -51,11 +51,7 @@ const Home = () => {
 
             {/* SEARCH BAR */}
             <div className="mt-6">
-              <SearchBar
-                filters={filters}
-                setFilters={setFilters}
-                onSearch={handleSearch}
-              />
+              <SearchBar filters={filters} setFilters={setFilters} onSearch={handleSearch}/>
             </div>
             <div className="mt-6 flex gap-4 flex-wrap">
               {/* <button className="px-6 py-3 border border-gray-300 rounded-xl hover:bg-gray-100 transition">
@@ -74,10 +70,7 @@ const Home = () => {
                 { num: "10k+", text: "Properties" },
                 { num: "16+", text: "Experience" },
               ].map((item, i) => (
-                <div
-                  key={i}
-                  className="bg-sky-100/70 border border-gray-200 rounded-xl py-4 shadow-sm text-center"
-                >
+                <div key={i} className="bg-sky-100/70 border border-gray-200 rounded-xl py-4 shadow-sm text-center">
                   <h2 className="text-lg font-bold text-gray-900">
                     {item.num}
                   </h2>
@@ -91,25 +84,14 @@ const Home = () => {
           <div className="relative flex justify-center lg:justify-end">
             <div className="relative w-full max-w-[650px] h-[380px] lg:h-[400px]">
               <div className="absolute inset-0 bg-sky-300/20 blur-[100px] rounded-full"></div>
-
-              <img
-                src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00"
-                alt="building"
-                className="w-full h-full object-cover rounded-3xl shadow-xl"
-              />
+              <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00" alt="building" className="w-full h-full object-cover rounded-3xl shadow-xl"/>
 
               {/* Circle */}
               <div className="absolute left-[-50px] top-1/2 -translate-y-1/2">
                 <div className="relative w-24 h-24 flex items-center justify-center rounded-full bg-white/80 backdrop-blur-md border border-sky-200 shadow-lg">
-                  <svg
-                    className="absolute w-full h-full animate-spin-slow"
-                    viewBox="0 0 100 100"
-                  >
+                  <svg className="absolute w-full h-full animate-spin-slow" viewBox="0 0 100 100">
                     <defs>
-                      <path
-                        id="circlePath"
-                        d="M 50,50 m -40,0 a 40,40 0 1,1 80,0 a 40,40 0 1,1 -80,0"
-                      />
+                      <path id="circlePath" d="M 50,50 m -40,0 a 40,40 0 1,1 80,0 a 40,40 0 1,1 -80,0"/>
                     </defs>
 
                     <text fill="#0EA5E9" fontSize="10" letterSpacing="2">

@@ -44,14 +44,8 @@ export default function About() {
           {/* Right Image */}
           <div className="flex justify-center">
             <div className="relative bg-sky-50 p-8 rounded-3xl shadow-xl">
-              {/* subtle pattern effect */}
               <div className="absolute inset-0 rounded-3xl opacity-10 bg-[radial-gradient(circle,_#0ea5e9_1px,_transparent_1px)] [background-size:20px_20px]"></div>
-
-              <img
-                src="https://images.unsplash.com/photo-1560518883-ce09059eeffa"
-                alt="house"
-                className="relative rounded-xl w-full max-w-md object-cover"
-              />
+              <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa" alt="house" className="relative rounded-xl w-full max-w-md object-cover"/>
             </div>
           </div>
         </div>
@@ -129,9 +123,7 @@ export default function About() {
           </h2>
 
           <p className="text-gray-500 mb-12">
-            Our story is one of continuous growth and evolution. We started as a
-            small team with big dreams, determined to create a real estate
-            platform.
+            Our story is one of continuous growth and evolution. We started as a small team with big dreams, determined to create a real estate platform.
           </p>
 
           {/* Cards */}
@@ -150,10 +142,7 @@ export default function About() {
                 desc: "We’ve earned respect from industry leaders and clients.",
               },
             ].map((item, i) => (
-              <div
-                key={i}
-                className="border border-gray-200 rounded-2xl p-6 text-left hover:shadow-lg transition"
-              >
+              <div key={i} className="border border-gray-200 rounded-2xl p-6 text-left hover:shadow-lg transition">
                 <h3 className="font-semibold text-gray-900 mb-2">
                   {item.title}
                 </h3>
@@ -174,8 +163,7 @@ export default function About() {
             </h2>
 
             <p className="text-gray-500">
-              We’ve designed a simple process to help you find and purchase your
-              dream property with ease.
+              We’ve designed a simple process to help you find and purchase your dream property with ease.
             </p>
           </div>
 
@@ -213,23 +201,17 @@ export default function About() {
                 desc: "We'll help you negotiate the best terms and prepare your offer. Our goal is to secure the property at the right price and on favorable terms",
               },
             ].map((item, i) => (
-              <div
-                key={i}
-                className="relative border border-gray-200 rounded-2xl p-6 bg-white 
-              transition duration-300 
-              hover:-translate-y-1
-              hover:shadow-[0_20px_60px_rgba(59,130,246,0.25),0_10px_30px_rgba(168,85,247,0.15)]"
-              >
-                {/* Step label */}
+              <div key={i} className="relative border border-gray-200 rounded-2xl p-6 bg-white transition duration-300 hover:-translate-y-1
+                hover:shadow-[0_20px_60px_rgba(59,130,246,0.25),0_10px_30px_rgba(168,85,247,0.15)]">
+
                 <span className="text-xs text-sky-500 font-semibold">
                   {item.step}
                 </span>
-
                 <h3 className="font-semibold text-gray-900 mt-2 mb-2">
                   {item.title}
                 </h3>
-
                 <p className="text-gray-500 text-sm">{item.desc}</p>
+                
               </div>
             ))}
           </div>

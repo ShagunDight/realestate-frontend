@@ -11,7 +11,7 @@ const defaultCenter = {
   lng: 78.9629,
 };
 
-const MapView = ({ properties, location }) => {
+const MapView = ({ properties, location, onBoundsChange }) => {
   const [markers, setMarkers] = useState([]);
   const [activeMarker, setActiveMarker] = useState(null);
 
@@ -19,14 +19,12 @@ const MapView = ({ properties, location }) => {
   const hoverTimeout = useRef(null);
   const leaveTimeout = useRef(null);
 
-
   // -------------------------
   // MAP INSTANCE STORE
   // -------------------------
   const onLoad = (map) => {
     mapRef.current = map;
   };
-
 
   // -------------------------
   // LOCATION → MOVE MAP
@@ -90,20 +88,31 @@ const MapView = ({ properties, location }) => {
   }, []);
 
   return (
-    <GoogleMap
-      mapContainerStyle={containerStyle}
-      center={defaultCenter}
-      zoom={6}
-      onLoad={onLoad}
-    >
+    <GoogleMap mapContainerStyle={containerStyle} center={defaultCenter} zoom={6} onLoad={onLoad}
+      onIdle={() => {
+        if (!mapRef.current) return;
+
+        const bounds = mapRef.current.getBounds();
+
+        if (!bounds) return;
+
+        const filtered = properties.filter((p) => {
+          if (!p.latitude || !p.longitude) return false;
+
+          const lat = parseFloat(p.latitude);
+          const lng = parseFloat(p.longitude);
+
+          return bounds.contains(
+            new window.google.maps.LatLng(lat, lng)
+          );
+        });
+
+        onBoundsChange(filtered);
+      }}>
+      
       {/* MARKERS */}
       {markers.map((item) => (
-        <Marker
-          key={item.id}
-          position={{ lat: item.lat, lng: item.lng }}
-
-          onClick={() => setActiveMarker(item)}
-
+        <Marker key={item.id} position={{ lat: item.lat, lng: item.lng }} onClick={() => setActiveMarker(item)}
           onMouseOver={() => {
             clearTimeout(leaveTimeout.current);
 
@@ -124,13 +133,8 @@ const MapView = ({ properties, location }) => {
 
       {/* OVERLAY */}
       {activeMarker && (
-        <OverlayView
-          position={{ lat: activeMarker.lat, lng: activeMarker.lng }}
-          mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-        >
-          <div
-            onMouseEnter={() => clearTimeout(leaveTimeout.current) }
-
+        <OverlayView position={{ lat: activeMarker.lat, lng: activeMarker.lng }} mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
+          <div onMouseEnter={() => clearTimeout(leaveTimeout.current) }
             onMouseLeave={() => {
               leaveTimeout.current = setTimeout(() => {
                 setActiveMarker(null);
@@ -145,14 +149,13 @@ const MapView = ({ properties, location }) => {
               boxShadow: "0 6px 18px rgba(0,0,0,0.25)",
               fontFamily: "Arial",
               transform: "translate(-50%, -110%)",
-            }}
-          >
+            }}>
+            
             {/* IMAGE */}
             <div style={{ position: "relative" }}>
-              <img
-                src={
+              <img src={
                   activeMarker.image
-                    ? `https://lightblue-moose-690494.hostingersite.com/public/${activeMarker.image}`
+                    ? `http://127.0.0.1:8001/public/${activeMarker.image}`
                     : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
                 }
                 style={{
@@ -165,24 +168,11 @@ const MapView = ({ properties, location }) => {
 
             {/* CONTENT */}
             <div style={{ padding: "15px 20px" }}>
-              <div
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "600",
-                  marginBottom: "4px",
-                  color: "#222",
-                }}
-              >
+              <div style={{ fontSize: "14px", fontWeight: "600", marginBottom: "4px", color: "#222", }}>
                 {activeMarker.title}
               </div>
 
-              <div
-                style={{
-                  fontSize: "12px",
-                  color: "#777",
-                  marginBottom: "6px",
-                }}
-              >
+              <div style={{ fontSize: "12px", color: "#777", marginBottom: "6px", }}>
                 {activeMarker.location || ""}
               </div>
             </div>

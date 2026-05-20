@@ -29,47 +29,47 @@ const Navbar = () => {
 
         {/* Links */}
         <ul className="hidden md:flex items-center gap-2 p-1 rounded-xl ">
-          <NavLink to="/"
-            className={({ isActive }) =>
-              `px-5 py-2.5 rounded-lg transition-all ${
+          <NavLink to="/" className={({ isActive }) => `px-5 py-2.5 rounded-lg transition-all 
+              ${
                 isActive
                   ? "bg-sky-100/70 text-sky-600 backdrop-blur-lg border border-white/40 shadow-sm"
                   : "text-gray-600 hover:text-sky-500"
               }`
-            }>
+            }
+          >
             Home
           </NavLink>
 
-          <NavLink to="/about"
-            className={({ isActive }) =>
-              `px-5 py-2.5 rounded-lg transition-all ${
+          <NavLink to="/about" className={({ isActive }) => `px-5 py-2.5 rounded-lg transition-all 
+              ${
                 isActive
                   ? "bg-sky-100/70 text-sky-600 backdrop-blur-lg border border-white/40 shadow-sm"
                   : "text-gray-600 hover:text-sky-500"
               }`
-            }>
+            }
+          >
             About
           </NavLink>
 
-          <NavLink to="/properties"
-            className={({ isActive }) =>
-              `px-5 py-2.5 rounded-lg transition-all ${
+          <NavLink to="/properties" className={({ isActive }) => `px-5 py-2.5 rounded-lg transition-all 
+              ${
                 isActive
                   ? "bg-sky-100/70 text-sky-600 backdrop-blur-lg border border-white/40 shadow-sm"
                   : "text-gray-600 hover:text-sky-500"
               }`
-            }>
+            }
+          >
             Properties
           </NavLink>
 
-          <NavLink to="/services"
-            className={({ isActive }) =>
-              `px-5 py-2.5 rounded-lg transition-all ${
+          <NavLink to="/services" className={({ isActive }) => `px-5 py-2.5 rounded-lg transition-all 
+              ${
                 isActive
                   ? "bg-sky-100/70 text-sky-600 backdrop-blur-lg border border-white/40 shadow-sm"
                   : "text-gray-600 hover:text-sky-500"
               }`
-            }>
+            }
+          >
             Services
           </NavLink>
 
@@ -92,11 +92,8 @@ const Navbar = () => {
       {open && (
         <div className="md:hidden px-4 pb-4">
           <div className="bg-white border border-gray-200 rounded-2xl shadow-lg p-4 flex flex-col gap-3 animate-fadeIn">
-            <NavLink
-              to="/"
-              onClick={() => setOpen(false)}
-              className={({ isActive }) =>
-                `px-4 py-2 rounded-lg text-center ${
+            <NavLink to="/" onClick={() => setOpen(false)} className={({ isActive }) => `px-4 py-2 rounded-lg text-center
+                ${
                   isActive
                     ? "bg-sky-100 text-sky-600 backdrop-blur-md"
                     : "text-gray-700 hover:bg-sky-50"
@@ -106,11 +103,8 @@ const Navbar = () => {
               Home
             </NavLink>
 
-            <NavLink
-              to="/about"
-              onClick={() => setOpen(false)}
-              className={({ isActive }) =>
-                `px-4 py-2 rounded-lg text-center ${
+            <NavLink to="/about" onClick={() => setOpen(false)} className={({ isActive }) => `px-4 py-2 rounded-lg text-center
+                ${
                   isActive
                     ? "bg-sky-100 text-sky-600 backdrop-blur-md"
                     : "text-gray-700 hover:bg-sky-50"
@@ -120,11 +114,8 @@ const Navbar = () => {
               About
             </NavLink>
 
-            <NavLink
-              to="/properties"
-              onClick={() => setOpen(false)}
-              className={({ isActive }) =>
-                `px-4 py-2 rounded-lg text-center ${
+            <NavLink to="/properties" onClick={() => setOpen(false)} className={({ isActive }) => `px-4 py-2 rounded-lg text-center 
+                ${
                   isActive
                     ? "bg-sky-100 text-sky-600 backdrop-blur-md"
                     : "text-gray-700 hover:bg-sky-50"
@@ -134,11 +125,8 @@ const Navbar = () => {
               Properties
             </NavLink>
 
-            <NavLink
-              to="/services"
-              onClick={() => setOpen(false)}
-              className={({ isActive }) =>
-                `px-4 py-2 rounded-lg text-center ${
+            <NavLink to="/services" onClick={() => setOpen(false)} className={({ isActive }) => `px-4 py-2 rounded-lg text-center 
+                ${
                   isActive
                     ? "bg-sky-100 text-sky-600 backdrop-blur-md"
                     : "text-gray-700 hover:bg-sky-50"
@@ -148,11 +136,7 @@ const Navbar = () => {
               Services
             </NavLink>
 
-            <Link
-              to="/contact"
-              onClick={() => setOpen(false)}
-              className="mt-2 bg-sky-500 text-white px-4 py-2 rounded-lg text-center hover:bg-sky-600"
-            >
+            <Link to="/contact" onClick={() => setOpen(false)} className="mt-2 bg-sky-500 text-white px-4 py-2 rounded-lg text-center hover:bg-sky-600">
               Contact
             </Link>
           </div>

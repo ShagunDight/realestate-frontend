@@ -53,7 +53,7 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
   }, [types]);
 
   const fetchTypes = async () => {
-    const res = await fetch("https://lightblue-moose-690494.hostingersite.com/api/property-types");
+    const res = await fetch("http://127.0.0.1:8001/api/property-types");
     const data = await res.json();
     setTypes(data.data || []);
   };
@@ -63,7 +63,6 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
   // =========================
   const toggleNode = (node, checked) => {
     let parentIds = Array.isArray(filters.space_use) ? [...filters.space_use] : [];
-
     let childIds = Array.isArray(filters.space_use_id) ? [...filters.space_use_id] : [];
 
     const hasChildren = node.children && node.children.length > 0;
@@ -144,7 +143,7 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
   // FETCH SPACE USES
   // =========================
   const fetchSpaceUses = async (typeId) => {
-    const res = await fetch(`https://lightblue-moose-690494.hostingersite.com/api/space-uses?type_id=${typeId}`);
+    const res = await fetch(`http://127.0.0.1:8001/api/space-uses?type_id=${typeId}`);
     const data = await res.json();
     const tree = buildTree(data.data || []);
     setSpaceUses(tree);
@@ -185,20 +184,12 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
           {/* PARENT */}
           <div className="flex items-center justify-between p-2">
             <div className="flex items-center gap-2">
-              <input type="checkbox" checked={hasChildren ? isParentChecked : isParentChecked}
-                onChange={(e) => toggleNode(item, e.target.checked)}
-              />
+              <input type="checkbox" checked={hasChildren ? isParentChecked : isParentChecked} onChange={(e) => toggleNode(item, e.target.checked)}/>
               <span className="text-sm font-medium">{item.name}</span>
             </div>
 
             {hasChildren && (
-              <button type="button"
-                onClick={() =>
-                  setOpenGroups((prev) => ({
-                    ...prev,
-                    [id]: !prev[id],
-                  }))
-                } >
+              <button type="button" onClick={() => setOpenGroups((prev) => ({ ...prev, [id]: !prev[id], } )) }>
                 {isOpen ? "▲" : "▼"}
               </button>
             )}
@@ -236,10 +227,7 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
           onPlaceChanged={() => {
             const place = autoRef.current.getPlace();
             if (place?.formatted_address) {
-              const updated = {
-                ...filters,
-                location: place.formatted_address,
-              };
+              const updated = { ...filters, location: place.formatted_address, };
               setFilters(updated);
               // onSearch(updated);
             }
@@ -252,14 +240,15 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
       )}
 
       {/* PROPERTY TYPE */}
-      <select className="border p-3 rounded-lg w-[180px]" value={filters.type || ""}
-        onChange={(e) => { const value = e.target.value;
+      <select className="border p-3 rounded-lg w-[180px]" value={filters.type || ""} onChange={(e) => {
+          const value = e.target.value;
           const updated = { ...filters, type: value, section_id: [], };
           setFilters(updated);
           fetchSpaceUses(value);
           // onSearch(updated);
         }
-      }>
+      }
+      >
         <option value="">Property</option>
         {types.map((t) => (
           <option key={t._id || t.id} value={t._id || t.id}>
@@ -298,9 +287,7 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
       {/* BUILDING SIZE FILTER */}
       <div className="relative size-dropdown w-[180px]">
         <div className="border p-3 rounded-lg bg-white cursor-pointer" onClick={() => setShowSize(!showSize)}>
-          {filters.building_min_size || filters.building_max_size
-            ? `${filters.building_min_size || 0}-${filters.building_max_size || 0} sqft`
-            : "Building Size"}
+          {filters.building_min_size || filters.building_max_size ? `${filters.building_min_size || 0}-${filters.building_max_size || 0} sqft` : "Building Size"}
         </div>
 
         {showSize && (
@@ -356,10 +343,7 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
         </button>
 
         {/* SEARCH BUTTON */}
-        <button
-          onClick={() => {
-            const updated = filters;
-
+        <button onClick={() => { const updated = filters;
             navigate("/properties", {
               state: { filters: updated },
             });
