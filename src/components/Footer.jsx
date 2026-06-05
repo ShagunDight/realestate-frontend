@@ -10,7 +10,7 @@ import {
 const Footer = () => {
   return (
     <footer className="bg-sky-400 text-white px-6 pt-12 pb-10">
-      <div className="max-w-[1300px] mx-auto grid md:grid-cols-4 gap-10">
+      <div className="max-w-[1300px] mx-auto grid md:grid-cols-3 gap-10">
         {/* LOGO + DESC */}
         <div>
           <h2 className="text-2xl font-bold mb-3">Estatein</h2>
