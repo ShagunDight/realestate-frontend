@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const FilterModal = ({ filters, setFilters, onClose, onSearch }) => {
+const FilterModal = ({ filters = {}, setFilters = () => { }, onClose = () => { }, onSearch = () => {} }) => {
   const [activeTab] = useState("sale");
   const [types, setTypes] = useState([]);
   const [openGroups, setOpenGroups] = useState({});

@@ -7,78 +7,134 @@ const BlogDetails = () => {
   const [blog, setBlog] = useState(null);
   const [allBlogs, setAllBlogs] = useState([]);
 
-  // Current Blog
   useEffect(() => {
     fetch(`https://lightblue-moose-690494.hostingersite.com/api/blogs/${slug}`)
       .then((res) => res.json())
       .then((data) => setBlog(data.data));
   }, [slug]);
 
-  // All Blogs
   useEffect(() => {
     fetch(`https://lightblue-moose-690494.hostingersite.com/api/blogs`)
       .then((res) => res.json())
       .then((data) => setAllBlogs(data.data || []));
   }, []);
 
-  if (!blog) return <p className="p-6">Loading...</p>;
+  if (!blog)
+    return (
+      <div className="p-10 text-center text-gray-500">Loading...</div>
+    );
 
   const filteredBlogs = allBlogs.filter(
-    (item) => item.slug !== slug && item.type === "market_news",
+    (item) => item.slug !== slug && item.type === "market_news"
+  );
+
+  const relatedBlogs = allBlogs.filter(
+    (item) => item.slug !== slug && item.type === "blog"
   );
 
   return (
     <>
-      <div className="w-full px-6 md:px-16 py-10">
-        {/* MAIN GRID */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-          {/* LEFT → BLOG CONTENT */}
-          <div className="lg:col-span-2">
-            <h1 className="text-3xl font-bold mb-4"> {blog.title?.replace(/[\r\n]+/g, "").trim()} </h1>
+      {/* HERO */}
+      <div className="relative w-full h-[350px] md:h-[420px] bg-gray-900">
+        <img
+          src={`https://lightblue-moose-690494.hostingersite.com/public${blog.image}`}
+          className="w-full h-full object-cover opacity-60"
+        />
 
-            <img src={`https://lightblue-moose-690494.hostingersite.com/public${blog.image}`} className="w-full h-[350px] object-cover rounded-lg mb-6" />
-
-            <div className="text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: blog.content }} ></div>
+        <div className="absolute inset-0 flex items-end">
+          <div className="max-w-5xl mx-auto px-6 pb-10 text-white">
+            <p className="text-sky-300 text-sm mb-2">Blog Article</p>
+            <h1 className="text-2xl md:text-4xl font-bold leading-snug">
+              {blog.title?.replace(/[\r\n]+/g, "").trim()}
+            </h1>
           </div>
+        </div>
+      </div>
 
-          {/* RIGHT → SIDEBAR */}
-          <div className="hidden lg:block">
-            <div className="sticky top-24">
-              <h3 className="text-xl font-semibold mb-4 text-sky-500">
-                Recent News
-              </h3>
+      {/* MAIN */}
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          
+          {/* LEFT CONTENT */}
+          <div className="lg:col-span-2">
+            
+            {/* CONTENT CARD */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+              
+              <div
+                className="prose max-w-none prose-sky prose-headings:text-gray-800 prose-p:text-gray-600"
+                dangerouslySetInnerHTML={{ __html: blog.content }}
+              />
+            </div>
 
-              <div className="flex flex-col gap-4">
-                {filteredBlogs.slice(0, 5).map((item) => (
-                    <Link key={item.id} to={`/blog/${item.slug}`} className="bg-white border border-sky-100 rounded-xl p-3 hover:shadow-md transition flex gap-3">
-                      <img src={`https://lightblue-moose-690494.hostingersite.com/public${item.image}`} className="w-20 h-20 object-cover rounded-md" />
+            {/* RELATED BLOGS */}
+            <div className="mt-10">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">
+                Related Blogs
+              </h2>
 
-                      <p className="text-sm font-semibold text-gray-800 line-clamp-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {relatedBlogs.slice(0, 4).map((item) => (
+                  <Link
+                    key={item.id}
+                    to={`/blog/${item.slug}`}
+                    className="bg-white border border-gray-100 rounded-xl overflow-hidden hover:shadow-md transition"
+                  >
+                    <img
+                      src={`https://lightblue-moose-690494.hostingersite.com/public${item.image}`}
+                      className="w-full h-36 object-cover"
+                    />
+                    <div className="p-4">
+                      <p className="text-sm font-medium text-gray-800 line-clamp-2">
                         {item.title}
                       </p>
-                    </Link>
-                  ))
-                }
+                    </div>
+                  </Link>
+                ))}
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="mt-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {allBlogs
-              .filter((item) => item.slug !== slug && item.type === "blog")
-              .map((item) => (
-                <Link key={item.id} to={`/blog/${item.slug}`} className="bg-white border border-sky-100 rounded-xl overflow-hidden hover:shadow-lg transition">
-                  <img src={`https://lightblue-moose-690494.hostingersite.com/public${item.image}`} className="w-full h-40 object-cover" />
+          {/* RIGHT SIDEBAR */}
+          <div className="space-y-6">
+            
+            {/* RECENT NEWS */}
+            <div className="bg-white border border-gray-100 rounded-2xl p-5 sticky top-32 shadow-sm">
+              <h3 className="text-lg font-semibold text-sky-600 mb-4">
+                Recent News
+              </h3>
 
-                  <div className="p-4">
-                    <p className="text-sm font-semibold text-gray-800 line-clamp-2">
-                      {item.title}
-                    </p>
-                  </div>
-                </Link>
-              ))}
+              <div className="space-y-4">
+                {filteredBlogs.slice(0, 5).map((item) => (
+                  <Link
+                    key={item.id}
+                    to={`/blog/${item.slug}`}
+                    className="flex gap-3 items-center hover:bg-gray-50 p-2 rounded-lg transition"
+                  >
+                    <img
+                      src={`https://lightblue-moose-690494.hostingersite.com/public${item.image}`}
+                      className="w-16 h-16 rounded-lg object-cover"
+                    />
+
+                    <div>
+                      <p className="text-sm font-medium text-gray-800 line-clamp-2">
+                        {item.title}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* INFO BOX */}
+            <div className="bg-sky-50 border border-sky-100 rounded-2xl p-5">
+              <h4 className="text-sky-700 font-semibold mb-2">
+                Real Estate Insights
+              </h4>
+              <p className="text-sm text-gray-600">
+                Get latest updates about commercial property, valuation methods and investment strategies.
+              </p>
+            </div>
           </div>
         </div>
       </div>

@@ -1,11 +1,20 @@
 import { useEffect, useState } from "react";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import Footer from "../components/Footer";
+import {
+  FaMapMarkerAlt,
+  FaPhone,
+  FaEnvelope,
+  FaInstagram,
+  FaFacebookF,
+  FaLinkedinIn,
+} from "react-icons/fa";
 
 const ContactUs = () => {
 
   const [offices, setOffices] = useState([]);
   const [propertyTypes, setPropertyTypes] = useState([]);
-
+  const [currentOfficeImage, setCurrentOfficeImage] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -47,6 +56,8 @@ const ContactUs = () => {
       console.log(err);
     }
   };
+
+  const officeImages = offices ?.filter((o) => o?.images?.length > 0).map((o) => o.images[0]) || [];
 
   // =========================
   // PROPERTY TYPES
@@ -168,54 +179,85 @@ const ContactUs = () => {
         </div>
 
         {/* ================= CONTACT CARDS ================= */}
-        <div className="px-6 md:px-20 mt-10">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {offices.map((item, i) => (
-              <div key={i} className="contents">
-                {/* EMAIL */}
-                <div className="bg-white border border-sky-100 rounded-xl p-6 text-center hover:shadow-lg">
-                  <a href={`mailto:${item.email}`} className="block">
-                    <img src={item.icons?.email} className="w-8 h-8 mx-auto mb-3" />
-                    <p className="text-sm text-gray-600">{item.email}</p>
+        {/* <div className="max-w-7xl mx-auto px-6 text-center">
+          {offices.map((item, i) => {
+            const socialLinks = Object.entries(item.social_links || {}).filter(
+              ([, url]) => url?.trim()
+            );
+
+            return (
+              <div
+                key={i}
+                className={`grid grid-cols-1 md:grid-cols-${
+                  socialLinks.length > 0 ? "4" : "3"
+                } gap-6`}
+              >
+                <div className="bg-white border border-sky-100 rounded-xl p-6 text-center hover:shadow-lg transition">
+                  <a
+                    href={`mailto:${item.email}`}
+                    className="flex flex-col items-center gap-2"
+                  >
+                    <FaEnvelope className="text-sky-500 text-xl" />
+                    <p className="text-sm text-gray-600 break-all">{item.email}</p>
                   </a>
                 </div>
 
-                {/* PHONE */}
-                <div className="bg-white border border-sky-100 rounded-xl p-6 text-center hover:shadow-lg">
-                  <img src={item.icons?.phone} className="w-8 h-8 mx-auto mb-3" />
+                <div className="bg-white border border-sky-100 rounded-xl p-6 text-center hover:shadow-lg transition">
+                  <FaPhone className="text-sky-500 text-xl mx-auto mb-2" />
                   <p className="text-sm text-gray-600">{item.phone}</p>
                 </div>
 
-                {/* ADDRESS */}
-                <div className="bg-white border border-sky-100 rounded-xl p-6 text-center hover:shadow-lg">
-                  <img src={item.icons?.address} className="w-8 h-8 mx-auto mb-3" />
+                <div className="bg-white border border-sky-100 rounded-xl p-6 text-center hover:shadow-lg transition">
+                  <FaMapMarkerAlt className="text-sky-500 text-xl mx-auto mb-2" />
                   <p className="text-sm text-gray-600">{item.address}</p>
                 </div>
 
-                {/* SOCIAL */}
-                <div className="bg-white border border-sky-100 rounded-xl p-6 text-center hover:shadow-lg">
-                  <div className="flex justify-center gap-8">
-                    {
-                      Object.keys(item.social_links || {}).map((key, idx) => {
-                        const url = item.social_links[key]?.trim();
+                {socialLinks.length > 0 && (
+                  <div className="bg-white border border-sky-100 rounded-xl p-6 text-center hover:shadow-lg transition">
+                    <div className="flex justify-center gap-4 flex-wrap">
+                      {socialLinks.map(([key, url], idx) => {
+                        let Icon = null;
+
+                        switch (key.toLowerCase()) {
+                          case "instagram":
+                            Icon = FaInstagram;
+                            break;
+                          case "facebook":
+                            Icon = FaFacebookF;
+                            break;
+                          case "linkedin":
+                            Icon = FaLinkedinIn;
+                            break;
+                          default:
+                            return null;
+                        }
 
                         return (
-                          <a key={idx} href={ url && url.startsWith("http") ? url : `https://${url}` }
-                            target="_blank" rel="noopener noreferrer" className="flex flex-col items-center" >
-                            <img src={item.icons?.[key]} className="w-6 h-6 mb-2" />
+                          <a
+                            key={idx}
+                            href={
+                              url.startsWith("http")
+                                ? url
+                                : `https://${url}`
+                            }
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex flex-col items-center"
+                          >
+                            <Icon className="text-sky-500 text-lg" />
                             <span className="text-xs text-gray-600 capitalize">
                               {key}
                             </span>
                           </a>
                         );
-                      })
-                    }
+                      })}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
-            ))}
-          </div>
-        </div>
+            );
+          })}
+        </div> */}
 
         {/* ================= OFFICE LOCATIONS ================= */}
         <div className="bg-white py-16">
@@ -232,45 +274,114 @@ const ContactUs = () => {
 
             {/* CARDS */}
             <div className="flex flex-wrap justify-center gap-6">
-              {offices.map((item, i) => (
-                <div key={i} className=" border border-sky-100 rounded-xl p-6 hover:shadow-lg transition w-full md:w-[1250px] text-left" >
+              {offices.map((item, i) => {
 
-                  {/* LOCATION TYPE */}
-                  <p className="text-xs text-gray-400 mb-1"> {item.location_type || "Office"} </p>
+                const socialLinks = Object.entries(item.social_links || {}).filter(
+                  ([, url]) => url?.trim()
+                );
 
-                  {/* ADDRESS */}
-                  <h3 className="text-lg font-semibold text-sky-500 mb-2"> {item.address} </h3>
+                // Google Maps link (auto)
+                const mapQuery = encodeURIComponent(item.location || item.address || "");
+                const mapUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
 
-                  {/* DESCRIPTION */}
-                  <p className="text-sm text-gray-500 mb-4"> {item.short_description || "No description available"} </p>
+                return (
+                  <div
+                    key={i}
+                    className="w-full md:w-[1100px] bg-white border border-sky-100 rounded-2xl p-6 md:p-8 hover:shadow-xl transition duration-300 text-left"
+                  >
 
-                  {/* CONTACT INFO  */}
-                  <div className="flex flex-wrap md:flex-nowrap items-center justify-between gap-4 text-sm text-gray-600 mt-4">
-                    {/* EMAIL */}
-                    <div className="flex items-center gap-2 min-w-[150px]">
-                      <img src={item.icons?.email} className="w-4 h-4" />
-                      <span className="truncate">{item.email}</span>
+                    {/* TOP BADGE */}
+                    <div className="flex justify-between items-center mb-3">
+                      <span className="text-xs bg-sky-50 text-sky-600 px-3 py-1 rounded-full">
+                        {item.location_type || "Office"}
+                      </span>
+
+                      {/* SOCIAL */}
+                      {socialLinks.length > 0 && (
+                        <div className="flex gap-3">
+                          {socialLinks.map(([key, url], idx) => {
+                            let Icon = null;
+
+                            switch (key.toLowerCase()) {
+                              case "instagram":
+                                Icon = FaInstagram;
+                                break;
+                              case "facebook":
+                                Icon = FaFacebookF;
+                                break;
+                              case "linkedin":
+                                Icon = FaLinkedinIn;
+                                break;
+                              default:
+                                return null;
+                            }
+
+                            return (
+                              <a
+                                key={idx}
+                                href={url.startsWith("http") ? url : `https://${url}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="bg-sky-50 hover:bg-sky-100 p-2 rounded-full transition"
+                              >
+                                <Icon className="text-sky-600 text-lg" />
+                              </a>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
 
-                    {/* PHONE */}
-                    <div className="flex items-center gap-2 min-w-[130px]">
-                      <img src={item.icons?.phone} className="w-4 h-4" />
-                      <span>{item.phone}</span>
+                    {/* ADDRESS */}
+                    <h3 className="text-lg md:text-xl font-semibold text-sky-600 mb-1">
+                      {item.address}
+                    </h3>
+
+                    {/* DESCRIPTION */}
+                    <p className="text-sm text-gray-500 mb-5">
+                      {item.short_description || "No description available"}
+                    </p>
+
+                    {/* CONTACT ROW */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
+
+                      {/* EMAIL */}
+                      <div className="flex items-center gap-2">
+                        <FaEnvelope className="text-sky-500" />
+                        <span className="truncate">{item.email}</span>
+                      </div>
+
+                      {/* PHONE */}
+                      <div className="flex items-center gap-2">
+                        <FaPhone className="text-sky-500" />
+                        <span>{item.phone}</span>
+                      </div>
+
+                      {/* LOCATION */}
+                      <div className="flex items-center gap-2">
+                        <FaMapMarkerAlt className="text-sky-500" />
+                        <span className="truncate">
+                          {item.location || item.address}
+                        </span>
+                      </div>
+
                     </div>
 
-                    {/* LOCATION */}
-                    <div className="flex items-center gap-2 min-w-[180px]">
-                      <img src={item.icons?.address} className="w-4 h-4" />
-                      <span className="truncate"> {item.location || item.address} </span>
+                    {/* BUTTON */}
+                    <div className="mt-6 flex justify-end">
+                      <a
+                        href={mapUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-sky-500 hover:bg-sky-600 text-white px-6 py-2 rounded-lg text-sm transition"
+                      >
+                        Get Direction
+                      </a>
                     </div>
+
                   </div>
-
-                  {/* BUTTON */}
-                  <button className="mt-6 bg-sky-500 hover:bg-sky-600 text-white px-5 py-2 rounded-md text-sm">
-                    Get Direction
-                  </button>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
@@ -368,43 +479,132 @@ const ContactUs = () => {
           </div>
         </div>
 
-        <div className=" border border-sky-100 rounded-xl p-6 hover:shadow-lg transition w-full max-w-7xl mx-auto mt-16 mb-16">
-          <div className="max-w-6xl mx-auto px-4">
-            {/* ROW  */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
-              {[0, 1, 4, 5].map((i) =>
-                offices[0]?.images?.[i] ? (
-                  <div key={i} className="bg-white rounded-xl p-3 flex items-center justify-center" >
-                    <img src={offices[0].images[i]} className="w-full h-40 object-contain" />
-                  </div>
-                ) : null,
-              )}
+        <div className="border border-sky-100 rounded-2xl p-6 md:p-10 hover:shadow-xl transition w-full max-w-7xl mx-auto mt-16 mb-16 bg-white">
+
+          <div className="max-w-6xl mx-auto space-y-8">
+
+            {/* TITLE */}
+            <div className="text-center">
+              <p className="text-sky-500 text-xs mb-2">✦ ✦ ✦</p>
+              <h3 className="text-sky-600 text-2xl md:text-3xl font-semibold mb-2">
+                Explore Estatein's World
+              </h3>
+              <p className="text-gray-500 text-sm max-w-2xl mx-auto">
+                Step inside the world of Estatein, where professionalism meets warmth and expertise meets passion.
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-center">
-              {/* IMAGE LEFT */}
-              {offices[0]?.images?.[4] && (
-                <div className="bg-white rounded-xl p-3 flex items-center justify-center">
-                  <img src={offices[0].images[2]} className="w-full h-56 object-contain" />
-                  <img src={offices[0].images[5]} className="w-full h-56 object-contain" />
+            {/* MAIN GRID */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+              {/* LEFT BIG IMAGE */}
+              <div className="lg:col-span-2 relative w-full h-[240px] sm:h-[320px] md:h-[380px] rounded-3xl overflow-hidden shadow-2xl group bg-gray-100">
+
+                {/* MAIN IMAGE */}
+                <img
+                  src={
+                    officeImages.length
+                      ? officeImages[currentOfficeImage]
+                      : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
+                  }
+                  className="w-full h-full object-cover transition duration-700 group-hover:scale-105"
+                  alt="Office"
+                />
+
+                {/* SOFT DARK GRADIENT */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+
+                {/* TOP LABEL */}
+                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-medium text-gray-700">
+                  Office Gallery
                 </div>
-              )}
 
-              {/* CONTENT RIGHT */}
-              <div className="bg-white border border-sky-100 rounded-xl p-6 flex flex-col justify-center h-full">
-                <p className="text-sky-500 text-xs mb-2">✦ ✦ ✦</p>
-                <h3 className="text-sky-600 text-xl md:text-2xl font-semibold mb-3">
-                  Explore Estatein's World
-                </h3>
+                {/* IMAGE COUNTER */}
+                {officeImages.length > 1 && (
+                  <div className="absolute top-4 right-4 bg-black/40 text-white text-xs px-3 py-1 rounded-full backdrop-blur">
+                    {currentOfficeImage + 1} / {officeImages.length}
+                  </div>
+                )}
 
-                <p className="text-gray-500 text-sm">
-                  Step inside the world of Estatein, where professionalism meets
-                  warmth and expertise meets passion. Our gallery offers a
-                  glimpse into our team and workspaces.
-                </p>
+                {/* LEFT BUTTON */}
+                {officeImages.length > 1 && (
+                  <button
+                    onClick={() =>
+                      setCurrentOfficeImage(
+                        currentOfficeImage === 0
+                          ? officeImages.length - 1
+                          : currentOfficeImage - 1
+                      )
+                    }
+                    className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg transition hover:scale-110"
+                  >
+                    <IoIosArrowBack size={18} />
+                  </button>
+                )}
+
+                {/* RIGHT BUTTON */}
+                {officeImages.length > 1 && (
+                  <button
+                    onClick={() =>
+                      setCurrentOfficeImage(
+                        currentOfficeImage === officeImages.length - 1
+                          ? 0
+                          : currentOfficeImage + 1
+                      )
+                    }
+                    className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg transition hover:scale-110"
+                  >
+                    <IoIosArrowForward size={18} />
+                  </button>
+                )}
+
+                {/* THUMBNAILS STRIP */}
+                {officeImages.length > 1 && (
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 bg-black/30 backdrop-blur px-2 py-1 rounded-xl">
+                    {officeImages.map((img, idx) => (
+                      <img
+                        key={idx}
+                        src={img}
+                        onClick={() => setCurrentOfficeImage(idx)}
+                        className={`w-10 h-10 object-cover rounded-md cursor-pointer border-2 transition ${
+                          idx === currentOfficeImage
+                            ? "border-white scale-110"
+                            : "border-transparent opacity-70 hover:opacity-100"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
+
+              {/* RIGHT CONTENT */}
+              <div className="w-26 bg-sky-50 rounded-xl p-6 flex flex-col justify-center">
+
+                <div className="space-y-4">
+
+                  <h4 className="text-lg font-semibold text-sky-700">
+                    Our Workspace & Team
+                  </h4>
+
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    Explore our professional environment where creativity and expertise come together to deliver the best real estate experience.
+                  </p>
+
+                  {/* HIGHLIGHTS */}
+                  <div className="space-y-2 text-sm text-gray-600">
+                    <p>✔ Modern Office Setup</p>
+                    <p>✔ Professional Team</p>
+                    <p>✔ Client-Friendly Environment</p>
+                  </div>
+
+                </div>
+
+              </div>
+
             </div>
+
           </div>
+
         </div>
       </div>
       <Footer />

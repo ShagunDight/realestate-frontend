@@ -10,7 +10,7 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
   
   const [types, setTypes] = useState([]);
   const [spaceUses, setSpaceUses] = useState([]);
-  const [showPrice, setShowPrice] = useState(true);
+  const [showPrice, setShowPrice] = useState(false);
   const [showSize, setShowSize] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [openGroups, setOpenGroups] = useState({});
@@ -39,15 +39,17 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
 
   useEffect(() => {
     if (types.length > 0 && !filters.type) {
-      const firstId = types[0]._id || types[0].id;
+      const firstType = types[0];
+      const firstId = firstType._id || firstType.id;
 
       const updated = {
         ...filters,
         type: firstId,
+        type_name: firstType?.name || "",
       };
 
       setFilters(updated);
-      // fetchSpaceUses(firstId);
+      fetchSpaceUses(firstId);
       // onSearch(updated);
     }
   }, [types]);
@@ -219,137 +221,210 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
   // UI
   // =========================
   return (
-    <div className="bg-sky-200 shadow-lg rounded-xl p-4 flex flex-wrap items-end gap-4">
+    <div className=" bg-sky-200 shadow-lg rounded-2xl p-4 md:p-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-[2fr_1.3fr_1.5fr_1fr_1fr_auto] gap-3 items-end">
 
-      {/* LOCATION */}
-      {isLoaded ? (
-        <Autocomplete onLoad={(ref) => (autoRef.current = ref)}
-          onPlaceChanged={() => {
-            const place = autoRef.current.getPlace();
-            if (place?.formatted_address) {
-              const updated = { ...filters, location: place.formatted_address, };
-              setFilters(updated);
-              // onSearch(updated);
-            }
-          }} >
-          <input type="text" placeholder="Location" className="border p-3 rounded-lg w-[200px]"
-            value={filters.location || ""} onChange={(e) => setFilters({ ...filters, location: e.target.value }) } />
-        </Autocomplete>
-      ) : (
-        <input type="text" placeholder="Location" className="border p-3 rounded-lg w-[200px]" />
-      )}
+        {/* LOCATION */}
+        {isLoaded ? (
+          <Autocomplete
+            onLoad={(ref) => (autoRef.current = ref)}
+            onPlaceChanged={() => {
+              const place = autoRef.current.getPlace();
+              if (place?.formatted_address) {
+                const updated = {
+                  ...filters,
+                  location: place.formatted_address,
+                };
+                setFilters(updated);
+              }
+            }}
+          >
+            <input
+              type="text"
+              placeholder="Location"
+              className="w-full h-12 border border-gray-300 rounded-xl px-4 bg-white focus:ring-2 focus:ring-sky-500 outline-none"
+              value={filters.location || ""}
+              onChange={(e) =>
+                setFilters({ ...filters, location: e.target.value })
+              }
+            />
+          </Autocomplete>
+        ) : (
+          <input
+            type="text"
+            placeholder="Location"
+            className="w-full h-12 border border-gray-300 rounded-xl px-4 bg-white focus:ring-2 focus:ring-sky-500 outline-none"
+          />
+        )}
 
-      {/* PROPERTY TYPE */}
-      <select className="border p-3 rounded-lg w-[180px]" value={filters.type || ""} onChange={(e) => {
-          const value = e.target.value;
-          const updated = { ...filters, type: value, section_id: [], };
-          setFilters(updated);
-          fetchSpaceUses(value);
-          // onSearch(updated);
-        }
-      }
-      >
-        <option value="">Property</option>
-        {types.map((t) => (
-          <option key={t._id || t.id} value={t._id || t.id}>
-            {t.name}
-          </option>
-        ))}
-      </select>
+        {/* PROPERTY TYPE */}
+        <select
+          className="w-full h-12 border border-gray-300 rounded-xl px-4 bg-white focus:ring-2 focus:ring-sky-500 outline-none"
+          value={filters.type || ""}
+          onChange={(e) => {
+            const value = e.target.value;
+            const selectedType = types.find((t) => (t._id || t.id) === value);
 
-      {/* SPACE USE */}
-      <SpaceUseDropdown spaceUses={spaceUses} renderTree={renderTree} buttonLabel={getSelectedLabel()} />
+            const updated = {
+              ...filters,
+              type: value,
+              type_name: selectedType?.name || "",
+              section_id: [],
+            };
 
-      {/* PRICE FILTER */}
-      {filters.listing_type && (
-        <div className="relative price-dropdown w-[180px]">
-          <div className="border p-3 rounded-lg bg-white cursor-pointer" onClick={() => setShowPrice(!showPrice)}>
-            {filters.min_price || filters.max_price ? `${filters.min_price || 0}-${filters.max_price || 0}` : filters.listing_type === "rent" ? "Rent" : "Price"}
+            setFilters(updated);
+            fetchSpaceUses(value);
+          }}
+        >
+          <option value="">Property</option>
+          {types.map((t) => (
+            <option key={t._id || t.id} value={t._id || t.id}>
+              {t.name}
+            </option>
+          ))}
+        </select>
+
+        {/* SPACE USE */}
+        <div className="w-full">
+          <SpaceUseDropdown
+            spaceUses={spaceUses}
+            renderTree={renderTree}
+            buttonLabel={getSelectedLabel()}
+          />
+        </div>
+
+        {/* PRICE FILTER */}
+        {filters.type_name && (
+          <div className="relative w-full">
+            <div
+              className="border p-3 rounded-lg bg-white cursor-pointer"
+              onClick={() => setShowPrice(!showPrice)}
+            >
+              {filters.min_price || filters.max_price
+                ? `${filters.min_price || 0}-${filters.max_price || 0}`
+                : filters.type_name?.toLowerCase().includes("sale")
+                ? "Price"
+                : "Rent"}
+            </div>
+
+            {showPrice && (
+              <div className="absolute top-full left-0 right-0 bg-white border rounded-xl p-3 mt-2 shadow-xl z-50">
+                <input
+                  placeholder="Min"
+                  className="border p-2 w-full mb-2"
+                  value={filters.min_price || ""}
+                  onChange={(e) =>
+                    setFilters({ ...filters, min_price: e.target.value })
+                  }
+                />
+                <input
+                  placeholder="Max"
+                  className="border p-2 w-full"
+                  value={filters.max_price || ""}
+                  onChange={(e) =>
+                    setFilters({ ...filters, max_price: e.target.value })
+                  }
+                />
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* SIZE FILTER */}
+        <div className="relative w-full">
+          <div
+            className="border p-3 rounded-lg bg-white cursor-pointer"
+            onClick={() => setShowSize(!showSize)}
+          >
+            {filters.building_min_size || filters.building_max_size
+              ? `${filters.building_min_size || 0}-${
+                  filters.building_max_size || 0
+                } sqft`
+              : "Building Size"}
           </div>
 
-          {showPrice && (
-            <div className="absolute bg-white border rounded-lg p-3 mt-1 w-full z-50">
-              <input placeholder="Min" className="border p-2 w-full mb-2" value={filters.min_price || ""}
-                onChange={(e) => { const updated = { ...filters, min_price: e.target.value };
-                  setFilters(updated);
-                  // onSearch(updated);
-                }} />
-              <input placeholder="Max" className="border p-2 w-full" value={filters.max_price || ""}
-                onChange={(e) => { const updated = { ...filters, max_price: e.target.value };
-                  setFilters(updated);
-                  // onSearch(updated);
-                }} />
+          {showSize && (
+            <div className="absolute top-full left-0 right-0 bg-white border rounded-xl p-3 mt-2 shadow-xl z-50">
+              <input
+                placeholder="Min SF"
+                className="border p-2 w-full mb-2"
+                value={filters.building_min_size || ""}
+                onChange={(e) =>
+                  setFilters({
+                    ...filters,
+                    building_min_size: e.target.value,
+                  })
+                }
+              />
+              <input
+                placeholder="Max SF"
+                className="border p-2 w-full"
+                value={filters.building_max_size || ""}
+                onChange={(e) =>
+                  setFilters({
+                    ...filters,
+                    building_max_size: e.target.value,
+                  })
+                }
+              />
             </div>
           )}
         </div>
-      )}
-
-      {/* BUILDING SIZE FILTER */}
-      <div className="relative size-dropdown w-[180px]">
-        <div className="border p-3 rounded-lg bg-white cursor-pointer" onClick={() => setShowSize(!showSize)}>
-          {filters.building_min_size || filters.building_max_size ? `${filters.building_min_size || 0}-${filters.building_max_size || 0} sqft` : "Building Size"}
-        </div>
-
-        {showSize && (
-          <div className="absolute bg-white border rounded-lg p-3 mt-1 w-full z-50">
-            <input placeholder="Min SF" className="border p-2 w-full mb-2" value={ filters.building_min_size || "" }
-              onChange={(e) => { const value = e.target.value;
-                setFilters({ ...filters, building_min_size: value });
-                onSearch({ ...filters, building_min_size: value });
-              }} />
-            <input placeholder="Max SF" className="border p-2 w-full" value={ filters.building_max_size || "" }
-              onChange={(e) => { const value = e.target.value;
-                setFilters({ ...filters, building_max_size: value });
-                onSearch({ ...filters, building_max_size: value });
-              }} />
-          </div>
-        )}
-      </div>
-
-      {showModal && (
-        <FilterModal filters={filters} setFilters={setFilters} onClose={() => setShowModal(false)} onSearch={onSearch} />
-      )}
-
-      <button onClick={() => setShowModal(true)} className="bg-sky-500 text-white px-6 py-3 rounded-lg"> All Filters </button>
-
-      {/* SEARCH BUTTON */}
-      <div className="ml-auto flex gap-3">
         
-        {/* CLEAR BUTTON */}
-        <button onClick={() => {
-            const resetFilters = {
-              location: "",
-              type: "",
-              space_use: [],
-              space_use_id: [],
-              listing_type: "",
-              min_price: "",
-              max_price: "",
-              land_size_min: "",
-              land_size_max: "",
-              building_size_min: "",
-              building_size_max: "",
-              year_built_min: "",
-              year_built_max: "",
-            };
+        {showModal && (
+          <FilterModal filters={filters} setFilters={setFilters} onClose={() => setShowModal(false)} onSearch={onSearch} />
+        )}
+        
+        {/* BUTTONS WRAP FIX */}
+        <div className="col-span-1 sm:col-span-2 xl:col-span-1 flex flex-col sm:flex-row gap-3 w-full">
 
-            setFilters(resetFilters);
-            setSpaceUses([]);
-            setShowPrice(true);
-            setShowSize(false);
-            // onSearch(resetFilters);
-          }} className="bg-gray-200 text-black px-6 py-3 rounded-lg hover:bg-gray-300" >
-          Clear
-        </button>
+          <button
+            onClick={() => setShowModal(true)}
+            className="bg-sky-500 hover:bg-sky-600 text-white px-6 py-3 rounded-lg w-full sm:w-auto"
+          >
+            All Filters
+          </button>
 
-        {/* SEARCH BUTTON */}
-        <button onClick={() => { const updated = filters;
-            navigate("/properties", {
-              state: { filters: updated },
-            });
-          }} className="bg-sky-500 text-white px-6 py-3 rounded-lg" >
-          Search
-        </button>
+          <button
+            onClick={() => {
+              const resetFilters = {
+                location: "",
+                type: "",
+                type_name: "",
+                space_use: [],
+                space_use_id: [],
+                listing_type: "",
+                min_price: "",
+                max_price: "",
+                land_size_min: "",
+                land_size_max: "",
+                building_size_min: "",
+                building_size_max: "",
+                year_built_min: "",
+                year_built_max: "",
+              };
+
+              setFilters(resetFilters);
+              setSpaceUses([]);
+              setShowPrice(false);
+              setShowSize(false);
+            }}
+            className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300 w-full sm:w-auto"
+          >
+            Clear
+          </button>
+
+          <button
+            onClick={() => {
+              navigate("/properties", {
+                state: { filters },
+              });
+            }}
+            className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg w-full sm:w-auto"
+          >
+            Search
+          </button>
+        </div>
       </div>
     </div>
   );

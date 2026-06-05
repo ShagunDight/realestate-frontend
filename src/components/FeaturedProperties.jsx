@@ -29,7 +29,6 @@ const FeaturedProperties = () => {
       setProperties(data.data || []);
       setLastPage(data.last_page || 1);
       setPage(data.current_page || pageNo);
-
     } catch (err) {
       console.error(err);
     }
@@ -47,14 +46,15 @@ const FeaturedProperties = () => {
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+    <section className="max-w-7xl mx-auto px-3 sm:px-6 py-8 sm:py-10">
 
       {/* HEADER */}
-      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 mb-10">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 mb-8 sm:mb-10">
         <div>
-          <h2 className="text-3xl font-bold text-gray-900">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
             Featured Properties
           </h2>
+
           <p className="text-gray-500 text-sm mt-2 max-w-xl">
             Explore handpicked premium properties for investment and business opportunities.
           </p>
@@ -63,84 +63,126 @@ const FeaturedProperties = () => {
 
       {/* GRID */}
       {loading ? (
-          <p className="text-center text-gray-500">Loading...</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {properties.map((item) => {
-              const text = stripHtml(item.description || "");
-              const isLong = text.length > 80;
+        <p className="text-center text-gray-500">Loading...</p>
+      ) : (
+        <div className="
+          grid grid-cols-1 
+          sm:grid-cols-2 
+          lg:grid-cols-3 
+          xl:grid-cols-4 
+          gap-4 sm:gap-6
+        ">
 
-              return (
-                <div key={item._id || item.id}
-                  className="group bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+          {properties.map((item) => {
+            const text = stripHtml(item.description || "");
+            const isLong = text.length > 80;
 
-                  {/* IMAGE */}
-                  <div className="relative h-52 overflow-hidden bg-gray-100">
-                    <img className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
-                      src={
-                        item.image && item.image.length > 0
-                          ? `https://lightblue-moose-690494.hostingersite.com/public/${item.image[0]?.path || item.image[0]}`
-                          : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
-                      }/>
-                  </div>
+            return (
+              <div
+                key={item._id || item.id}
+                className="group bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
+              >
 
-                  {/* CONTENT */}
-                  <div className="p-4 flex flex-col gap-3">
-
-                    <h3 className="text-base font-semibold text-gray-800">
-                      {item.title}
-                    </h3>
-
-                    <p className="text-sm text-gray-500">
-                      📍 {item.location || "Location not available"}
-                    </p>
-
-                    <p className="text-sm text-gray-500 min-h-[48px]">
-                      {expanded === item.id ? text : text.slice(0, 80) + (isLong ? "..." : "")}
-                    </p>
-
-                    {isLong && (
-                      <button onClick={() => setExpanded(expanded === item.id ? null : item.id) } className="text-sky-500 text-sm">
-                        {expanded === item.id ? "Show Less" : "Read More"}
-                      </button>
-                    )}
-
-                    <div className="flex justify-between items-center pt-3 border-t">
-                      <div className="font-semibold text-sm">
-                        ₹{" "}
-                        {item.property_type?.name?.toLowerCase() === "for lease"
-                          ? item.monthly_rent
-                          : item.sale_price || "N/A"}
-                      </div>
-
-                      <button onClick={() => navigate(`/property/${item._id || item.id}`) } className="px-3 py-1.5 text-xs bg-sky-500 text-white rounded-lg">
-                        View
-                      </button>
-                    </div>
-                  </div>
+                {/* IMAGE */}
+                <div className="relative h-44 sm:h-52 overflow-hidden bg-gray-100">
+                  <img
+                    className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                    src={
+                      item.image && item.image.length > 0
+                        ? `https://lightblue-moose-690494.hostingersite.com/public/${item.image[0]?.path || item.image[0]}`
+                        : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
+                    }
+                    alt={item.title}
+                  />
                 </div>
-              );
-            })}
 
-          </div>
-        )
-      }
+                {/* CONTENT */}
+                <div className="p-3 sm:p-4 flex flex-col gap-2 sm:gap-3">
+
+                  <h3 className="text-sm sm:text-base font-semibold text-gray-800">
+                    {item.title}
+                  </h3>
+
+                  <p className="text-xs sm:text-sm text-gray-500">
+                    📍 {item.location || "Location not available"}
+                  </p>
+
+                  <p className="text-xs sm:text-sm text-gray-500 min-h-[40px] sm:min-h-[48px]">
+                    {expanded === item.id
+                      ? text
+                      : text.slice(0, 80) + (isLong ? "..." : "")}
+                  </p>
+
+                  {isLong && (
+                    <button
+                      onClick={() =>
+                        setExpanded(expanded === item.id ? null : item.id)
+                      }
+                      className="text-sky-500 text-xs sm:text-sm hover:underline self-start"
+                    >
+                      {expanded === item.id ? "Show Less" : "Read More"}
+                    </button>
+                  )}
+
+                  {/* FOOTER */}
+                  <div className="flex justify-between items-center pt-3 border-t">
+
+                    <div className="font-semibold text-xs sm:text-sm">
+                      ₹{" "}
+                      {item.property_type?.name?.toLowerCase() === "for lease"
+                        ? item.monthly_rent
+                        : item.sale_price || "N/A"}
+                    </div>
+
+                    <button
+                      onClick={() =>
+                        navigate(`/property/${item._id || item.id}`)
+                      }
+                      className="px-3 py-1.5 text-xs bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition"
+                    >
+                      View
+                    </button>
+
+                  </div>
+
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* PAGINATION */}
-      <div className="flex justify-between items-center mt-10 text-gray-600 text-sm">
-        <p> Page {page} of {lastPage} </p>
+      <div className="
+        flex flex-col sm:flex-row 
+        justify-between items-center 
+        gap-3 sm:gap-0 
+        mt-8 sm:mt-10 
+        text-gray-600 text-sm
+      ">
+
+        <p>
+          Page {page} of {lastPage}
+        </p>
 
         <div className="flex gap-3">
-          <button onClick={() => changePage(page - 1)} disabled={page === 1}
-            className="w-9 h-9 flex items-center justify-center border rounded-full hover:bg-sky-500 hover:text-white disabled:opacity-40">
+          <button
+            onClick={() => changePage(page - 1)}
+            disabled={page === 1}
+            className="w-9 h-9 flex items-center justify-center border rounded-full hover:bg-sky-500 hover:text-white disabled:opacity-40"
+          >
             ←
           </button>
 
-          <button onClick={() => changePage(page + 1)} disabled={page === lastPage}
-            className="w-9 h-9 flex items-center justify-center border rounded-full hover:bg-sky-500 hover:text-white disabled:opacity-40">
+          <button
+            onClick={() => changePage(page + 1)}
+            disabled={page === lastPage}
+            className="w-9 h-9 flex items-center justify-center border rounded-full hover:bg-sky-500 hover:text-white disabled:opacity-40"
+          >
             →
           </button>
         </div>
+
       </div>
 
     </section>

@@ -14,7 +14,7 @@ const defaultCenter = {
 const MapView = ({ properties, location, onBoundsChange }) => {
   const [markers, setMarkers] = useState([]);
   const [activeMarker, setActiveMarker] = useState(null);
-
+  const idleTimeout = useRef(null);
   const mapRef = useRef(null);
   const hoverTimeout = useRef(null);
   const leaveTimeout = useRef(null);
@@ -24,7 +24,23 @@ const MapView = ({ properties, location, onBoundsChange }) => {
   // -------------------------
   const onLoad = (map) => {
     mapRef.current = map;
+
+    const isMobile = window.innerWidth < 768;
+
+    map.setZoom(isMobile ? 5 : 6);
   };
+
+  useEffect(() => {
+    if (!mapRef.current || !markers.length) return;
+
+    const bounds = new window.google.maps.LatLngBounds();
+
+    markers.forEach((m) => {
+      bounds.extend({ lat: m.lat, lng: m.lng });
+    });
+
+    mapRef.current.fitBounds(bounds);
+  }, [markers]);
 
   // -------------------------
   // LOCATION → MOVE MAP
@@ -57,18 +73,12 @@ const MapView = ({ properties, location, onBoundsChange }) => {
     const validMarkers = properties
       .filter((p) => p.latitude && p.longitude)
       .map((p) => {
-        let img = "";
-
-        try {
-          const parsed = JSON.parse(p.image || "[]");
-          img = parsed[0]?.path || "";
-        } catch (e) {}
 
         return {
           id: p.id,
           title: p.title,
           price: p.monthly_rent,
-          image: img,
+          image: p.image,
           lat: parseFloat(p.latitude),
           lng: parseFloat(p.longitude),
         };
@@ -87,46 +97,109 @@ const MapView = ({ properties, location, onBoundsChange }) => {
     };
   }, []);
 
+  const getImage = () => {
+    const fallback =
+      "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg";
+
+    let images = activeMarker.image;
+
+    // ✅ FIX: STRING → ARRAY
+    if (typeof images === "string") {
+      try {
+        images = JSON.parse(images);
+      } catch (e) {
+        return fallback;
+      }
+    }
+
+    if (!Array.isArray(images) || images.length === 0) {
+      return fallback;
+    }
+
+    const firstImage = images[0];
+
+    // ✅ OBJECT CASE
+    if (typeof firstImage === "object" && firstImage.path) {
+      return `https://lightblue-moose-690494.hostingersite.com/public/${firstImage.path}`;
+    }
+
+    // ✅ STRING CASE
+    if (typeof firstImage === "string") {
+      return `https://lightblue-moose-690494.hostingersite.com/public/${firstImage}`;
+    }
+
+    return fallback;
+  };
+
   return (
-    <GoogleMap mapContainerStyle={containerStyle} center={defaultCenter} zoom={6} onLoad={onLoad}
+    <GoogleMap mapContainerStyle={containerStyle} center={defaultCenter} zoom={6} onLoad={onLoad} 
+      options={{
+        gestureHandling: "greedy",
+        zoomControl: true,
+        streetViewControl: false,
+        mapTypeControl: false,
+        fullscreenControl: false,
+      }}
+
       onIdle={() => {
         if (!mapRef.current) return;
 
-        const bounds = mapRef.current.getBounds();
+        clearTimeout(idleTimeout.current);
 
-        if (!bounds) return;
+        idleTimeout.current = setTimeout(() => {
+          const bounds = mapRef.current.getBounds();
+          if (!bounds) return;
 
-        const filtered = properties.filter((p) => {
-          if (!p.latitude || !p.longitude) return false;
+          const filtered = properties.filter((p) => {
+            if (!p.latitude || !p.longitude) return false;
 
-          const lat = parseFloat(p.latitude);
-          const lng = parseFloat(p.longitude);
+            const lat = parseFloat(p.latitude);
+            const lng = parseFloat(p.longitude);
 
-          return bounds.contains(
-            new window.google.maps.LatLng(lat, lng)
-          );
-        });
+            return bounds.contains(
+              new window.google.maps.LatLng(lat, lng)
+            );
+          });
 
-        onBoundsChange(filtered);
+          onBoundsChange(filtered);
+        }, 300);
       }}>
       
       {/* MARKERS */}
       {markers.map((item) => (
-        <Marker key={item.id} position={{ lat: item.lat, lng: item.lng }} onClick={() => setActiveMarker(item)}
+        <Marker key={item.id} position={{ lat: item.lat, lng: item.lng }} 
+          onClick={() => {
+            setActiveMarker(item);
+
+            if (mapRef.current) {
+              mapRef.current.panTo({ lat: item.lat, lng: item.lng });
+
+              if (window.innerWidth < 768) {
+                mapRef.current.setZoom(13);
+              } else {
+                mapRef.current.setZoom(14);
+              }
+            }
+          }}
+
           onMouseOver={() => {
+            if (window.innerWidth < 768) return;
+
             clearTimeout(leaveTimeout.current);
 
             hoverTimeout.current = setTimeout(() => {
               setActiveMarker(item);
-            }, 1000); // 1 sec delay show
+            }, 1000);
           }}
 
           onMouseOut={() => {
+            if (window.innerWidth < 768) return;
+
             clearTimeout(hoverTimeout.current);
 
             leaveTimeout.current = setTimeout(() => {
               setActiveMarker(null);
-            }, 1000); // 1 sec delay hide
+            }, 1000);
           }}
         />
       ))}
@@ -142,22 +215,19 @@ const MapView = ({ properties, location, onBoundsChange }) => {
             }}
 
             style={{
-              width: "280px",
+              width: window.innerWidth < 640 ? "220px" : "280px",
+              maxWidth: "90vw",
               background: "#fff",
               borderRadius: "12px",
               overflow: "hidden",
               boxShadow: "0 6px 18px rgba(0,0,0,0.25)",
               fontFamily: "Arial",
-              transform: "translate(-50%, -110%)",
+              transform: window.innerWidth < 640 ? "translate(-50%, -120%)" : "translate(-50%, -110%)",
             }}>
             
             {/* IMAGE */}
             <div style={{ position: "relative" }}>
-              <img src={
-                  activeMarker.image
-                    ? `https://lightblue-moose-690494.hostingersite.com/public/${activeMarker.image}`
-                    : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
-                }
+              <img src={getImage()}
                 style={{
                   width: "100%",
                   height: "140px",

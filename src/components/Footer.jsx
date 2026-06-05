@@ -1,4 +1,5 @@
 import React from "react";
+import { Link, NavLink } from "react-router-dom";
 import {
   FaFacebookF,
   FaTwitter,
@@ -30,29 +31,44 @@ const Footer = () => {
         </div>
 
         {/* LINKS */}
-        <div>
-          <h3 className="font-semibold mb-4">Quick Links</h3>
-          <ul className="space-y-2 text-sm">
-            <li className="hover:text-white/80 cursor-pointer">Home</li>
-            <li className="hover:text-white/80 cursor-pointer">Properties</li>
-            <li className="hover:text-white/80 cursor-pointer">About</li>
-            <li className="hover:text-white/80 cursor-pointer">Contact</li>
-          </ul>
-        </div>
+        <div className="flex sm:flex-row justify-between gap-8">
+          <div>
+            <h3 className="font-semibold mb-4">Quick Links</h3>
+            <ul className="space-y-2 text-sm">
+              <li className="hover:text-white/80 cursor-pointer">
+                <NavLink to="/"> Home </NavLink>
+              </li>
+              <li className="hover:text-white/80 cursor-pointer">
+                <NavLink to="/wishlist"> Wishlist </NavLink>
+              </li>
+              <li className="hover:text-white/80 cursor-pointer">
+                <NavLink to="/properties"> Properties </NavLink>
+              </li>
+              <li className="hover:text-white/80 cursor-pointer">
+                <NavLink to="/about"> About </NavLink>
+              </li>
+              <li className="hover:text-white/80 cursor-pointer">
+                <NavLink to="/contact"> Contact </NavLink>
+              </li>
+            </ul>
+          </div>
 
-        {/* LINKS */}
-        <div>
-          <h3 className="font-semibold mb-4">Support</h3>
-          <ul className="space-y-2 text-sm">
-            <li className="hover:text-white/80 cursor-pointer">Help Center</li>
-            <li className="hover:text-white/80 cursor-pointer">
-              Terms of Service
-            </li>
-            <li className="hover:text-white/80 cursor-pointer">
-              Privacy Policy
-            </li>
-            <li className="hover:text-white/80 cursor-pointer">FAQs</li>
-          </ul>
+          {/* LINKS */}
+          <div>
+            <h3 className="font-semibold mb-4">Support</h3>
+            <ul className="space-y-2 text-sm">
+              <li className="hover:text-white/80 cursor-pointer">Help Center</li>
+              <li className="hover:text-white/80 cursor-pointer">
+                Terms of Service
+              </li>
+              <li className="hover:text-white/80 cursor-pointer">
+                <NavLink to="/privacy-policy"> Privacy Policy </NavLink>
+              </li>
+              <li className="hover:text-white/80 cursor-pointer">
+                <NavLink to="/faq"> FAQs </NavLink>
+              </li>
+            </ul>
+          </div>
         </div>
 
         {/* SUBSCRIBE */}
@@ -76,11 +92,10 @@ const Footer = () => {
       <div className="border-t border-white/30 mt-10 pt-6 flex flex-col md:flex-row justify-around items-center text-sm text-white/80">
         <p>© 2024 Estatein. All rights reserved.</p>
 
-        <div className="flex gap-4 mt-3 md:mt-0">
+        {/* <div className="flex gap-4 mt-3 md:mt-0">
           <span className="hover:text-white cursor-pointer">Privacy</span>
           <span className="hover:text-white cursor-pointer">Terms</span>
-          <span className="hover:text-white cursor-pointer">Cookies</span>
-        </div>
+        </div> */}
       </div>
     </footer>
   );

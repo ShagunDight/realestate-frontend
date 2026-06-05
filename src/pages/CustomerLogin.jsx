@@ -5,6 +5,15 @@ import { sendOtp, verifyOtp } from "../api/customerAuth";
 const CustomerLogin = ({ open, setOpen, setCustomer }) => {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (open) {
+      setStep(1);
+      setEmail("");
+      setOtp("");
+      setLoading(false);
+    }
+  }, [open]);
+
   // ✅ ALL HOOKS ALWAYS RUN FIRST
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");

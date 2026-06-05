@@ -7,7 +7,7 @@ import MapView from "../components/MapView";
 import Footer from "../components/Footer";
 import { useLocation } from "react-router-dom";
 
-const Properties = () => {
+const Properties = ({setShowLogin}) => {
   const [properties, setProperties] = useState([]);
   const [visibleProperties, setVisibleProperties] = useState([]);
   const [filters, setFilters] = useState({
@@ -87,9 +87,9 @@ const Properties = () => {
     }
   }, []);
 
-  // -------------------------
-  // INIT LOAD (ONLY ONCE)
-  // -------------------------
+    // -------------------------
+    // INIT LOAD (ONLY ONCE)
+    // -------------------------
   useEffect(() => {
     let initialFilters = { ...filters };
 
@@ -106,9 +106,17 @@ const Properties = () => {
     // fetchData(initialFilters);
   }, []);
 
-  // -------------------------
-  // FILTER CHANGE (DEBOUNCE)
-  // -------------------------
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "instant",
+    });
+  }, []);
+
+    // -------------------------
+    // FILTER CHANGE (DEBOUNCE)
+    // -------------------------
   useEffect(() => {
     const delay = setTimeout(() => {
       fetchData(filters);
@@ -137,19 +145,19 @@ const Properties = () => {
           )}
         </div>
 
-        <div className="flex flex-1 h-[calc(100vh-120px)]">
+        <div className="flex flex-col lg:flex-row flex-1">
 
           {/* MAP */}
-          <div className="w-1/2 p-4 sticky top-0 h-screen">
+          <div className="w-full lg:w-2/3 p-4 lg:sticky top-0 lg:h-screen h-[400px] lg:h-screen">
             <MapView properties={properties} location={filters.location} onBoundsChange={setVisibleProperties}/>
           </div>
 
           {/* LISTING */}
-          <div className="w-1/2 overflow-y-auto p-4 space-y-6 h-full">
+          <div className="w-full lg:w-1/3 p-4 space-y-6 overflow-hidden lg:overflow-y-auto lg:h-screen">
 
             {currentProperties.length > 0 ? (
               currentProperties.map((item) => (
-                <PropertyCard key={item.id} item={item} />
+                <PropertyCard key={item.id} item={item} setShowLogin={setShowLogin}/>
               ))
             ) : (
               <div className="flex items-center justify-center min-h-[500px] px-6">
@@ -191,13 +199,12 @@ const Properties = () => {
                 </button>
 
                 {Array.from({ length: totalPages }).map((_, i) => (
-                  <button key={i} onClick={() => setCurrentPage(i + 1)} className={`px-3 py-1 border rounded-full ${ currentPage === i + 1 ? "bg-sky-500 text-white" : "hover:bg-gray-100" }`
-                  }>{i + 1}
+                  <button key={i} onClick={() => setCurrentPage(i + 1)} className={`px-3 py-1 border rounded-full ${currentPage === i + 1 ? "bg-sky-500 text-white" : "hover:bg-gray-100"}`}>
+                    {i + 1}
                   </button>
                 ))}
 
-                <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} className="w-10 h-10 rounded-full border hover:bg-sky-500 
-                  hover:text-white transition disabled:opacity-40">
+                <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} className="w-10 h-10 rounded-full border hover:bg-sky-500 hover:text-white transition disabled:opacity-40">
                   →
                 </button>
               </div>

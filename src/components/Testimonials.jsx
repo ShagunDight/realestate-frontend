@@ -24,9 +24,12 @@ const testimonials = [
 
 const Testimonials = () => {
   return (
-    <section className="bg-white py-20 px-6">
+    <section className="bg-white py-16 md:py-20 px-4 sm:px-6">
       <div className="max-w-[1300px] mx-auto">
-        <div className="flex justify-between items-center mb-12">
+
+        {/* HEADER */}
+        <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-12">
+
           <div>
             {/* DECORATIVE ICONS */}
             <div className="flex items-center gap-2 mb-3">
@@ -34,50 +37,60 @@ const Testimonials = () => {
               <span className="w-3 h-3 bg-sky-500 rounded-full"></span>
               <span className="w-2 h-2 bg-sky-300 rounded-full"></span>
             </div>
-            <h2 className="text-3xl font-semibold text-gray-800 mb-2 mx-6">
+
+            <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-2">
               What Our Clients Say
             </h2>
-            <p className="text-gray-500 text-sm max-w-xl mx-8">
+
+            <p className="text-gray-500 text-sm max-w-xl">
               Read the success stories and heartfelt testimonials from our valued clients.
             </p>
           </div>
 
-          <button className="px-5 py-2 border border-gray-300 rounded-lg hover:bg-sky-500 hover:text-white transition">
-            View All Testimonials
+          <button className="w-fit px-5 py-2 border border-gray-300 rounded-lg hover:bg-sky-500 hover:text-white transition">
+            View All
           </button>
         </div>
 
         {/* CARDS */}
-        <div className="grid md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {testimonials.map((item, index) => (
-            <div key={index} className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-2 transition duration-300">
+            <div
+              key={index}
+              className="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300"
+            >
               {/* STARS */}
-              <div className="flex gap-1 mb-4 text-yellow-400">
-                <div className="flex gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <FaStar key={i} className="text-sky-400  hover:scale-110 transition"/>
-                  ))}
-                </div>
+              <div className="flex gap-1 mb-4 text-sky-400">
+                {[...Array(5)].map((_, i) => (
+                  <FaStar key={i} className="text-sky-400" />
+                ))}
               </div>
 
               {/* TITLE */}
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">
+              <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-2">
                 Exceptional Service!
               </h3>
 
               {/* TEXT */}
-              <p className="text-gray-500 text-sm leading-relaxed mb-6">
+              <p className="text-gray-500 text-sm leading-relaxed mb-5">
                 {item.text}
               </p>
 
               {/* USER */}
               <div className="flex items-center gap-3">
-                <img src={item.image} alt="" className="w-10 h-10 rounded-full object-cover"/>
+                <img
+                  src={item.image}
+                  alt=""
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+
                 <div>
                   <p className="text-sm font-medium text-gray-800">
                     {item.name}
                   </p>
-                  <p className="text-xs text-gray-500">{item.location}</p>
+                  <p className="text-xs text-gray-500">
+                    {item.location}
+                  </p>
                 </div>
               </div>
             </div>
@@ -85,10 +98,13 @@ const Testimonials = () => {
         </div>
 
         {/* FOOTER */}
-        <div className="flex justify-between items-center mt-10 text-gray-500 text-sm">
-          <p>01 of 10</p>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mt-10 text-gray-500 text-sm">
 
-          <div className="flex gap-3">
+          <p className="text-center sm:text-left">
+            01 of 10
+          </p>
+
+          <div className="flex justify-center sm:justify-end gap-3">
             <button className="w-9 h-9 flex items-center justify-center border border-gray-300 rounded-full hover:bg-sky-500 hover:text-white transition">
               ←
             </button>
@@ -97,6 +113,7 @@ const Testimonials = () => {
             </button>
           </div>
         </div>
+
       </div>
     </section>
   );
