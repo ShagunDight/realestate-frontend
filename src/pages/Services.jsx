@@ -257,20 +257,20 @@ export default function ServicesPage() {
                   <div className="relative z-10">
 
                     {/* icon */}
-                    <div className="relative mb-6">
+                    <div className="relative mb-6 group">
 
-                      <div className="w-18 h-18 mx-auto flex items-center justify-center">
+                    <div className="w-18 h-18 mx-auto flex items-center justify-center relative z-10">
 
-                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-sky-50 to-white border border-sky-100 text-sky-500 text-2xl flex items-center justify-center shadow-[0_10px_30px_rgba(14,165,233,0.12)] group-hover:scale-110 group-hover:bg-sky-500 group-hover:text-white transition duration-500">
-                          {item.icon}
-                        </div>
-
+                      <div className="w-16 h-16 rounded-2xl border border-sky-100 text-sky-500 text-2xl flex items-center justify-center shadow-[0_10px_30px_rgba(14,165,233,0.12)] group-hover:scale-110 group-hover:bg-sky-500 group-hover:text-white transition duration-500">
+                        {item.icon}
                       </div>
 
-                      {/* glow */}
-                      <div className="absolute inset-0 blur-2xl bg-sky-200 opacity-0 group-hover:opacity-40 transition duration-500"></div>
-
                     </div>
+
+                    {/* glow */}
+                    <div className="absolute inset-0 blur-2xl bg-sky-200 opacity-0 group-hover:opacity-40 transition duration-500"></div>
+
+                  </div>
 
                     {/* content */}
                     <div className="text-center">

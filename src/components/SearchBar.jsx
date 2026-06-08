@@ -239,10 +239,7 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
               }
             }}
           >
-            <input
-              type="text"
-              placeholder="Location"
-              className="w-full h-12 border border-gray-300 rounded-xl px-4 bg-white focus:ring-2 focus:ring-sky-500 outline-none"
+            <input type="text" placeholder="Location" className="w-full h-12 border border-gray-300 rounded-xl px-4 bg-white focus:ring-2 focus:ring-sky-500 outline-none"
               value={filters.location || ""}
               onChange={(e) =>
                 setFilters({ ...filters, location: e.target.value })
@@ -250,77 +247,55 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
             />
           </Autocomplete>
         ) : (
-          <input
-            type="text"
-            placeholder="Location"
-            className="w-full h-12 border border-gray-300 rounded-xl px-4 bg-white focus:ring-2 focus:ring-sky-500 outline-none"
-          />
+          <input type="text" placeholder="Location" className="w-full h-12 border border-gray-300 rounded-xl px-4 bg-white focus:ring-2 focus:ring-sky-500 outline-none" />
         )}
 
-        {/* PROPERTY TYPE */}
-        <select
-          className="w-full h-12 border border-gray-300 rounded-xl px-4 bg-white focus:ring-2 focus:ring-sky-500 outline-none"
-          value={filters.type || ""}
-          onChange={(e) => {
-            const value = e.target.value;
-            const selectedType = types.find((t) => (t._id || t.id) === value);
+        <div className="grid grid-cols-2 gap-3 col-span-1 sm:col-span-2 xl:col-span-2">
+            {/* PROPERTY TYPE */}
+            <select name="type" id="type" className="w-full h-12 border border-gray-300 rounded-xl px-3 bg-white focus:ring-2 focus:ring-sky-500 outline-none text-sm"
+              value={filters.type || ""}
+              onChange={(e) => {
+                const value = e.target.value;
+                const selectedType = types.find((t) => (t._id || t.id) === value);
 
-            const updated = {
-              ...filters,
-              type: value,
-              type_name: selectedType?.name || "",
-              section_id: [],
-            };
+                const updated = {
+                  ...filters,
+                  type: value,
+                  type_name: selectedType?.name || "",
+                  section_id: [],
+                };
+                setFilters(updated);
+                fetchSpaceUses(value);
+              }}
+            >
+              <option value="">Property</option>
+              {types.map((t) => (
+                <option key={t._id || t.id} value={t._id || t.id}> {t.name} </option>
+              ))}
+          </select>
 
-            setFilters(updated);
-            fetchSpaceUses(value);
-          }}
-        >
-          <option value="">Property</option>
-          {types.map((t) => (
-            <option key={t._id || t.id} value={t._id || t.id}>
-              {t.name}
-            </option>
-          ))}
-        </select>
-
-        {/* SPACE USE */}
-        <div className="w-full">
-          <SpaceUseDropdown
-            spaceUses={spaceUses}
-            renderTree={renderTree}
-            buttonLabel={getSelectedLabel()}
-          />
+          {/* SPACE USE */}
+          <div className="w-full">
+            <SpaceUseDropdown spaceUses={spaceUses} renderTree={renderTree} buttonLabel={getSelectedLabel()}/>
+          </div>
         </div>
 
         {/* PRICE FILTER */}
         {filters.type_name && (
           <div className="relative w-full">
-            <div
-              className="border p-3 rounded-lg bg-white cursor-pointer"
-              onClick={() => setShowPrice(!showPrice)}
-            >
-              {filters.min_price || filters.max_price
-                ? `${filters.min_price || 0}-${filters.max_price || 0}`
-                : filters.type_name?.toLowerCase().includes("sale")
-                ? "Price"
-                : "Rent"}
+            <div className="border p-3 rounded-lg bg-white cursor-pointer" onClick={() => setShowPrice(!showPrice)} >
+              {filters.min_price || filters.max_price ? `${filters.min_price || 0}-${filters.max_price || 0}` : filters.type_name?.toLowerCase().includes("sale")
+                ? "Price" : "Rent"}
             </div>
 
             {showPrice && (
               <div className="absolute top-full left-0 right-0 bg-white border rounded-xl p-3 mt-2 shadow-xl z-50">
-                <input
-                  placeholder="Min"
-                  className="border p-2 w-full mb-2"
-                  value={filters.min_price || ""}
+                <input placeholder="Min" className="border p-2 w-full mb-2" value={filters.min_price || ""}
                   onChange={(e) =>
                     setFilters({ ...filters, min_price: e.target.value })
                   }
                 />
-                <input
-                  placeholder="Max"
-                  className="border p-2 w-full"
-                  value={filters.max_price || ""}
+                <input placeholder="Max" className="border p-2 w-full" value={filters.max_price || ""}
                   onChange={(e) =>
                     setFilters({ ...filters, max_price: e.target.value })
                   }
@@ -332,23 +307,15 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
 
         {/* SIZE FILTER */}
         <div className="relative w-full">
-          <div
-            className="border p-3 rounded-lg bg-white cursor-pointer"
-            onClick={() => setShowSize(!showSize)}
-          >
+          <div className="border p-3 rounded-lg bg-white cursor-pointer" onClick={() => setShowSize(!showSize)} >
             {filters.building_min_size || filters.building_max_size
-              ? `${filters.building_min_size || 0}-${
-                  filters.building_max_size || 0
-                } sqft`
+              ? `${filters.building_min_size || 0}-${filters.building_max_size || 0} sqft`
               : "Building Size"}
           </div>
 
           {showSize && (
             <div className="absolute top-full left-0 right-0 bg-white border rounded-xl p-3 mt-2 shadow-xl z-50">
-              <input
-                placeholder="Min SF"
-                className="border p-2 w-full mb-2"
-                value={filters.building_min_size || ""}
+              <input placeholder="Min SF" className="border p-2 w-full mb-2" value={filters.building_min_size || ""}
                 onChange={(e) =>
                   setFilters({
                     ...filters,
@@ -356,10 +323,7 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
                   })
                 }
               />
-              <input
-                placeholder="Max SF"
-                className="border p-2 w-full"
-                value={filters.building_max_size || ""}
+              <input placeholder="Max SF" className="border p-2 w-full" value={filters.building_max_size || ""}
                 onChange={(e) =>
                   setFilters({
                     ...filters,
@@ -376,12 +340,9 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
         )}
         
         {/* BUTTONS WRAP FIX */}
-        <div className="col-span-1 sm:col-span-2 xl:col-span-1 flex flex-col sm:flex-row gap-3 w-full">
+        <div className="col-span-1 sm:col-span-2 xl:col-span-1 flex flex-row sm:flex-row gap-3 w-full">
 
-          <button
-            onClick={() => setShowModal(true)}
-            className="bg-sky-500 hover:bg-sky-600 text-white px-6 py-3 rounded-lg w-full sm:w-auto"
-          >
+          <button onClick={() => setShowModal(true)} className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-1 rounded-lg w-full sm:w-auto">
             All Filters
           </button>
 
@@ -408,9 +369,7 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
               setSpaceUses([]);
               setShowPrice(false);
               setShowSize(false);
-            }}
-            className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300 w-full sm:w-auto"
-          >
+            }} className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300 w-full sm:w-auto" >
             Clear
           </button>
 
@@ -419,9 +378,7 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
               navigate("/properties", {
                 state: { filters },
               });
-            }}
-            className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg w-full sm:w-auto"
-          >
+            }} className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg w-full sm:w-auto" >
             Search
           </button>
         </div>
