@@ -104,7 +104,7 @@ const Properties = ({ setShowLogin }) => {
       <div className="bg-white max-w-[1440px] mx-auto min-h-screen flex flex-col">
 
         {/* SEARCH */}
-        <div className="p-3">
+        <div className="p-3 py-4">
           <SearchBar filters={filters} setFilters={setFilters} />
 
           {showModal && (
@@ -117,7 +117,7 @@ const Properties = ({ setShowLogin }) => {
         <div className="flex flex-col lg:flex-row lg:h-screen lg:overflow-hidden">
 
           {/* MAP */}
-          <div className="w-full lg:w-2/3 h-[300px] lg:h-screen lg:sticky lg:top-0 z-20">
+          <div className="w-full lg:w-2/3 h-[300px] lg:h-screen lg:sticky lg:top-0 z-20 p-3">
             <MapView key="map" properties={properties} location={filters.location} onBoundsChange={setVisibleProperties}/>
           </div>
 
