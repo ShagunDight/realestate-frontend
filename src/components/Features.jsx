@@ -10,7 +10,7 @@ const Features = () => {
   ];
 
   return (
-    <section className="w-full bg-sky-50 py-14 md:py-20 relative">
+    <section className="w-full bg-sky-50 py-10 md:py-12 relative">
 
       <div className="max-w-[1300px] mx-auto px-4 sm:px-6 relative z-10">
 

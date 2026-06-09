@@ -14,11 +14,7 @@ const FilterModal = ({ filters = {}, setFilters = () => { }, onClose = () => { }
     const res = await fetch("https://lightblue-moose-690494.hostingersite.com/api/property-types");
     const data = await res.json();
     setTypes(data.data || []);
-    setFilters({
-      ...filters,
-      type: data.data[0]?.id || "",
-      space_use_id: [],
-    });
+    setFilters({...filters, type: data.data[0]?.id || "", space_use_id: [], });
   };
 
   const buildTree = (data) => {
@@ -50,10 +46,7 @@ const FilterModal = ({ filters = {}, setFilters = () => { }, onClose = () => { }
   const fetchSpaceUses = async (typeId) => {
     if (!typeId) return;
 
-    const res = await fetch(
-      `https://lightblue-moose-690494.hostingersite.com/api/space-uses?type_id=${typeId}`
-    );
-
+    const res = await fetch(`https://lightblue-moose-690494.hostingersite.com/api/space-uses?type_id=${typeId}`);
     const data = await res.json();
     const tree = buildTree(data.data || []);
     setSpaceUses(tree);
@@ -63,13 +56,8 @@ const FilterModal = ({ filters = {}, setFilters = () => { }, onClose = () => { }
   // TOGGLE NODE (SAME LOGIC)
   // =========================
   const toggleNode = (node, checked) => {
-    let parentIds = Array.isArray(filters.space_use)
-      ? [...filters.space_use]
-      : [];
-
-    let childIds = Array.isArray(filters.space_use_id)
-      ? [...filters.space_use_id]
-      : [];
+    let parentIds = Array.isArray(filters.space_use) ? [...filters.space_use] : [];
+    let childIds = Array.isArray(filters.space_use_id) ? [...filters.space_use_id] : [];
 
     const hasChildren = node.children && node.children.length > 0;
 
@@ -105,11 +93,7 @@ const FilterModal = ({ filters = {}, setFilters = () => { }, onClose = () => { }
       }
     }
 
-    setFilters({
-      ...filters,
-      space_use: parentIds,
-      space_use_id: childIds,
-    });
+    setFilters({...filters, space_use: parentIds, space_use_id: childIds,});
   };
 
 
@@ -166,9 +150,7 @@ const FilterModal = ({ filters = {}, setFilters = () => { }, onClose = () => { }
   const fetchAdditionalFilters = async (typeId, spaceUseIds) => {
     if (!typeId || !spaceUseIds) return;
 
-    const res = await fetch(
-      `https://lightblue-moose-690494.hostingersite.com/api/filters?type_id=${typeId}&space_use_id=${spaceUseIds}`,
-    );
+    const res = await fetch(`https://lightblue-moose-690494.hostingersite.com/api/filters?type_id=${typeId}&space_use_id=${spaceUseIds}`,);
     // FETCH PROPERTY COLUMNS
     const data = await res.json();
     setAdditionalFilters(data.data || []);
@@ -191,12 +173,7 @@ const FilterModal = ({ filters = {}, setFilters = () => { }, onClose = () => { }
 
   // PROPERTY TYPE CHANGE
   const handleTypeChange = (id) => {
-    setFilters({
-      ...filters,
-      type: id,
-      space_use_id: [],
-    });
-
+    setFilters({...filters, type: id, space_use_id: [],});
     setAdditionalFilters([]);
     fetchSpaceUses(id);
   };
@@ -212,11 +189,8 @@ const FilterModal = ({ filters = {}, setFilters = () => { }, onClose = () => { }
       updatedSelected = [...currentSelected, id];
     }
 
-    const updatedFilters = {
-      ...filters,
-      space_use_id: updatedSelected,
-    };
-
+    const updatedFilters = { ...filters, space_use_id: updatedSelected, };
+    
     setFilters(updatedFilters);
 
     if (updatedSelected.length > 0) {
@@ -227,10 +201,7 @@ const FilterModal = ({ filters = {}, setFilters = () => { }, onClose = () => { }
   };
   // INPUT CHANGE
   const handleChange = (name, value) => {
-    setFilters({
-      ...filters,
-      [name]: value,
-    });
+    setFilters({...filters, [name]: value,});
   };
 
   // CLEAR
@@ -251,6 +222,7 @@ const FilterModal = ({ filters = {}, setFilters = () => { }, onClose = () => { }
       handleTypeChange(types[0].id);
     }
   }, [types]);
+
   return (
     <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
       <div className="bg-white w-full max-w-6xl p-6 rounded-2xl shadow-xl">
@@ -263,8 +235,7 @@ const FilterModal = ({ filters = {}, setFilters = () => { }, onClose = () => { }
         {/* PROPERTY TYPES */}
         <div className="flex gap-3 flex-wrap mb-6">
           {types.map((item) => (
-            <button key={item.id} onClick={() => handleTypeChange(item.id)}
-              className={`px-4 py-2 rounded ${ filters.type == item.id ? "bg-sky-500 text-white" : "bg-gray-200" }`}>
+            <button key={item.id} onClick={() => handleTypeChange(item.id)} className={`px-4 py-2 rounded ${ filters.type == item.id ? "bg-sky-500 text-white" : "bg-gray-200" }`}>
               {item.name}
             </button>
           ))}
@@ -287,7 +258,6 @@ const FilterModal = ({ filters = {}, setFilters = () => { }, onClose = () => { }
             {/* LOCATION */}
             <div className="bg-gray-50 p-4 rounded-xl">
               <h4 className="mb-2 font-semibold">Location</h4>
-
               <select className="w-full border p-2 rounded" onChange={(e) => handleChange("location", e.target.value)}>
                 <option value="">Select</option>
 
@@ -309,14 +279,12 @@ const FilterModal = ({ filters = {}, setFilters = () => { }, onClose = () => { }
 
                       {/* TEXT */}
                       {item.field_type === "text" && (
-                        <input type="text" value={filters[item.name] || ""} className="w-full border p-2 rounded"
-                          onChange={(e) => handleChange(item.name, e.target.value) }/>
+                        <input type="text" value={filters[item.name] || ""} className="w-full border p-2 rounded" onChange={(e) => handleChange(item.name, e.target.value) }/>
                       )}
 
                       {/* SELECT / SINGLE SELECT */}
                       {(item.field_type === "select" || item.field_type === "single_select") && (
-                        <select value={filters[item.name] || ""} className="w-full border p-2 rounded"
-                          onChange={(e) => handleChange(item.name, e.target.value) }>
+                        <select value={filters[item.name] || ""} className="w-full border p-2 rounded" onChange={(e) => handleChange(item.name, e.target.value) }>
                           <option value="">Select</option>
 
                           {item.options?.map((opt, i) => (
@@ -343,7 +311,8 @@ const FilterModal = ({ filters = {}, setFilters = () => { }, onClose = () => { }
                                   }
 
                                   handleChange(item.name, updated);
-                                }}/>
+                                }}
+                              />
                               {opt}
                             </label>
                           ))}
@@ -359,7 +328,6 @@ const FilterModal = ({ filters = {}, setFilters = () => { }, onClose = () => { }
           {/* RIGHT SIDE PROPERTY FILTERS */}
           <div className="col-span-2 p-4 rounded-xl">
             <h4 className="font-semibold mb-3">Property Filters</h4>
-
             <div className="grid grid-cols-2 gap-4">
               {Object.entries(columns).map(([key, item]) => (
                 <div key={key}>

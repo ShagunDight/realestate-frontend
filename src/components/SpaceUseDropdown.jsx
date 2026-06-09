@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { FiChevronDown } from "react-icons/fi";
 
 export default function SpaceUseDropdown({ spaceUses, renderTree, buttonLabel }) {
   const [open, setOpen] = useState(false);
@@ -20,7 +21,7 @@ export default function SpaceUseDropdown({ spaceUses, renderTree, buttonLabel })
     <div className="relative w-full" ref={dropdownRef}>
       {/* Dropdown Button */}
       <button onClick={() => setOpen(!open)} className="w-full border rounded-lg bg-white p-2 text-left font-semibold flex justify-between items-center h-[50px]">
-        {buttonLabel}
+        {buttonLabel} <FiChevronDown/>
       </button>
 
       {/* Dropdown Content */}

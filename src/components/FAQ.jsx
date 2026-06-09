@@ -27,7 +27,6 @@ const FAQ = () => {
 
         {/* HEADER */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-12">
-
           <div>
             <div className="flex gap-1 mb-3">
               <span className="w-2 h-2 bg-sky-400 rounded-full"></span>
@@ -44,8 +43,7 @@ const FAQ = () => {
             </p>
           </div>
 
-          <button onClick={() => navigate(`/faq`) }
-            className="self-start md:self-auto px-5 py-2 text-sm border border-gray-300 rounded-lg hover:bg-sky-500 hover:text-white transition">
+          <button onClick={() => navigate(`/faq`) } className="self-start md:self-auto px-5 py-2 text-sm border border-gray-300 rounded-lg hover:bg-sky-500 hover:text-white transition">
             View All
           </button>
         </div>

@@ -14,8 +14,10 @@ import {
   FaHandshake,
   FaArrowRight,
 } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export default function ServicesPage() {
+  const navigate = useNavigate();
   const [services, setServices] = useState({});
   const [services1, setServices1] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -389,7 +391,7 @@ export default function ServicesPage() {
                   strategies designed to maximize long-term returns.
                 </p>
 
-                <button className="bg-white text-sky-600 px-5 sm:px-7 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold hover:bg-sky-50 transition">
+                <button onClick={() => navigate(`/contact`)} className="bg-white text-sky-600 px-5 sm:px-7 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold hover:bg-sky-50 transition">
                   Get Consultation
                 </button>
 

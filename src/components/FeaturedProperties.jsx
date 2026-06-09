@@ -65,34 +65,23 @@ const FeaturedProperties = () => {
       {loading ? (
         <p className="text-center text-gray-500">Loading...</p>
       ) : (
-        <div className="
-          grid grid-cols-1 
-          sm:grid-cols-2 
-          lg:grid-cols-3 
-          xl:grid-cols-4 
-          gap-4 sm:gap-6
-        ">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
 
           {properties.map((item) => {
             const text = stripHtml(item.description || "");
             const isLong = text.length > 80;
 
             return (
-              <div
-                key={item._id || item.id}
-                className="group bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
-              >
+              <div key={item._id || item.id} className="group bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
 
                 {/* IMAGE */}
                 <div className="relative h-44 sm:h-52 overflow-hidden bg-gray-100">
-                  <img
-                    className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                  <img className="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt={item.title}
                     src={
                       item.image && item.image.length > 0
                         ? `https://lightblue-moose-690494.hostingersite.com/public/${item.image[0]?.path || item.image[0]}`
                         : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
                     }
-                    alt={item.title}
                   />
                 </div>
 
@@ -108,17 +97,14 @@ const FeaturedProperties = () => {
                   </p>
 
                   <p className="text-xs sm:text-sm text-gray-500 min-h-[40px] sm:min-h-[48px]">
-                    {expanded === item.id
-                      ? text
-                      : text.slice(0, 80) + (isLong ? "..." : "")}
+                    {expanded === item.id ? text : text.slice(0, 80) + (isLong ? "..." : "")}
                   </p>
 
                   {isLong && (
-                    <button
+                    <button className="text-sky-500 text-xs sm:text-sm hover:underline self-start"
                       onClick={() =>
                         setExpanded(expanded === item.id ? null : item.id)
                       }
-                      className="text-sky-500 text-xs sm:text-sm hover:underline self-start"
                     >
                       {expanded === item.id ? "Show Less" : "Read More"}
                     </button>
@@ -126,25 +112,18 @@ const FeaturedProperties = () => {
 
                   {/* FOOTER */}
                   <div className="flex justify-between items-center pt-3 border-t">
-
                     <div className="font-semibold text-xs sm:text-sm">
-                      ₹{" "}
-                      {item.property_type?.name?.toLowerCase() === "for lease"
-                        ? item.monthly_rent
-                        : item.sale_price || "N/A"}
+                      ₹{" "} {item.property_type?.name?.toLowerCase() === "for lease" ? item.monthly_rent : item.sale_price || "N/A"}
                     </div>
 
-                    <button
+                    <button className="px-3 py-1.5 text-xs bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition"
                       onClick={() =>
                         navigate(`/property/${item._id || item.id}`)
                       }
-                      className="px-3 py-1.5 text-xs bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition"
                     >
                       View
                     </button>
-
                   </div>
-
                 </div>
               </div>
             );
@@ -153,36 +132,24 @@ const FeaturedProperties = () => {
       )}
 
       {/* PAGINATION */}
-      <div className="
-        flex flex-col sm:flex-row 
-        justify-between items-center 
-        gap-3 sm:gap-0 
-        mt-8 sm:mt-10 
-        text-gray-600 text-sm
-      ">
-
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0 mt-8 sm:mt-10 text-gray-600 text-sm">
         <p>
           Page {page} of {lastPage}
         </p>
 
         <div className="flex gap-3">
-          <button
-            onClick={() => changePage(page - 1)}
-            disabled={page === 1}
+          <button onClick={() => changePage(page - 1)} disabled={page === 1}
             className="w-9 h-9 flex items-center justify-center border rounded-full hover:bg-sky-500 hover:text-white disabled:opacity-40"
           >
             ←
           </button>
 
-          <button
-            onClick={() => changePage(page + 1)}
-            disabled={page === lastPage}
+          <button onClick={() => changePage(page + 1)} disabled={page === lastPage}
             className="w-9 h-9 flex items-center justify-center border rounded-full hover:bg-sky-500 hover:text-white disabled:opacity-40"
           >
             →
           </button>
         </div>
-
       </div>
 
     </section>

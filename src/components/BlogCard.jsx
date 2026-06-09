@@ -4,11 +4,7 @@ import { Link } from "react-router-dom";
 const BlogCard = ({ blog }) => {
   return (
     <div className="bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition duration-300">
-      <img
-        src={`https://lightblue-moose-690494.hostingersite.com/public${blog.image}`}
-        alt={blog.title}
-        className="w-full h-[200px] object-cover"
-      />
+      <img src={`https://lightblue-moose-690494.hostingersite.com/public${blog.image}`} alt={blog.title} className="w-full h-[200px] object-cover"/>
 
       <div className="p-4">
         <h2 className="text-lg font-semibold text-gray-800 mb-2">

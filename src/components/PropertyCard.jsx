@@ -63,10 +63,7 @@ const PropertyCard = ({ item, setShowLogin }) => {
     <div className="group relative bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
 
       {/* HEART ICON */}
-      <button
-        onClick={handleWishlistClick}
-        className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm p-2.5 rounded-full shadow-md border border-gray-100 z-20 hover:scale-110 transition"
-      >
+      <button onClick={handleWishlistClick} className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm p-2.5 rounded-full shadow-md border border-gray-100 z-20 hover:scale-110 transition">
         {isWished(propertyId) ? (
           <FaHeart className="text-red-500" />
         ) : (
@@ -76,16 +73,11 @@ const PropertyCard = ({ item, setShowLogin }) => {
 
       {/* IMAGE */}
       <div className="relative h-48 overflow-hidden bg-gray-100">
-        <img
-          src={getImage()}
-          alt={item.name}
-          className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
-        />
+        <img src={getImage()} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition duration-500"/>
       </div>
 
       {/* CONTENT */}
       <div className="p-4 space-y-3">
-
         <h3 className="text-lg font-semibold text-gray-800 group-hover:text-sky-500 transition line-clamp-1">
           {item.title}
         </h3>
@@ -103,13 +95,9 @@ const PropertyCard = ({ item, setShowLogin }) => {
         </div>
 
         {/* BUTTON */}
-        <button
-          onClick={() => navigate(`/property/${propertyId}`)}
-          className="px-5 py-2.5 bg-sky-500 text-white text-sm font-medium rounded-xl hover:bg-sky-600"
-        >
+        <button onClick={() => navigate(`/property/${propertyId}`)} className="px-5 py-2.5 bg-sky-500 text-white text-sm font-medium rounded-xl hover:bg-sky-600">
           View Details →
         </button>
-
       </div>
     </div>
   );

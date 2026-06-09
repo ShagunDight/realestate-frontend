@@ -251,21 +251,13 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
         )}
 
         <div className="grid grid-cols-2 gap-3 col-span-1 sm:col-span-2 xl:col-span-2">
-            {/* PROPERTY TYPE */}
-            <select name="type" id="type" className="w-full h-12 border border-gray-300 rounded-xl px-3 bg-white focus:ring-2 focus:ring-sky-500 outline-none text-sm"
-              value={filters.type || ""}
-              onChange={(e) => {
+          {/* PROPERTY TYPE */}
+          <select name="type" id="type" className="w-full h-12 border border-gray-300 rounded-xl px-3 bg-white focus:ring-2 focus:ring-sky-500 outline-none text-sm"
+              value={filters.type || ""} onChange={(e) => {
                 const value = e.target.value;
                 const selectedType = types.find((t) => (t._id || t.id) === value);
-
-                const updated = {
-                  ...filters,
-                  type: value,
-                  type_name: selectedType?.name || "",
-                  section_id: [],
-                };
-                setFilters(updated);
-                fetchSpaceUses(value);
+                const updated = { ...filters, type: value, type_name: selectedType?.name || "", section_id: [], };
+                setFilters(updated); fetchSpaceUses(value);
               }}
             >
               <option value="">Property</option>
@@ -342,7 +334,7 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
         {/* BUTTONS WRAP FIX */}
         <div className="col-span-1 sm:col-span-2 xl:col-span-1 flex flex-row sm:flex-row gap-3 w-full">
 
-          <button onClick={() => setShowModal(true)} className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-1 rounded-lg w-full sm:w-auto">
+          <button onClick={() => setShowModal(true)} className="bg-sky-500 hover:bg-sky-600 text-white px-3 py-1 rounded-lg w-full sm:w-auto">
             All Filters
           </button>
 
@@ -369,7 +361,7 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
               setSpaceUses([]);
               setShowPrice(false);
               setShowSize(false);
-            }} className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300 w-full sm:w-auto" >
+            }} className="bg-gray-200 text-gray-800 px-4 py-3 rounded-lg hover:bg-gray-300 w-full sm:w-auto" >
             Clear
           </button>
 
@@ -378,7 +370,7 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
               navigate("/properties", {
                 state: { filters },
               });
-            }} className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg w-full sm:w-auto" >
+            }} className="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg w-full sm:w-auto" >
             Search
           </button>
         </div>

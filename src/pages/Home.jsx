@@ -35,7 +35,7 @@ const Home = () => {
   return (
     <>
       {/* HERO SECTION */}
-      <section className="relative overflow-visible bg-gradient-to-b from-sky-50 via-white to-white pt-14 sm:pt-16 md:pt-20 pb-12 md:pb-16">
+      <section className="relative overflow-visible bg-gradient-to-b from-sky-50 via-white to-white pt-14 sm:pt-16 md:pt-20 pb-12 md:pb-4">
         <div className="max-w-[1300px] mx-auto px-4 sm:px-6">
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">

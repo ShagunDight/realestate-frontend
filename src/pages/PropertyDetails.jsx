@@ -232,18 +232,15 @@ const PropertyDetails = ({setShowLogin}) => {
 
           {/* MAIN IMAGE */}
           <div className="lg:col-span-4 relative h-[320px] sm:h-[420px] md:h-[520px] rounded-3xl overflow-hidden shadow-xl group bg-gray-100">
-
-              <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 cursor-pointer" alt=""
-                src={
-                  images.length
-                    ? `https://lightblue-moose-690494.hostingersite.com/public/${images[currentImage]?.path}`
-                    : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
-                }
-                onClick={() => {
-                  setGalleryIndex(currentImage);
-                  setShowGallery(true);
-                }}
-              />
+            <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 cursor-pointer" alt=""
+              src={
+                images.length ? `https://lightblue-moose-690494.hostingersite.com/public/${images[currentImage]?.path}` : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
+              }
+              onClick={() => {
+                setGalleryIndex(currentImage);
+                setShowGallery(true);
+              }}
+            />
 
             {/* DARK GRADIENT OVERLAY */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
@@ -267,106 +264,97 @@ const PropertyDetails = ({setShowLogin}) => {
                   )
                 }
               >
-              <IoIosArrowForward size={20} />
-            </button>
+                <IoIosArrowForward size={20} />
+              </button>
+            </div>
+
+
+            {/* ===== THUMBNAILS ===== */}
+            <div className="lg:col-span-1 flex lg:flex-col gap-2 lg:gap-3 overflow-x-auto lg:overflow-visible">
+
+              {images.slice(0, 4).map((img, i) => {
+                const remaining = images.length - 4;
+
+                return (
+                  <div key={i} onClick={() => setCurrentImage(i)} className={`relative rounded-xl overflow-hidden cursor-pointer border-2 transition
+                      ${i === currentImage ? "border-sky-500 shadow-md scale-[1.02]" : "border-gray-200 hover:border-sky-400"}`}>
+                    
+                    <img src={`https://lightblue-moose-690494.hostingersite.com/public/${img.path}`} className="w-28 h-20 lg:w-full lg:h-24 object-cover" alt=""/>
+
+                    {/* OVERLAY FOR EXTRA IMAGES */}
+                    {i === 3 && remaining > 0 && (
+                      <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white font-bold text-xl" onClick={() => { setGalleryIndex(3); setShowGallery(true); }}>
+                        +{remaining}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
+          {/* ================= MAIN CONTENT ================= */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
 
-          {/* ===== THUMBNAILS ===== */}
-          <div className="lg:col-span-1 flex lg:flex-col gap-2 lg:gap-3 overflow-x-auto lg:overflow-visible">
+            {/* LEFT SIDE */}
+            <div className="lg:col-span-2 space-y-8">
 
-            {images.slice(0, 4).map((img, i) => {
-              const remaining = images.length - 4;
+              {/* HIGHLIGHTS */}
+              <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100">
+                <h2 className="text-2xl font-semibold mb-5 text-gray-900">
+                  Highlights
+                </h2>
 
-              return (
-                <div key={i} onClick={() => setCurrentImage(i)}
-                  className={`relative rounded-xl overflow-hidden cursor-pointer border-2 transition
+                <div className="text-gray-600 leading-relaxed [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mb-2 [&_li]:marker:text-sky-500"
+                  dangerouslySetInnerHTML={{ __html: property.highlights, }}></div>
+              </div>
+
+              {/* SUMMARY */}
+              <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100">
+                <h2 className="text-2xl font-semibold mb-5 text-gray-900">
+                  Summary
+                </h2>
+
+                <div className="text-gray-600 leading-relaxed [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mb-2 [&_li]:marker:text-sky-500"
+                    dangerouslySetInnerHTML={{ __html: property.description, }}>
+                </div>
+              </div>
+
+              {/* MAP */}
+              <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+
+                {/* TABS */}
+                <div className="flex gap-6 border-b mb-5">
+                  <button onClick={() => setView("aerial")} className={`pb-3 text-sm font-medium transition
+                    ${ view === "aerial"
+                        ? "border-b-2 border-sky-500 text-sky-500"
+                        : "text-gray-500"
+                      }`
+                    }
+                  >
+                    Aerial
+                  </button>
+
+                  <button onClick={() => setView("map")} className={`pb-3 text-sm font-medium transition
                     ${
-                      i === currentImage
-                        ? "border-sky-500 shadow-md scale-[1.02]"
-                        : "border-gray-200 hover:border-sky-400"
+                      view === "map"
+                        ? "border-b-2 border-sky-500 text-sky-500"
+                        : "text-gray-500"
                     }`}
                   >
-                  <img src={`https://lightblue-moose-690494.hostingersite.com/public/${img.path}`} className="w-28 h-20 lg:w-full lg:h-24 object-cover" alt=""/>
-
-                  {/* OVERLAY FOR EXTRA IMAGES */}
-                  {i === 3 && remaining > 0 && (
-                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white font-bold text-xl"
-                      onClick={() => {
-                        setGalleryIndex(3);
-                        setShowGallery(true);
-                      }}
-                    > +{remaining}
-                    </div>
-                  )}
+                    Map
+                  </button>
                 </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* ================= MAIN CONTENT ================= */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-
-          {/* LEFT SIDE */}
-          <div className="lg:col-span-2 space-y-8">
-
-            {/* HIGHLIGHTS */}
-            <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100">
-              <h2 className="text-2xl font-semibold mb-5 text-gray-900">
-                Highlights
-              </h2>
-
-              <div className="text-gray-600 leading-relaxed [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mb-2 [&_li]:marker:text-sky-500"
-                dangerouslySetInnerHTML={{ __html: property.highlights, }}></div>
-            </div>
-
-            {/* SUMMARY */}
-            <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100">
-              <h2 className="text-2xl font-semibold mb-5 text-gray-900">
-                Summary
-              </h2>
-
-              <div className="text-gray-600 leading-relaxed [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mb-2 [&_li]:marker:text-sky-500"
-                  dangerouslySetInnerHTML={{ __html: property.description, }}>
-              </div>
-            </div>
-
-            {/* MAP */}
-            <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-
-              {/* TABS */}
-              <div className="flex gap-6 border-b mb-5">
-                <button onClick={() => setView("aerial")} className={`pb-3 text-sm font-medium transition
-                  ${ view === "aerial"
-                      ? "border-b-2 border-sky-500 text-sky-500"
-                      : "text-gray-500"
-                    }`
-                  }
-                > Aerial
-                </button>
-
-                <button onClick={() => setView("map")} className={`pb-3 text-sm font-medium transition
-                  ${
-                    view === "map"
-                      ? "border-b-2 border-sky-500 text-sky-500"
-                      : "text-gray-500"
-                  }`}
-                > Map
-                </button>
-              </div>
 
               <div className="h-[250px] sm:h-[300px] md:h-[350px] rounded-2xl overflow-hidden">
                 {view === "aerial" ? (
                   <div className="relative h-full rounded-2xl overflow-hidden bg-gray-100">
-                    <img
+                    <img className="w-full h-full object-cover" alt=""
                       src={
                         images.length
                           ? `https://lightblue-moose-690494.hostingersite.com/public/${images[aerialImage]?.path}`
                           : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
                       }
-                      className="w-full h-full object-cover"
-                      alt=""
                     />
 
                     <button
@@ -374,8 +362,7 @@ const PropertyDetails = ({setShowLogin}) => {
                         setAerialImage(
                           aerialImage === 0 ? images.length - 1 : aerialImage - 1
                         )
-                      }
-                      className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 p-3 rounded-full"
+                      } className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 p-3 rounded-full"
                     >
                       <IoIosArrowBack size={20} />
                     </button>
@@ -392,15 +379,11 @@ const PropertyDetails = ({setShowLogin}) => {
                     </button>
                   </div>
                 ) : (
-                  <iframe
-                    width="100%"
-                    height="100%"
+                  <iframe width="100%" height="100%" title="map"
                     src={`https://maps.google.com/maps?q=${property.latitude},${property.longitude}&z=15&output=embed`}
-                    title="map"
                   />
                 )}
               </div>
-
             </div>
 
             {/* PROPERTY OVERVIEW */}
@@ -411,9 +394,7 @@ const PropertyDetails = ({setShowLogin}) => {
                 </h2>
 
                 <div className="text-gray-600 leading-relaxed [&_p]:mb-4 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mb-2 [&_li]:marker:text-sky-500"
-                  dangerouslySetInnerHTML={{
-                    __html: property.property_overview,
-                  }
+                  dangerouslySetInnerHTML={{__html: property.property_overview,}
                 }></div>
               </div>
             )}
@@ -426,9 +407,7 @@ const PropertyDetails = ({setShowLogin}) => {
                 </h2>
 
                 <div className="text-gray-600 leading-relaxed [&_p]:mb-4 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mb-2 [&_li]:marker:text-sky-500"
-                  dangerouslySetInnerHTML={{
-                    __html: property.about_owner,
-                  }
+                  dangerouslySetInnerHTML={{__html: property.about_owner,}
                 }></div>
               </div>
             )}
@@ -464,9 +443,7 @@ const PropertyDetails = ({setShowLogin}) => {
             <div className="bg-gradient-to-r from-sky-500 to-indigo-500 text-white p-6 rounded-3xl">
               <p>Price</p>
               <h3 className="text-3xl font-bold mt-2">
-                {property.property_type?.name === "For Lease"
-                  ? `₹ ${property.monthly_rent}/mo`
-                  : `₹ ${property.sale_price || "On Request"}`}
+                {property.property_type?.name === "For Lease" ? `₹ ${property.monthly_rent}/mon` : `₹ ${property.sale_price || "On Request"}`}
               </h3>
             </div>
               
@@ -553,21 +530,19 @@ const PropertyDetails = ({setShowLogin}) => {
                   </div>
 
                   <div className="flex flex-wrap gap-2">
-
                     {property.building_features ? (
-                      property.building_features
-                        .split(",")
+                      property.building_features.split(",")
                         .map((item, index) => (
                           <span key={index} className="px-3 py-1 text-xs bg-sky-50 text-sky-600 border border-sky-200 rounded-full">
                             {item.trim()}
                           </span>
-                        ))
+                        )
+                      )
                     ) : (
                       <span className="text-gray-400">
                         N/A
                       </span>
                     )}
-
                   </div>
                 </li>
               </ul>
@@ -641,24 +616,6 @@ const PropertyDetails = ({setShowLogin}) => {
                 className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-full font-semibold transition disabled:opacity-50">
                 {loading ? "Sending..." : "Request Tour"}
               </button>
-
-              {/* DIVIDER */}
-              {/* <div className="border-t my-6"></div> */}
-
-              {/* MORE ABOUT */}
-              {/* <h4 className="text-xl font-semibold text-gray-900 mb-4">
-                More about this property
-              </h4> */}
-
-              {/* <button className="w-full border border-gray-300 hover:border-sky-500 hover:bg-sky-50 py-3 rounded-full font-medium transition">
-                Email Agent
-              </button> */}
-
-              {/* DISCLAIMER */}
-              {/* <p className="text-[11px] text-gray-500 mt-5 leading-relaxed">
-                By proceeding, you consent to receive calls and texts at the number
-                you provided, including marketing by autodialer and prerecorded voice.
-              </p> */}
             </div>
 
             {/* AGENT CARD */}

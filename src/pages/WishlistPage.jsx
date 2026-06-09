@@ -66,10 +66,7 @@ const WishlistPage = () => {
               {/* GRID */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
                 {wishlist.map((property) => (
-                  <div
-                    key={property._id || property.id}
-                    className="hover:-translate-y-1 transition duration-300"
-                  >
+                  <div key={property._id || property.id} className="hover:-translate-y-1 transition duration-300">
                     <PropertyCard item={property} />
                   </div>
                 ))}

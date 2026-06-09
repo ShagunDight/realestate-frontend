@@ -4,8 +4,7 @@ const SearchBar = ({ filters, setFilters }) => {
   return (
     <div className="bg-white shadow-xl rounded-2xl p-5 flex flex-wrap gap-4 items-center mt-6">
       {/* LOCATION */}
-      <input type="text" placeholder="Location"
-        className="border border-gray-200 px-4 py-2 rounded-lg text-sm w-[180px] focus:outline-none focus:ring-2 focus:ring-sky-400"
+      <input type="text" placeholder="Location" className="border border-gray-200 px-4 py-2 rounded-lg text-sm w-[180px] focus:outline-none focus:ring-2 focus:ring-sky-400"
         value={filters.location || ""} onChange={(e) => setFilters({ ...filters, location: e.target.value })} />
 
       {/* PROPERTY TYPE */}

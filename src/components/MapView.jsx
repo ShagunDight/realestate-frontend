@@ -70,10 +70,7 @@ const MapView = ({ properties, location, onBoundsChange }) => {
   useEffect(() => {
     if (!properties?.length) return;
 
-    const validMarkers = properties
-      .filter((p) => p.latitude && p.longitude)
-      .map((p) => {
-
+    const validMarkers = properties.filter((p) => p.latitude && p.longitude).map((p) => {
         return {
           id: p.id,
           title: p.title,
@@ -98,8 +95,7 @@ const MapView = ({ properties, location, onBoundsChange }) => {
   }, []);
 
   const getImage = () => {
-    const fallback =
-      "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg";
+    const fallback = "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg";
 
     let images = activeMarker.image;
 
@@ -227,13 +223,7 @@ const MapView = ({ properties, location, onBoundsChange }) => {
             
             {/* IMAGE */}
             <div style={{ position: "relative" }}>
-              <img src={getImage()}
-                style={{
-                  width: "100%",
-                  height: "140px",
-                  objectFit: "cover",
-                }}
-              />
+              <img src={getImage()} style={{ width: "100%", height: "140px", objectFit: "cover", }}/>
             </div>
 
             {/* CONTENT */}

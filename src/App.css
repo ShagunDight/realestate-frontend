@@ -182,3 +182,12 @@
     border-right-color: var(--border);
   }
 }
+
+.propList .scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.propList .scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

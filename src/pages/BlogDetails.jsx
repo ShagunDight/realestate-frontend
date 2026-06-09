@@ -36,11 +36,7 @@ const BlogDetails = () => {
     <>
       {/* HERO */}
       <div className="relative w-full h-[350px] md:h-[420px] bg-gray-900">
-        <img
-          src={`https://lightblue-moose-690494.hostingersite.com/public${blog.image}`}
-          className="w-full h-full object-cover opacity-60"
-        />
-
+        <img src={`https://lightblue-moose-690494.hostingersite.com/public${blog.image}`} className="w-full h-full object-cover opacity-60"/>
         <div className="absolute inset-0 flex items-end">
           <div className="max-w-5xl mx-auto px-6 pb-10 text-white">
             <p className="text-sky-300 text-sm mb-2">Blog Article</p>
@@ -60,11 +56,7 @@ const BlogDetails = () => {
             
             {/* CONTENT CARD */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
-              
-              <div
-                className="prose max-w-none prose-sky prose-headings:text-gray-800 prose-p:text-gray-600"
-                dangerouslySetInnerHTML={{ __html: blog.content }}
-              />
+              <div className="prose max-w-none prose-sky prose-headings:text-gray-800 prose-p:text-gray-600" dangerouslySetInnerHTML={{ __html: blog.content }}/>
             </div>
 
             {/* RELATED BLOGS */}
@@ -75,19 +67,10 @@ const BlogDetails = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {relatedBlogs.slice(0, 4).map((item) => (
-                  <Link
-                    key={item.id}
-                    to={`/blog/${item.slug}`}
-                    className="bg-white border border-gray-100 rounded-xl overflow-hidden hover:shadow-md transition"
-                  >
-                    <img
-                      src={`https://lightblue-moose-690494.hostingersite.com/public${item.image}`}
-                      className="w-full h-36 object-cover"
-                    />
+                  <Link key={item.id} to={`/blog/${item.slug}`} className="bg-white border border-gray-100 rounded-xl overflow-hidden hover:shadow-md transition">
+                    <img src={`https://lightblue-moose-690494.hostingersite.com/public${item.image}`} className="w-full h-36 object-cover"/>
                     <div className="p-4">
-                      <p className="text-sm font-medium text-gray-800 line-clamp-2">
-                        {item.title}
-                      </p>
+                      <p className="text-sm font-medium text-gray-800 line-clamp-2">{item.title}</p>
                     </div>
                   </Link>
                 ))}
@@ -106,20 +89,11 @@ const BlogDetails = () => {
 
               <div className="space-y-4">
                 {filteredBlogs.slice(0, 5).map((item) => (
-                  <Link
-                    key={item.id}
-                    to={`/blog/${item.slug}`}
-                    className="flex gap-3 items-center hover:bg-gray-50 p-2 rounded-lg transition"
-                  >
-                    <img
-                      src={`https://lightblue-moose-690494.hostingersite.com/public${item.image}`}
-                      className="w-16 h-16 rounded-lg object-cover"
-                    />
+                  <Link key={item.id} to={`/blog/${item.slug}`} className="flex gap-3 items-center hover:bg-gray-50 p-2 rounded-lg transition">
+                    <img src={`https://lightblue-moose-690494.hostingersite.com/public${item.image}`} className="w-16 h-16 rounded-lg object-cover"/>
 
                     <div>
-                      <p className="text-sm font-medium text-gray-800 line-clamp-2">
-                        {item.title}
-                      </p>
+                      <p className="text-sm font-medium text-gray-800 line-clamp-2">{item.title}</p>
                     </div>
                   </Link>
                 ))}

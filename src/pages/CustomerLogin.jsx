@@ -42,8 +42,6 @@ const CustomerLogin = ({ open, setOpen, setCustomer }) => {
       await sendOtp(email);
       localStorage.setItem("customer_email", email);
 
-      // alert("OTP sent successfully");
-
       setStep(2);
     } catch (err) {
       alert(err.message);
@@ -60,7 +58,7 @@ const CustomerLogin = ({ open, setOpen, setCustomer }) => {
       setLoading(true);
 
       await verifyOtp(email, otp);
-      // alert("Login successful");
+
       setCustomer({ email,});
       setOpen(false);
       navigate("/");
@@ -72,19 +70,10 @@ const CustomerLogin = ({ open, setOpen, setCustomer }) => {
   };
 
   return (
-    <div
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-      onClick={() => setOpen(false)}
-    >
-      <div
-        className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 relative"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setOpen(false)}>
+      <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 relative" onClick={(e) => e.stopPropagation()}>
         {/* CLOSE */}
-        <button
-          onClick={() => setOpen(false)}
-          className="absolute right-4 top-4 text-gray-500 text-xl"
-        >
+        <button onClick={() => setOpen(false)} className="absolute right-4 top-4 text-gray-500 text-xl">
           ✕
         </button>
 
@@ -94,17 +83,9 @@ const CustomerLogin = ({ open, setOpen, setCustomer }) => {
             <h2 className="text-xl font-semibold mb-4">Login with Email</h2>
 
             <form onSubmit={handleSendOtp} className="space-y-4">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full border px-4 py-3 rounded-lg"
-                placeholder="Enter email"
-              />
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full border px-4 py-3 rounded-lg" placeholder="Enter email"/>
 
-              <button className="w-full bg-black text-white py-3 rounded-full">
-                {loading ? "Sending..." : "Continue"}
-              </button>
+              <button className="w-full bg-black text-white py-3 rounded-full"> {loading ? "Sending..." : "Continue"} </button>
             </form>
           </>
         )}
@@ -113,18 +94,9 @@ const CustomerLogin = ({ open, setOpen, setCustomer }) => {
         {step === 2 && (
           <>
             <h2 className="text-xl font-semibold mb-4">Enter OTP</h2>
+            <input value={otp} onChange={(e) => setOtp(e.target.value)} className="w-full border px-4 py-3 rounded-lg" placeholder="Enter OTP"/>
 
-            <input
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              className="w-full border px-4 py-3 rounded-lg"
-              placeholder="Enter OTP"
-            />
-
-            <button
-              onClick={handleVerifyOtp}
-              className="w-full bg-black text-white py-3 rounded-full mt-4"
-            >
+            <button onClick={handleVerifyOtp} className="w-full bg-black text-white py-3 rounded-full mt-4">
               Verify OTP
             </button>
           </>

@@ -79,11 +79,8 @@ const Footer = () => {
           </p>
 
           <div className="flex bg-white/20 rounded-lg overflow-hidden backdrop-blur">
-            <input type="email" placeholder="Enter your email"
-              className="bg-transparent px-3 py-2 w-full text-sm outline-none placeholder:text-white/70"/>
-            <button className="bg-white text-sky-500 px-4 text-sm hover:bg-gray-100 transition">
-              →
-            </button>
+            <input type="email" placeholder="Enter your email" className="bg-transparent px-3 py-2 w-full text-sm outline-none placeholder:text-white/70"/>
+            <button className="bg-white text-sky-500 px-4 text-sm hover:bg-gray-100 transition"> → </button>
           </div>
         </div>
       </div>

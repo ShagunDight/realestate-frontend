@@ -1,19 +1,16 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+
 const CTASection = () => {
   const navigate = useNavigate();
+
   return (
     <section className="px-4 py-10 bg-white">
       <div className="max-w-7xl mx-auto">
-
         <div className="relative rounded-3xl overflow-hidden shadow-xl">
 
           {/* BACKGROUND IMAGE */}
-          <img
-            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c"
-            alt="real estate"
-            className="absolute inset-0 w-full h-full object-cover scale-105"
-          />
+          <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c" alt="real estate" className="absolute inset-0 w-full h-full object-cover scale-105" />
 
           {/* DARK OVERLAY */}
           <div className="absolute inset-0 bg-gradient-to-r from-sky-900/95 via-sky-800/80 to-sky-600/70" />
@@ -47,7 +44,6 @@ const CTASection = () => {
 
             {/* RIGHT BUTTON */}
             <div className="flex flex-col items-center md:items-end gap-4">
-
               <button onClick={() => navigate(`/properties`) }
                 className="px-8 py-3 bg-white text-sky-600 font-semibold rounded-xl shadow-lg hover:bg-sky-50 hover:scale-105 transition-all duration-300">
                 Explore Properties →
@@ -56,7 +52,6 @@ const CTASection = () => {
               <p className="text-xs text-sky-100">
                 Trusted by 10,000+ investors & buyers
               </p>
-
             </div>
 
           </div>

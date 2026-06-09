@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import SearchBar from "../components/SearchBar";
 import FilterModal from "../components/FilterModal";
 import PropertyCard from "../components/PropertyCard";
@@ -7,9 +7,10 @@ import MapView from "../components/MapView";
 import Footer from "../components/Footer";
 import { useLocation } from "react-router-dom";
 
-const Properties = ({setShowLogin}) => {
+const Properties = ({ setShowLogin }) => {
   const [properties, setProperties] = useState([]);
   const [visibleProperties, setVisibleProperties] = useState([]);
+
   const [filters, setFilters] = useState({
     location: "",
     type: "",
@@ -32,9 +33,6 @@ const Properties = ({setShowLogin}) => {
   const [showModal, setShowModal] = useState(false);
   const location = useLocation();
 
-  // -------------------------
-  // PAGINATION CALC
-  // -------------------------
   const totalPages = Math.ceil(visibleProperties.length / itemsPerPage);
 
   const currentProperties = visibleProperties.slice(
@@ -42,42 +40,27 @@ const Properties = ({setShowLogin}) => {
     currentPage * itemsPerPage
   );
 
-  // -------------------------
-  // FETCH FUNCTION (STABLE)
-  // -------------------------
+  // ---------------- FETCH ----------------
   const fetchData = useCallback(async (appliedFilters) => {
     try {
       const f = appliedFilters;
 
       const queryObj = {
         ...f,
-
-        ...(f.space_use?.length && {
-          space_use: f.space_use.join(","),
-        }),
-
-        ...(f.space_use_id?.length && {
-          space_use_id: f.space_use_id.join(","),
-        }),
-
-        ...(f.type && {
-          property_type_id: f.type,
-        }),
-
-        ...(f.building_size_min && {
-          building_min_size: f.building_size_min,
-        }),
-
-        ...(f.building_size_max && {
-          building_max_size: f.building_size_max,
-        }),
+        ...(f.space_use?.length && { space_use: f.space_use.join(",") }),
+        ...(f.space_use_id?.length && { space_use_id: f.space_use_id.join(",") }),
+        ...(f.type && { property_type_id: f.type }),
+        ...(f.building_size_min && { building_min_size: f.building_size_min }),
+        ...(f.building_size_max && { building_max_size: f.building_size_max }),
       };
 
       const query = new URLSearchParams(queryObj).toString();
-      const res = await fetch(`https://lightblue-moose-690494.hostingersite.com/api/properties?${query}`);
+
+      const res = await fetch(
+        `https://lightblue-moose-690494.hostingersite.com/api/properties?${query}`
+      );
+
       const data = await res.json();
-      
-      console.log("Res :", data);
       const finalData = Array.isArray(data) ? data : [];
 
       setProperties(finalData);
@@ -87,9 +70,7 @@ const Properties = ({setShowLogin}) => {
     }
   }, []);
 
-    // -------------------------
-    // INIT LOAD (ONLY ONCE)
-    // -------------------------
+  // ---------------- INIT ----------------
   useEffect(() => {
     let initialFilters = { ...filters };
 
@@ -97,30 +78,22 @@ const Properties = ({setShowLogin}) => {
       initialFilters = location.state.filters;
     } else {
       const saved = localStorage.getItem("filters");
-      if (saved) {
-        initialFilters = JSON.parse(saved);
-      }
+      if (saved) initialFilters = JSON.parse(saved);
     }
 
     setFilters(initialFilters);
-    // fetchData(initialFilters);
   }, []);
 
+  // ---------------- RESET SCROLL ----------------
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "instant",
-    });
+    window.scrollTo(0, 0);
   }, []);
 
-    // -------------------------
-    // FILTER CHANGE (DEBOUNCE)
-    // -------------------------
+  // ---------------- FILTER DEBOUNCE ----------------
   useEffect(() => {
     const delay = setTimeout(() => {
       fetchData(filters);
-      setCurrentPage(1); // reset page on filter change
+      setCurrentPage(1);
     }, 300);
 
     return () => clearTimeout(delay);
@@ -128,83 +101,86 @@ const Properties = ({setShowLogin}) => {
 
   return (
     <>
-      <div className="bg-white max-w-[1440px] min-h-screen mx-auto flex flex-col">
+      <div className="bg-white max-w-[1440px] mx-auto min-h-screen flex flex-col">
 
-        {/* SEARCH BAR + FILTER */}
+        {/* SEARCH */}
         <div className="p-6">
           <SearchBar filters={filters} setFilters={setFilters} />
 
           {showModal && (
-            <FilterModal filters={filters} setFilters={setFilters} onClose={() => setShowModal(false)}
+            <FilterModal
+              filters={filters}
+              setFilters={setFilters}
+              onClose={() => setShowModal(false)}
               onSearch={(updatedFilters) => {
                 setFilters(updatedFilters);
                 fetchData(updatedFilters);
                 setShowModal(false);
               }}
-            />  
+            />
           )}
         </div>
 
-        <div className="flex flex-col lg:flex-row flex-1">
+        {/* MAIN LAYOUT */}
+        <div className="flex flex-col lg:flex-row h-screen overflow-hidden">
 
           {/* MAP */}
-          <div className="w-full lg:w-2/3 p-4 lg:sticky top-0 lg:h-screen h-[400px] lg:h-screen">
-            <MapView properties={properties} location={filters.location} onBoundsChange={setVisibleProperties}/>
+          <div className="w-full lg:w-2/3 h-[300px] lg:h-screen sticky top-0 z-20">
+            <MapView
+              key="map"
+              properties={properties}
+              location={filters.location}
+              onBoundsChange={setVisibleProperties}
+            />
           </div>
 
-          {/* LISTING */}
-          <div className="w-full lg:w-1/3 p-4 space-y-6 overflow-hidden lg:overflow-y-auto lg:h-screen">
+          {/* LIST */}
+          <div className="w-full lg:w-1/3 h-screen overflow-y-auto p-4 space-y-6 scrollbar-hide">
 
             {currentProperties.length > 0 ? (
               currentProperties.map((item) => (
-                <PropertyCard key={item.id} item={item} setShowLogin={setShowLogin}/>
+                <PropertyCard
+                  key={`prop-${item.id}`}
+                  item={item}
+                  setShowLogin={setShowLogin}
+                />
               ))
             ) : (
               <div className="flex items-center justify-center min-h-[500px] px-6">
-                <div className="relative max-w-lg w-full">
-                  <div className="absolute inset-0 bg-sky-100 blur-3xl opacity-40 rounded-full"></div>
-                  <div className="relative bg-white/90 backdrop-blur-lg border border-gray-100 shadow-2xl rounded-[32px] px-10 py-14 text-center overflow-hidden">
-
-                    <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-sky-400 via-cyan-400 to-blue-500"></div>
-                    <div className="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-sky-100 to-cyan-50 flex items-center justify-center shadow-inner mb-8">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="w-14 h-14 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 10l9-7 9 7"/>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 9.5V20a1 1 0 001 1h4m8-11.5V20a1 1 0 01-1 1h-4"/>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 21v-6a2 2 0 012-2 2 2 0 012 2v6"/>
-                      </svg>
-                    </div>
-
-                    <h2 className="text-3xl font-bold text-gray-800 mb-4 tracking-tight">
-                      No Result Found
-                    </h2>
-
-                    <p className="text-gray-500 leading-7 text-[15px] max-w-md mx-auto">
-                      Try adjusting your search area or changing or removing some of your filters
-                    </p>
-
-                    <div className="mt-10 flex items-center justify-center gap-3 text-sm text-gray-400">
-                      <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
-                      Updated listings are added regularly
-                    </div>
-                  </div>
-                </div>
+                No Result Found
               </div>
             )}
 
             {/* PAGINATION */}
-            {visibleProperties.length > itemsPerPage && (
-              <div className="flex justify-center items-center gap-2 mt-6 flex-wrap">
-                <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} className="w-10 h-10 rounded-full border hover:bg-sky-500 hover:text-white transition disabled:opacity-40">
+            {totalPages > 1 && (
+              <div className="flex justify-center gap-2 mt-6 flex-wrap">
+                <button
+                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                  className="w-10 h-10 border rounded-full"
+                >
                   ←
                 </button>
 
                 {Array.from({ length: totalPages }).map((_, i) => (
-                  <button key={i} onClick={() => setCurrentPage(i + 1)} className={`px-3 py-1 border rounded-full ${currentPage === i + 1 ? "bg-sky-500 text-white" : "hover:bg-gray-100"}`}>
+                  <button
+                    key={i}
+                    onClick={() => setCurrentPage(i + 1)}
+                    className={`px-3 py-1 border rounded-full ${
+                      currentPage === i + 1
+                        ? "bg-sky-500 text-white"
+                        : "hover:bg-gray-100"
+                    }`}
+                  >
                     {i + 1}
                   </button>
                 ))}
 
-                <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} className="w-10 h-10 rounded-full border hover:bg-sky-500 hover:text-white transition disabled:opacity-40">
+                <button
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(p + 1, totalPages))
+                  }
+                  className="w-10 h-10 border rounded-full"
+                >
                   →
                 </button>
               </div>

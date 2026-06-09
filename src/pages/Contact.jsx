@@ -43,16 +43,12 @@ const ContactUs = () => {
   // OFFICES
   // =========================
   const fetchOffices = async () => {
-
     try {
-
       const res = await fetch("https://lightblue-moose-690494.hostingersite.com/api/information");
       const data = await res.json();
 
       setOffices(data);
-
     } catch (err) {
-
       console.log(err);
     }
   };
@@ -63,19 +59,14 @@ const ContactUs = () => {
   // PROPERTY TYPES
   // =========================
   const fetchPropertyTypes = async () => {
-
     try {
-
       const res = await fetch(
         "https://lightblue-moose-690494.hostingersite.com/api/property-types"
       );
 
       const data = await res.json();
-
       setPropertyTypes(data.data || data);
-
     } catch (err) {
-
       console.log(err);
     }
   };
@@ -84,20 +75,14 @@ const ContactUs = () => {
   // HANDLE CHANGE
   // =========================
   const handleChange = (e) => {
-
     const { name, value, type, checked } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+    setFormData((prev) => ({...prev, [name]: type === "checkbox" ? checked : value,}));
   };
 
   // =========================
   // SUBMIT FORM
   // =========================
   const handleSubmit = async (e) => {
-
     e.preventDefault();
 
     if (!formData.agree) {
@@ -106,7 +91,6 @@ const ContactUs = () => {
     }
 
     try {
-
       setLoading(true);
 
       const res = await fetch(
@@ -124,9 +108,7 @@ const ContactUs = () => {
       const data = await res.json();
 
       if (res.ok) {
-
         alert("Inquiry submitted successfully!");
-
         setFormData({
           first_name: "",
           last_name: "",
@@ -139,19 +121,14 @@ const ContactUs = () => {
           message: "",
           agree: false,
         });
-
       } else {
-
         alert(data.message || "Something went wrong");
       }
 
     } catch (err) {
-
       console.log(err);
       alert("Server Error");
-
     } finally {
-
       setLoading(false);
     }
   };
@@ -177,87 +154,6 @@ const ContactUs = () => {
             </div>
           </div>
         </div>
-
-        {/* ================= CONTACT CARDS ================= */}
-        {/* <div className="max-w-7xl mx-auto px-6 text-center">
-          {offices.map((item, i) => {
-            const socialLinks = Object.entries(item.social_links || {}).filter(
-              ([, url]) => url?.trim()
-            );
-
-            return (
-              <div
-                key={i}
-                className={`grid grid-cols-1 md:grid-cols-${
-                  socialLinks.length > 0 ? "4" : "3"
-                } gap-6`}
-              >
-                <div className="bg-white border border-sky-100 rounded-xl p-6 text-center hover:shadow-lg transition">
-                  <a
-                    href={`mailto:${item.email}`}
-                    className="flex flex-col items-center gap-2"
-                  >
-                    <FaEnvelope className="text-sky-500 text-xl" />
-                    <p className="text-sm text-gray-600 break-all">{item.email}</p>
-                  </a>
-                </div>
-
-                <div className="bg-white border border-sky-100 rounded-xl p-6 text-center hover:shadow-lg transition">
-                  <FaPhone className="text-sky-500 text-xl mx-auto mb-2" />
-                  <p className="text-sm text-gray-600">{item.phone}</p>
-                </div>
-
-                <div className="bg-white border border-sky-100 rounded-xl p-6 text-center hover:shadow-lg transition">
-                  <FaMapMarkerAlt className="text-sky-500 text-xl mx-auto mb-2" />
-                  <p className="text-sm text-gray-600">{item.address}</p>
-                </div>
-
-                {socialLinks.length > 0 && (
-                  <div className="bg-white border border-sky-100 rounded-xl p-6 text-center hover:shadow-lg transition">
-                    <div className="flex justify-center gap-4 flex-wrap">
-                      {socialLinks.map(([key, url], idx) => {
-                        let Icon = null;
-
-                        switch (key.toLowerCase()) {
-                          case "instagram":
-                            Icon = FaInstagram;
-                            break;
-                          case "facebook":
-                            Icon = FaFacebookF;
-                            break;
-                          case "linkedin":
-                            Icon = FaLinkedinIn;
-                            break;
-                          default:
-                            return null;
-                        }
-
-                        return (
-                          <a
-                            key={idx}
-                            href={
-                              url.startsWith("http")
-                                ? url
-                                : `https://${url}`
-                            }
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex flex-col items-center"
-                          >
-                            <Icon className="text-sky-500 text-lg" />
-                            <span className="text-xs text-gray-600 capitalize">
-                              {key}
-                            </span>
-                          </a>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div> */}
 
         {/* ================= OFFICE LOCATIONS ================= */}
         <div className="bg-white py-16">
@@ -285,10 +181,8 @@ const ContactUs = () => {
                 const mapUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
 
                 return (
-                  <div
-                    key={i}
-                    className="w-full md:w-[1100px] bg-white border border-sky-100 rounded-2xl p-6 md:p-8 hover:shadow-xl transition duration-300 text-left"
-                  >
+                  <div key={i}
+                    className="w-full md:w-[1100px] bg-white border border-sky-100 rounded-2xl p-6 md:p-8 hover:shadow-xl transition duration-300 text-left">
 
                     {/* TOP BADGE */}
                     <div className="flex justify-between items-center mb-3">
@@ -317,13 +211,8 @@ const ContactUs = () => {
                             }
 
                             return (
-                              <a
-                                key={idx}
-                                href={url.startsWith("http") ? url : `https://${url}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-sky-50 hover:bg-sky-100 p-2 rounded-full transition"
-                              >
+                              <a key={idx} href={url.startsWith("http") ? url : `https://${url}`} target="_blank" rel="noopener noreferrer"
+                                className="bg-sky-50 hover:bg-sky-100 p-2 rounded-full transition">
                                 <Icon className="text-sky-600 text-lg" />
                               </a>
                             );
@@ -369,16 +258,11 @@ const ContactUs = () => {
 
                     {/* BUTTON */}
                     <div className="mt-6 flex justify-end">
-                      <a
-                        href={mapUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="bg-sky-500 hover:bg-sky-600 text-white px-6 py-2 rounded-lg text-sm transition"
-                      >
+                      <a href={mapUrl} target="_blank" rel="noopener noreferrer"
+                        className="bg-sky-500 hover:bg-sky-600 text-white px-6 py-2 rounded-lg text-sm transition">
                         Get Direction
                       </a>
                     </div>
-
                   </div>
                 );
               })}
@@ -388,7 +272,7 @@ const ContactUs = () => {
 
         {/* ================= LET'S CONNECT ================= */}
         <div className="border border-sky-100 rounded-xl p-6 hover:shadow-lg transition w-full md:w-[1250px] mx-auto">
-          <div className="max-w-7xl mx-auto px-6">
+          <div className="max-w-7xl mx-auto px-3">
             <p className="text-sky-500 mb-2 text-sm">✦ ✦ ✦</p>
             <h2 className="text-2xl md:text-3xl font-semibold mb-3 text-sky-600">
               Let’s Connect
@@ -400,7 +284,7 @@ const ContactUs = () => {
             </p>
 
             {/* FORM */}
-            <form onSubmit={handleSubmit} className="bg-white border border-sky-100 rounded-xl p-6 md:p-10">
+            <form onSubmit={handleSubmit} className="bg-white border border-sky-100 rounded-xl p-4 md:p-10">
               <div className="grid md:grid-cols-3 gap-6">
 
                 {/* FIRST NAME */}
@@ -428,7 +312,6 @@ const ContactUs = () => {
                   className="border border-sky-200 rounded-md px-4 py-3 text-sm focus:outline-none focus:border-sky-500">
 
                   <option value="">Select Property Type</option>
-
                   {propertyTypes.map((type) => (
                     <option key={type._id || type.id} value={type._id || type.id}>
                       {type.name}
@@ -480,7 +363,6 @@ const ContactUs = () => {
         </div>
 
         <div className="border border-sky-100 rounded-2xl p-6 md:p-10 hover:shadow-xl transition w-full max-w-7xl mx-auto mt-16 mb-16 bg-white">
-
           <div className="max-w-6xl mx-auto space-y-8">
 
             {/* TITLE */}
@@ -501,14 +383,12 @@ const ContactUs = () => {
               <div className="lg:col-span-2 relative w-full h-[240px] sm:h-[320px] md:h-[380px] rounded-3xl overflow-hidden shadow-2xl group bg-gray-100">
 
                 {/* MAIN IMAGE */}
-                <img
+                <img alt="Office" className="w-full h-full object-cover transition duration-700 group-hover:scale-105"
                   src={
                     officeImages.length
                       ? officeImages[currentOfficeImage]
                       : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
                   }
-                  className="w-full h-full object-cover transition duration-700 group-hover:scale-105"
-                  alt="Office"
                 />
 
                 {/* SOFT DARK GRADIENT */}
@@ -528,7 +408,7 @@ const ContactUs = () => {
 
                 {/* LEFT BUTTON */}
                 {officeImages.length > 1 && (
-                  <button
+                  <button className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg transition hover:scale-110"
                     onClick={() =>
                       setCurrentOfficeImage(
                         currentOfficeImage === 0
@@ -536,7 +416,6 @@ const ContactUs = () => {
                           : currentOfficeImage - 1
                       )
                     }
-                    className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg transition hover:scale-110"
                   >
                     <IoIosArrowBack size={18} />
                   </button>
@@ -544,7 +423,7 @@ const ContactUs = () => {
 
                 {/* RIGHT BUTTON */}
                 {officeImages.length > 1 && (
-                  <button
+                  <button className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg transition hover:scale-110"
                     onClick={() =>
                       setCurrentOfficeImage(
                         currentOfficeImage === officeImages.length - 1
@@ -552,7 +431,6 @@ const ContactUs = () => {
                           : currentOfficeImage + 1
                       )
                     }
-                    className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg transition hover:scale-110"
                   >
                     <IoIosArrowForward size={18} />
                   </button>
@@ -562,10 +440,7 @@ const ContactUs = () => {
                 {officeImages.length > 1 && (
                   <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 bg-black/30 backdrop-blur px-2 py-1 rounded-xl">
                     {officeImages.map((img, idx) => (
-                      <img
-                        key={idx}
-                        src={img}
-                        onClick={() => setCurrentOfficeImage(idx)}
+                      <img key={idx} src={img} onClick={() => setCurrentOfficeImage(idx)}
                         className={`w-10 h-10 object-cover rounded-md cursor-pointer border-2 transition ${
                           idx === currentOfficeImage
                             ? "border-white scale-110"
@@ -579,9 +454,7 @@ const ContactUs = () => {
 
               {/* RIGHT CONTENT */}
               <div className="w-26 bg-sky-50 rounded-xl p-6 flex flex-col justify-center">
-
                 <div className="space-y-4">
-
                   <h4 className="text-lg font-semibold text-sky-700">
                     Our Workspace & Team
                   </h4>
@@ -596,13 +469,9 @@ const ContactUs = () => {
                     <p>✔ Professional Team</p>
                     <p>✔ Client-Friendly Environment</p>
                   </div>
-
                 </div>
-
               </div>
-
             </div>
-
           </div>
 
         </div>
