@@ -108,42 +108,25 @@ const Properties = ({ setShowLogin }) => {
           <SearchBar filters={filters} setFilters={setFilters} />
 
           {showModal && (
-            <FilterModal
-              filters={filters}
-              setFilters={setFilters}
-              onClose={() => setShowModal(false)}
-              onSearch={(updatedFilters) => {
-                setFilters(updatedFilters);
-                fetchData(updatedFilters);
-                setShowModal(false);
-              }}
-            />
+            <FilterModal filters={filters} setFilters={setFilters} onClose={() => setShowModal(false)}
+              onSearch={(updatedFilters) => { setFilters(updatedFilters); fetchData(updatedFilters); setShowModal(false); }}/>
           )}
         </div>
 
         {/* MAIN LAYOUT */}
-        <div className="flex flex-col lg:flex-row h-screen overflow-hidden">
+        <div className="flex flex-col lg:flex-row lg:h-screen lg:overflow-hidden">
 
           {/* MAP */}
-          <div className="w-full lg:w-2/3 h-[300px] lg:h-screen sticky top-0 z-20">
-            <MapView
-              key="map"
-              properties={properties}
-              location={filters.location}
-              onBoundsChange={setVisibleProperties}
-            />
+          <div className="w-full lg:w-2/3 h-[300px] lg:h-screen lg:sticky lg:top-0 z-20">
+            <MapView key="map" properties={properties} location={filters.location} onBoundsChange={setVisibleProperties}/>
           </div>
 
           {/* LIST */}
-          <div className="w-full lg:w-1/3 h-screen overflow-y-auto p-4 space-y-6 scrollbar-hide">
+          <div className="w-full lg:w-1/3 p-4 space-y-6 lg:h-screen lg:overflow-y-auto scrollbar-hide">
 
             {currentProperties.length > 0 ? (
               currentProperties.map((item) => (
-                <PropertyCard
-                  key={`prop-${item.id}`}
-                  item={item}
-                  setShowLogin={setShowLogin}
-                />
+                <PropertyCard key={`prop-${item.id}`} item={item} setShowLogin={setShowLogin}/>
               ))
             ) : (
               <div className="flex items-center justify-center min-h-[500px] px-6">
@@ -154,33 +137,19 @@ const Properties = ({ setShowLogin }) => {
             {/* PAGINATION */}
             {totalPages > 1 && (
               <div className="flex justify-center gap-2 mt-6 flex-wrap">
-                <button
-                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                  className="w-10 h-10 border rounded-full"
-                >
+                <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} className="w-10 h-10 border rounded-full">
                   ←
                 </button>
 
                 {Array.from({ length: totalPages }).map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setCurrentPage(i + 1)}
-                    className={`px-3 py-1 border rounded-full ${
-                      currentPage === i + 1
-                        ? "bg-sky-500 text-white"
-                        : "hover:bg-gray-100"
-                    }`}
+                  <button key={i} onClick={() => setCurrentPage(i + 1)}
+                    className={`px-3 py-1 border rounded-full ${currentPage === i + 1 ? "bg-sky-500 text-white" : "hover:bg-gray-100"}`}
                   >
                     {i + 1}
                   </button>
                 ))}
 
-                <button
-                  onClick={() =>
-                    setCurrentPage((p) => Math.min(p + 1, totalPages))
-                  }
-                  className="w-10 h-10 border rounded-full"
-                >
+                <button className="w-10 h-10 border rounded-full" onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages)) }>
                   →
                 </button>
               </div>

@@ -20,7 +20,7 @@ export default function SpaceUseDropdown({ spaceUses, renderTree, buttonLabel })
   return (
     <div className="relative w-full" ref={dropdownRef}>
       {/* Dropdown Button */}
-      <button onClick={() => setOpen(!open)} className="w-full border rounded-lg bg-white p-2 text-left font-semibold flex justify-between items-center h-[50px]">
+      <button onClick={() => setOpen(!open)} className="w-full border rounded-lg bg-white p-2 text-left flex justify-between items-center h-[50px]">
         {buttonLabel} <FiChevronDown/>
       </button>
 
