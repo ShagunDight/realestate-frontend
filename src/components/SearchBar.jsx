@@ -332,7 +332,7 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
         )}
         
         {/* BUTTONS WRAP FIX */}
-        <div className="col-span-1 sm:col-span-2 xl:col-span-1 flex flex-row sm:flex-row gap-3 w-full">
+        <div className="col-span-1 sm:col-span-2 xl:col-span-1 flex flex-row sm:flex-row gap-2 w-full">
 
           <button onClick={() => setShowModal(true)} className="bg-sky-500 hover:bg-sky-600 text-white px-3 py-1 rounded-lg w-full sm:w-auto">
             All Filters

@@ -224,200 +224,203 @@ const FilterModal = ({ filters = {}, setFilters = () => { }, onClose = () => { }
   }, [types]);
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
-      <div className="bg-white w-full max-w-6xl p-6 rounded-2xl shadow-xl">
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div className="bg-white w-full h-[95vh] sm:h-auto sm:max-h-[90vh] max-w-7xl rounded-t-3xl sm:rounded-2xl shadow-xl overflow-hidden flex flex-col">
         {/* HEADER */}
-        <div className="flex justify-between mb-4">
+        <div className="sticky top-0 bg-white z-20 flex items-center justify-between p-4 border-b">
           <h2 className="text-xl font-bold">All Filters</h2>
           <button onClick={onClose}>✕</button>
         </div>
 
-        {/* PROPERTY TYPES */}
-        <div className="flex gap-3 flex-wrap mb-6">
-          {types.map((item) => (
-            <button key={item.id} onClick={() => handleTypeChange(item.id)} className={`px-4 py-2 rounded ${ filters.type == item.id ? "bg-sky-500 text-white" : "bg-gray-200" }`}>
-              {item.name}
-            </button>
-          ))}
-        </div>
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
 
-        <div className="grid grid-cols-3 gap-6">
-          {/* LEFT SIDE */}
-          <div className="space-y-5">
-            {/* SPACE USES */}
-            <div className="bg-gray-50 p-4 rounded-xl max-h-[300px] overflow-y-auto">
-              <h4 className="font-semibold mb-3">Space Uses</h4>
-
-              {spaceUses.length === 0 ? (
-                <p>No Space Uses</p>
-              ) : (
-                renderTree(spaceUses)
-              )}
-            </div>
-
-            {/* LOCATION */}
-            <div className="bg-gray-50 p-4 rounded-xl">
-              <h4 className="mb-2 font-semibold">Location</h4>
-              <select className="w-full border p-2 rounded" onChange={(e) => handleChange("location", e.target.value)}>
-                <option value="">Select</option>
-
-                {locations.map((loc, i) => (
-                  <option key={i} value={loc}>
-                    {loc}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* ADDITIONAL FILTERS */}
-            <div className="p-4 rounded-xl">
-              <div className="grid grid-cols-2 gap-4">
-                {additionalFilters.map((item) => {
-                  return (
-                    <div key={item.id}>
-                      <label className="block text-sm mb-1">{item.name}</label>
-
-                      {/* TEXT */}
-                      {item.field_type === "text" && (
-                        <input type="text" value={filters[item.name] || ""} className="w-full border p-2 rounded" onChange={(e) => handleChange(item.name, e.target.value) }/>
-                      )}
-
-                      {/* SELECT / SINGLE SELECT */}
-                      {(item.field_type === "select" || item.field_type === "single_select") && (
-                        <select value={filters[item.name] || ""} className="w-full border p-2 rounded" onChange={(e) => handleChange(item.name, e.target.value) }>
-                          <option value="">Select</option>
-
-                          {item.options?.map((opt, i) => (
-                            <option key={i} value={opt}>
-                              {opt}
-                            </option>
-                          ))}
-                        </select>
-                      )}
-
-                      {/* MULTI SELECT (CHECKBOX) */}
-                      {item.field_type === "multi_select" && (
-                        <div className="flex flex-wrap gap-2">
-                          {item.options?.map((opt, i) => (
-                            <label key={i} className="flex items-center gap-1">
-                              <input type="checkbox" value={opt} checked={(filters[item.name] || []).includes( opt, )}
-                                onChange={(e) => {
-                                  let updated = filters[item.name] || [];
-
-                                  if (e.target.checked) {
-                                    updated = [...updated, opt];
-                                  } else {
-                                    updated = updated.filter((v) => v !== opt);
-                                  }
-
-                                  handleChange(item.name, updated);
-                                }}
-                              />
-                              {opt}
-                            </label>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+          {/* PROPERTY TYPES */}
+          <div className="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide">
+            {types.map((item) => (
+              <button key={item.id} onClick={() => handleTypeChange(item.id)} className={`px-4 py-2 whitespace-nowrap rounded-lg text-sm ${filters.type == item.id ? "bg-sky-500 text-white" : "bg-gray-100"}`}>
+                {item.name}
+              </button>
+            ))}
           </div>
 
-          {/* RIGHT SIDE PROPERTY FILTERS */}
-          <div className="col-span-2 p-4 rounded-xl">
-            <h4 className="font-semibold mb-3">Property Filters</h4>
-            <div className="grid grid-cols-2 gap-4">
-              {Object.entries(columns).map(([key, item]) => (
-                <div key={key}>
-                  <label className="block text-sm mb-1">{item.label || item}</label>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* LEFT SIDE */}
+            <div className="space-y-5 lg:col-span-1">
+              {/* SPACE USES */}
+              <div className="bg-gray-50 p-4 rounded-xl max-h-[250px] sm:max-h-[350px] overflow-y-auto">
+                <h4 className="font-semibold mb-3">Space Uses</h4>
 
-                  {/* TEXT  */}
-                  {(!item.type || item.type === "text") && (
-                    <input type="text" value={filters[key] || ""} className="w-full border p-2 rounded" onChange={(e) => handleChange(key, e.target.value)}/>
-                  )}
+                {spaceUses.length === 0 ? (
+                  <p>No Space Uses</p>
+                ) : (
+                  renderTree(spaceUses)
+                )}
+              </div>
 
-                  {/*  NUMBER */}
-                  {item.type === "number" && (
-                    <input type="number" value={filters[key] || ""} className="w-full border p-2 rounded" onChange={(e) => handleChange(key, e.target.value)}/>
-                  )}
+              {/* LOCATION */}
+              <div className="bg-gray-50 p-4 rounded-xl">
+                <h4 className="mb-2 font-semibold">Location</h4>
+                <select className="w-full border p-2 rounded" onChange={(e) => handleChange("location", e.target.value)}>
+                  <option value="">Select</option>
 
-                  {/* RADIO */}
-                  {item.type === "radio" && (
-                    <div className="flex gap-4 flex-wrap">
-                      {item.options?.map((opt, i) => {
-                        const value = opt.value || opt;
-                        const label = opt.label || opt;
+                  {locations.map((loc, i) => (
+                    <option key={i} value={loc}>
+                      {loc}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-                        return (
-                          <label key={i} className="flex items-center gap-2">
-                            <input type="radio" name={key} value={value} checked={filters[key] == value} onChange={(e) => handleChange(key, e.target.value)}/>
-                            {label}
-                          </label>
-                        );
-                      })}
-                    </div>
-                  )}
+              {/* ADDITIONAL FILTERS */}
+              <div className="p-4 rounded-xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {additionalFilters.map((item) => {
+                    return (
+                      <div key={item.id}>
+                        <label className="block text-sm mb-1">{item.name}</label>
 
-                  {/* SELECT */}
-                  {item.type === "select" && (
-                    <select value={filters[key] || ""} className="w-full border p-2 rounded" onChange={(e) => handleChange(key, e.target.value)}>
-                      <option value="">Select</option>
-                      {item.options?.map((opt, i) => {
-                        const value = opt.value || opt;
-                        const label = opt.label || opt;
+                        {/* TEXT */}
+                        {item.field_type === "text" && (
+                          <input type="text" value={filters[item.name] || ""} className="w-full border p-2 rounded" onChange={(e) => handleChange(item.name, e.target.value) }/>
+                        )}
 
-                        return (
-                          <option key={i} value={value}>
-                            {label}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  )}
+                        {/* SELECT / SINGLE SELECT */}
+                        {(item.field_type === "select" || item.field_type === "single_select") && (
+                          <select value={filters[item.name] || ""} className="w-full border p-2 rounded" onChange={(e) => handleChange(item.name, e.target.value) }>
+                            <option value="">Select</option>
 
-                  {/*  CHECKBOX */}
-                  {item.type === "checkbox" && (
-                    <div className="flex flex-wrap gap-3">
-                      {item.options?.map((opt, i) => {
-                        const value = opt.value || opt;
-                        const label = opt.label || opt;
+                            {item.options?.map((opt, i) => (
+                              <option key={i} value={opt}>
+                                {opt}
+                              </option>
+                            ))}
+                          </select>
+                        )}
 
-                        return (
-                          <label key={i} className="flex items-center gap-2">
-                            <input type="checkbox" value={value} checked={filters[key]?.includes(value)}
-                              onChange={(e) => {
-                                let updated = filters[key] || [];
+                        {/* MULTI SELECT (CHECKBOX) */}
+                        {item.field_type === "multi_select" && (
+                          <div className="flex flex-wrap gap-2">
+                            {item.options?.map((opt, i) => (
+                              <label key={i} className="flex items-center gap-1">
+                                <input type="checkbox" value={opt} checked={(filters[item.name] || []).includes( opt, )}
+                                  onChange={(e) => {
+                                    let updated = filters[item.name] || [];
 
-                                if (e.target.checked) {
-                                  updated = [...updated, value];
-                                } else {
-                                  updated = updated.filter((v) => v !== value);
-                                }
+                                    if (e.target.checked) {
+                                      updated = [...updated, opt];
+                                    } else {
+                                      updated = updated.filter((v) => v !== opt);
+                                    }
 
-                                handleChange(key, updated);
-                              }}
-                            />
-                            {label}
-                          </label>
-                        );
-                      })}
-                    </div>
-                  )}
+                                    handleChange(item.name, updated);
+                                  }}
+                                />
+                                {opt}
+                              </label>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
-              ))}
+              </div>
+            </div>
+
+            {/* RIGHT SIDE PROPERTY FILTERS */}
+            <div className="lg:col-span-2 p-4 rounded-xl bg-gray-50">
+              <h4 className="font-semibold mb-3">Property Filters</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {Object.entries(columns).map(([key, item]) => (
+                  <div key={key}>
+                    <label className="block text-sm mb-1">{item.label || item}</label>
+
+                    {/* TEXT  */}
+                    {(!item.type || item.type === "text") && (
+                      <input type="text" value={filters[key] || ""} className="w-full border p-2 rounded" onChange={(e) => handleChange(key, e.target.value)}/>
+                    )}
+
+                    {/*  NUMBER */}
+                    {item.type === "number" && (
+                      <input type="number" value={filters[key] || ""} className="w-full border p-2 rounded" onChange={(e) => handleChange(key, e.target.value)}/>
+                    )}
+
+                    {/* RADIO */}
+                    {item.type === "radio" && (
+                      <div className="flex gap-4 flex-wrap">
+                        {item.options?.map((opt, i) => {
+                          const value = opt.value || opt;
+                          const label = opt.label || opt;
+
+                          return (
+                            <label key={i} className="flex items-center gap-2">
+                              <input type="radio" name={key} value={value} checked={filters[key] == value} onChange={(e) => handleChange(key, e.target.value)}/>
+                              {label}
+                            </label>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* SELECT */}
+                    {item.type === "select" && (
+                      <select value={filters[key] || ""} className="w-full border p-2 rounded" onChange={(e) => handleChange(key, e.target.value)}>
+                        <option value="">Select</option>
+                        {item.options?.map((opt, i) => {
+                          const value = opt.value || opt;
+                          const label = opt.label || opt;
+
+                          return (
+                            <option key={i} value={value}>
+                              {label}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    )}
+
+                    {/*  CHECKBOX */}
+                    {item.type === "checkbox" && (
+                      <div className="flex flex-wrap gap-3">
+                        {item.options?.map((opt, i) => {
+                          const value = opt.value || opt;
+                          const label = opt.label || opt;
+
+                          return (
+                            <label key={i} className="flex items-center gap-2">
+                              <input type="checkbox" value={value} checked={filters[key]?.includes(value)}
+                                onChange={(e) => {
+                                  let updated = filters[key] || [];
+
+                                  if (e.target.checked) {
+                                    updated = [...updated, value];
+                                  } else {
+                                    updated = updated.filter((v) => v !== value);
+                                  }
+
+                                  handleChange(key, updated);
+                                }}
+                              />
+                              {label}
+                            </label>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
         {/* FOOTER BUTTONS */}
-        <div className="flex justify-end gap-4 mt-6">
-          <button onClick={handleClear} className="px-4 py-2 border rounded">
+        <div className="sticky bottom-0 bg-white border-t p-4 flex flex-col sm:flex-row justify-end gap-3">
+          <button onClick={handleClear} className="w-full sm:w-auto px-4 py-3 border rounded-lg">
             Clear
           </button>
 
-          <button onClick={handleSearch} className="bg-sky-500 text-white px-6 py-2 rounded">
+          <button onClick={handleSearch} className="w-full sm:w-auto bg-sky-500 text-white px-6 py-3 rounded-lg">
             Search
           </button>
         </div>
