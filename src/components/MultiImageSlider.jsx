@@ -158,7 +158,7 @@ const MultiImageSlider = () => {
           {/* LEFT BUTTON */}
           {news.length > visibleItems && (
             <button onClick={prevSlide} type="button" aria-label="Previous" className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center 
-              justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 shadow-xl border border-gray-200 z-50 cursor-pointer opacity-100 
+              justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 shadow-xl border border-gray-200 z-30 cursor-pointer opacity-100 
               lg:opacity-0 lg:group-hover:opacity-100 hover:scale-110 hover:bg-sky-500 hover:text-white transition-all duration-300">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
@@ -169,7 +169,7 @@ const MultiImageSlider = () => {
           {/* RIGHT BUTTON */}
           {news.length > visibleItems && (
             <button onClick={nextSlide} type="button" aria-label="Next" className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center 
-              w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 shadow-xl border border-gray-200 z-50 cursor-pointer opacity-100 lg:opacity-0 lg:group-hover:opacity-100
+              w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 shadow-xl border border-gray-200 z-30 cursor-pointer opacity-100 lg:opacity-0 lg:group-hover:opacity-100
               hover:scale-110 hover:bg-sky-500 hover:text-white transition-all duration-300">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
