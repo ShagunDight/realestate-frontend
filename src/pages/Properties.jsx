@@ -104,7 +104,7 @@ const Properties = ({ setShowLogin }) => {
       <div className="bg-white max-w-[1440px] mx-auto min-h-screen flex flex-col">
 
         {/* SEARCH */}
-        <div className="p-6">
+        <div className="p-3">
           <SearchBar filters={filters} setFilters={setFilters} />
 
           {showModal && (
