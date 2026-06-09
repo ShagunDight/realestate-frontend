@@ -168,20 +168,20 @@ const Navbar = ({ setShowLogin, customer, setCustomer }) => {
             </h3>
 
             <div className="space-y-3">
-              <NavLink to="/about" onClick={() => setMoreOpen(false)} className="block p-4 rounded-xl bg-gray-50 hover:bg-sky-50">
-                About Us
-              </NavLink>
-
               <NavLink to="/services" onClick={() => setMoreOpen(false)} className="block p-4 rounded-xl bg-gray-50 hover:bg-sky-50">
                 Services
               </NavLink>
 
-              <NavLink to="/contact" onClick={() => setMoreOpen(false)} className="block p-4 rounded-xl bg-gray-50 hover:bg-sky-50">
-                Contact
-              </NavLink>
-
               <NavLink to="/faq" onClick={() => setMoreOpen(false)} className="block p-4 rounded-xl bg-gray-50 hover:bg-sky-50">
                 FAQ
+              </NavLink>
+
+              <NavLink to="/about" onClick={() => setMoreOpen(false)} className="block p-4 rounded-xl bg-gray-50 hover:bg-sky-50">
+                About Us
+              </NavLink>
+
+              <NavLink to="/contact" onClick={() => setMoreOpen(false)} className="block p-4 rounded-xl bg-gray-50 hover:bg-sky-50">
+                Contact
               </NavLink>
 
               <NavLink to="/privacy-policy" onClick={() => setMoreOpen(false)} className="block p-4 rounded-xl bg-gray-50 hover:bg-sky-50">
