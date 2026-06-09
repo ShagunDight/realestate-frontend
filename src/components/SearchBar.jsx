@@ -221,8 +221,8 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
   // UI
   // =========================
   return (
-    <div className=" bg-sky-200 shadow-lg rounded-2xl p-4 md:p-5">
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-[2fr_1.3fr_1.5fr_1fr_1fr_auto] gap-3 items-end">
+    <div className=" bg-sky-200 shadow-lg rounded-2xl p-2 md:p-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-[2fr_1.3fr_1.5fr_1fr_1fr_auto] gap-2 items-end">
 
         {/* LOCATION */}
         {isLoaded ? (
