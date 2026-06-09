@@ -156,7 +156,7 @@ const ContactUs = () => {
         </div>
 
         {/* ================= OFFICE LOCATIONS ================= */}
-        <div className="bg-white py-16">
+        <div className="bg-white py-8">
           <div className="max-w-7xl mx-auto px-6 text-center">
             {/* TITLE */}
             <h2 className="text-2xl md:text-3xl font-semibold text-sky-600 mb-3">

@@ -10,7 +10,7 @@ export default function Team() {
   }, []);
 
   return (
-    <div className="mt-20 md:mt-28 mb-10 max-w-6xl mx-auto px-4 sm:px-6">
+    <div className="mt-16 md:mt-16 mb-10 max-w-6xl mx-auto px-4 sm:px-6">
 
       {/* Heading */}
       <div className="mb-10 md:mb-12 text-center md:text-left">

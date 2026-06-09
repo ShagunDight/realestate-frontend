@@ -225,7 +225,7 @@ const FilterModal = ({ filters = {}, setFilters = () => { }, onClose = () => { }
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div className="bg-white w-full h-[95vh] sm:h-auto sm:max-h-[90vh] max-w-7xl rounded-t-3xl sm:rounded-2xl shadow-xl overflow-hidden flex flex-col">
+      <div className="bg-white w-full h-[80vh] sm:h-auto sm:max-h-[90vh] max-w-7xl rounded-t-3xl sm:rounded-2xl shadow-xl overflow-hidden flex flex-col">
         {/* HEADER */}
         <div className="sticky top-0 bg-white z-20 flex items-center justify-between p-4 border-b">
           <h2 className="text-xl font-bold">All Filters</h2>

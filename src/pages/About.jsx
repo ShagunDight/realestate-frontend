@@ -7,7 +7,7 @@ export default function About() {
       <div className="bg-gradient-to-b from-white to-sky-50 min-h-screen px-6 md:px-20 py-16">
 
         {/* ===== HERO / JOURNEY ===== */}
-        <div className="grid md:grid-cols-2 max-w-6xl mx-auto gap-16 items-center mb-32">
+        <div className="grid md:grid-cols-2 max-w-6xl mx-auto gap-16 items-center mb-24">
 
           {/* LEFT */}
           <div>
@@ -50,7 +50,7 @@ export default function About() {
         </div>
 
         {/* ===== VALUES ===== */}
-        <div className="max-w-6xl mx-auto mb-32">
+        <div className="max-w-6xl mx-auto mb-28">
           <div className="text-center mb-14">
             <p className="text-sky-500 text-xs tracking-widest mb-2">
               CORE VALUES
@@ -82,7 +82,7 @@ export default function About() {
         </div>
 
         {/* ===== ACHIEVEMENTS ===== */}
-        <div className="max-w-6xl mx-auto mb-32">
+        <div className="max-w-6xl mx-auto mb-28">
 
           <div className="text-center mb-12">
             <p className="text-sky-500 text-xs tracking-widest mb-2">

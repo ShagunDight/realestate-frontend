@@ -5,7 +5,7 @@ const CTASection = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="px-4 py-10 bg-white">
+    <section className="px-4 py-4 bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="relative rounded-3xl overflow-hidden shadow-xl">
 

@@ -213,7 +213,7 @@ export default function ServicesPage() {
         <div className="bg-white min-h-screen px-6 md:px-20">
 
           {/* ================= MINI CARDS ================= */}
-          <div className="relative -mt-14 z-20 max-w-7xl mx-auto mb-28">
+          <div className="relative -mt-14 z-20 max-w-7xl mx-auto mb-14">
 
             {/* background blur */}
             <div className="absolute inset-0 flex justify-center">
@@ -294,7 +294,7 @@ export default function ServicesPage() {
           </div>
 
           {/* ================= STATIC SERVICES ================= */}
-          <div className="max-w-7xl mx-auto py-12">
+          <div className="max-w-7xl mx-auto py-8">
 
             {/* heading */}
             <div className="text-center mb-20">
@@ -335,7 +335,7 @@ export default function ServicesPage() {
 
           {/* ================= DYNAMIC API SECTIONS ================= */}
           {Object.entries(services).map(([sectionName, sectionItems], index) => (
-            <div key={index} className="py-24 border-t border-gray-100 max-w-7xl mx-auto">
+            <div key={index} className="py-12 border-t border-gray-100 max-w-7xl mx-auto">
 
               <div className="mb-14">
                 <p className="text-sky-500 text-sm tracking-[0.2em] uppercase mb-3 font-semibold">
@@ -363,7 +363,7 @@ export default function ServicesPage() {
           ))}
 
           {/* FAQ */}
-          <div className="py-20">
+          <div className="py-6">
             <FAQ />
           </div>
 
