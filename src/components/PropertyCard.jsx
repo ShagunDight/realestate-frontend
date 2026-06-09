@@ -82,13 +82,13 @@ const PropertyCard = ({ item, setShowLogin }) => {
           {item.title}
         </h3>
 
-        <div className="flex justify-between items-center mt-3">
-          <span className="text-sm text-gray-600">
-            {item.location ? item.location.slice(0, 40) + (item.location.length > 40 ? "..." : "") : "Location not available"}
+        <div className="flex items-center justify-between gap-2 mt-3">
+          <span className="text-sm text-gray-600 flex-1 truncate">
+            {item.location || "Location not available"}
           </span>
 
           {item.zip_code && (
-            <span className="text-xs border border-sky-200 text-sky-600 px-3 py-1 rounded-lg bg-sky-50">
+            <span className="flex-shrink-0 text-xs border border-sky-200 text-sky-600 px-3 py-1 rounded-lg bg-sky-50 whitespace-nowrap">
               ZIP: {item.zip_code}
             </span>
           )}
