@@ -1,4 +1,4 @@
-import { GoogleMap, Marker, OverlayView } from "@react-google-maps/api";
+import { GoogleMap, Marker, OverlayView, Polygon } from "@react-google-maps/api";
 import { useEffect, useState, useRef } from "react";
 
 const containerStyle = {
@@ -19,6 +19,46 @@ const MapView = ({ properties, location, onBoundsChange }) => {
   const hoverTimeout = useRef(null);
   const leaveTimeout = useRef(null);
 
+  // geo location area mark //
+  const [areaPolygon, setAreaPolygon] = useState([]);
+  useEffect(() => {
+    if (!location || !mapRef.current) return;
+
+    const fetchBoundary = async () => {
+      try {
+        // Get relation boundary from OSM
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=jsonv2&polygon_geojson=1&q=${encodeURIComponent(location)}`
+        );
+
+        const data = await res.json();
+
+        if (!data.length) return;
+
+        const geojson = data[0].geojson;
+
+        if (geojson.type === "Polygon") {
+          const coords = geojson.coordinates[0].map((coord) => ({
+            lng: coord[0],
+            lat: coord[1],
+          }));
+
+          setAreaPolygon(coords);
+
+          const bounds = new window.google.maps.LatLngBounds();
+
+          coords.forEach((p) => bounds.extend(p));
+
+          mapRef.current.fitBounds(bounds);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchBoundary();
+  }, [location]);
+  
   // -------------------------
   // MAP INSTANCE STORE
   // -------------------------
@@ -160,6 +200,18 @@ const MapView = ({ properties, location, onBoundsChange }) => {
           onBoundsChange(filtered);
         }, 300);
       }}>
+
+      {areaPolygon.length > 0 && (
+        <Polygon
+          paths={areaPolygon}
+          options={{
+            strokeColor: "#ff0000",
+            strokeOpacity: 1,
+            strokeWeight: 5,
+            fillOpacity: 0,
+          }}
+        />
+      )}
       
       {/* MARKERS */}
       {markers.map((item) => (

@@ -39,6 +39,33 @@ export const verifyOtp = async (email, otp) => {
   if (data.token) {
     localStorage.setItem("customer_token", data.token);
     localStorage.setItem("customer_email", email);
+    localStorage.setItem("customer", data.customer);
+  }
+
+  return data;
+};
+
+export const loginWithPassword = async (email, password) => {
+  const res = await fetch(
+    "http://127.0.0.1:8001/api/customer/login",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    }
+  );
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.message || "Login failed");
+  }
+
+  if (data.token) {
+    localStorage.setItem("customer_token", data.token);
   }
 
   return data;

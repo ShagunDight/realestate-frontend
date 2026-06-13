@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import PropertyCard from "../components/PropertyCard";
 import Footer from "../components/Footer";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
@@ -17,7 +17,8 @@ import {
   FaRegHeart,
 } from "react-icons/fa";
 
-const PropertyDetails = ({setShowLogin}) => {
+const PropertyDetails = ({ setShowLogin }) => {
+  const navigate = useNavigate();
   const { id } = useParams();
 
   // ✅ ALL HOOKS FIRST (no conditions above this line)
@@ -35,11 +36,14 @@ const PropertyDetails = ({setShowLogin}) => {
   const [showGallery, setShowGallery] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
   const { toggleWishlist, isWished } = useWishlist();
-
+  const [inquiryType, setInquiryType] = useState("");
+  const [message, setMessage] = useState("");
   const [zoom, setZoom] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
   const dragStart = useRef({ x: 0, y: 0 });
+
+  const [expanded, setExpanded] = useState(null);
 
   // ✅ ALL useEffects ALSO ABOVE RETURN
   useEffect(() => {
@@ -53,6 +57,64 @@ const PropertyDetails = ({setShowLogin}) => {
     setZoom(1);
     setPosition({ x: 0, y: 0 });
   }, [galleryIndex]);
+
+  useEffect(() => {
+    if (!id) return;
+
+    const trackView = async () => {
+      try {
+        await fetch("http://127.0.0.1:8001/api/property-view", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            property_id: id,
+            customer_id: localStorage.getItem("customer_id") || null,
+            name: localStorage.getItem("customer_name") || null,
+            email: localStorage.getItem("customer_email") || null,
+            phone: localStorage.getItem("customer_phone") || null,
+          }),
+        });
+      } catch (err) {
+        console.log("Tracking failed", err);
+      }
+    };
+
+    trackView();
+  }, [id]);
+
+
+  const [soldProperties, setSoldProperties] = useState([]);
+  const [soldPage, setSoldPage] = useState(1);
+
+  const soldItemsPerPage = 4;
+
+  const soldTotalPages = Math.ceil(soldProperties.length / soldItemsPerPage);
+  const paginated = soldProperties.slice((soldPage - 1) * soldItemsPerPage, soldPage * soldItemsPerPage);
+
+  const fetchSoldProperties = async () => {
+    try {
+      const res = await fetch(
+        "http://127.0.0.1:8001/api/sold-properties"
+      );
+
+      const data = await res.json();
+
+      setSoldProperties(data.data || data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSoldProperties();
+  }, []);
+
+  const stripHtml = (html) => {
+    const doc = new DOMParser().parseFromString(html || "", "text/html");
+    return doc.body.textContent || "";
+  };
 
   // ❌ ONLY AFTER ALL HOOKS
   if (!property) return <p className="text-center mt-10">Loading...</p>;
@@ -93,24 +155,32 @@ const PropertyDetails = ({setShowLogin}) => {
 
 
   const handleSubmit = async () => {
-    if (!selectedDate || !email || !phone) {
+    if (!inquiryType || !name || !email || !phone) {
       alert("Please fill all required fields");
       return;
     }
+
+    if (inquiryType === "request_tour" && !selectedDate) {
+      alert("Please select a tour date");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const res = await fetch("https://lightblue-moose-690494.hostingersite.com/api/visit-request", {
+      const res = await fetch("http://127.0.0.1:8001/api/visit-request", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           property_id: id,
-          date: selectedDate,
+          inquiry_type: inquiryType,
+          date: inquiryType === "request_tour" ? selectedDate : null,
           name,
           email,
           phone,
+          message,
           is_military: isMilitary,
         }),
       });
@@ -118,17 +188,21 @@ const PropertyDetails = ({setShowLogin}) => {
       const data = await res.json();
 
       if (data.success) {
-        alert("Tour request submitted successfully!");
+        alert(data.message || "Inquiry submitted successfully!");
+
+        setInquiryType("");
         setSelectedDate(null);
+        setName("");
         setEmail("");
         setPhone("");
+        setMessage("");
         setIsMilitary(false);
       } else {
-        alert("Something went wrong!");
+        alert(data.message || "Something went wrong!");
       }
     } catch (err) {
       console.error(err);
-      alert("Server error");
+      alert("Server error. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -188,15 +262,34 @@ const PropertyDetails = ({setShowLogin}) => {
 
         {/* ================= HEADER ================= */}
         <div className="bg-white/60 backdrop-blur-xl border rounded-3xl p-6 mb-8 text-center">
-          <span className="text-xs px-3 py-1 bg-sky-100 text-sky-600 rounded-full">
-            {property.property_type?.name}
-          </span>
+          {/* Top Badges */}
+          <div className="flex items-center justify-between">
+            <span className="text-xs px-3 py-1 bg-sky-100 text-sky-600 rounded-full font-medium">
+              {property.property_type?.name}
+            </span>
 
-          <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mt-3">
+            <span className={`text-sm px-3 py-1 rounded-full font-medium capitalize
+                ${property.status === "active"
+                  ? "bg-green-100 text-green-700"
+                  : property.status === "pending"
+                  ? "bg-yellow-100 text-yellow-700"
+                  : property.status === "sold"
+                  ? "bg-red-100 text-red-700"
+                  : property.status === "rented"
+                  ? "bg-purple-100 text-purple-700"
+                  : "bg-gray-100 text-gray-700"
+                }`
+              }
+            >
+              {property.status}
+            </span>
+          </div>
+
+          <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mt-4">
             {property.title}
           </h1>
 
-          <p className="mt-3 text-gray-500 flex justify-center items-center gap-2">
+          <p className="mt-3 text-gray-500 flex justify-center items-center gap-2 flex-wrap">
             📍 {property.location} • Zip {property.zip_code}
           </p>
         </div>
@@ -549,73 +642,98 @@ const PropertyDetails = ({setShowLogin}) => {
             </div>
               
             {/* SCHEDULE TOUR CARD */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                Schedule Property Tour
-              </h3>
+            <div className="bg-white rounded-3xl shadow-lg border border-gray-100 p-4 md:p-6">
 
-              {/* DATE */}
-              <div className="mb-5">
-                <p className="text-sm font-medium text-gray-700 mb-3">
-                  What is your preferred tour date?
-                </p>
-
-                {/* DATE SLIDER */}
-                <div className="relative">
-
-                  {/* LEFT BUTTON */}
-                  <button onClick={scrollLeft} className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow-md border 
-                    flex items-center justify-center hover:bg-sky-50">
-                    <IoIosArrowBack />
-                  </button>
-
-                  {/* SLIDER */}
-                  <div ref={sliderRef} className="flex gap-3 overflow-x-auto scroll-smooth px-12 pb-2 no-scrollbar">
-                    {nextDates.map((item, index) => (
-                      <button key={index} onClick={() => setSelectedDate(item.fullDate)}
-                        className={`min-w-[75px] sm:min-w-[90px] border rounded-xl py-3 px-4 text-center transition flex-shrink-0
-                          ${
-                            selectedDate === item.fullDate
-                              ? "border-sky-500 bg-sky-50"
-                              : "hover:border-sky-500 hover:bg-sky-50"
-                          }`
-                        }
-                      >
-                        <p className="text-xs text-gray-500">{item.day}</p>
-                        <p className="font-semibold text-gray-900">{item.date}</p>
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* RIGHT BUTTON */}
-                  <button onClick={scrollRight} className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow-md border flex items-center justify-center hover:bg-sky-50">
-                    <IoIosArrowForward />
-                  </button>
-                </div>
+              {/* HEADER */}
+              <div className="mb-6">
+                <h3 className="text-2xl font-bold text-gray-900">Contact & Inquiry</h3>
+                <p className="text-sm text-gray-500 mt-1">Tell us what you’re looking for — we’ll get back to you shortly.</p>
               </div>
 
-              {/* Name */}
-              <input value={name} onChange={(e) => setName(e.target.value)} type="text" placeholder="Full Name *"
-                  className="w-full border border-gray-300 rounded-xl px-4 py-3 mb-4 focus:outline-none focus:ring-2 focus:ring-sky-500"/>
-                
-              {/* EMAIL */}
-              <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Email *"
-                  className="w-full border border-gray-300 rounded-xl px-4 py-3 mb-4 focus:outline-none focus:ring-2 focus:ring-sky-500"/>
+              {/* TYPE SELECT */}
+              <div className="mb-6">
+                <label className="text-sm font-medium text-gray-700 mb-2 block">What can we help you with?</label>
 
-              {/* PHONE */}
-              <input value={phone} onChange={(e) => setPhone(e.target.value)} type="text" placeholder="Phone *"
-                className="w-full border border-gray-300 rounded-xl px-4 py-3 mb-4 focus:outline-none focus:ring-2 focus:ring-sky-500"/>
+                <select value={inquiryType} onChange={(e) => setInquiryType(e.target.value)}
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-500 transition">
+                  <option value="">Select purpose</option>
+                  <option value="financials">Financial Information</option>
+                  <option value="pricing">Pricing Details</option>
+                  <option value="request_tour">Schedule a Property Tour</option>
+                  <option value="others">General Inquiry</option>
+                </select>
+              </div>
 
-              {/* CHECKBOX */}
-              <label className="flex items-start gap-2 text-sm text-gray-600 mb-5">
-                <input type="checkbox" checked={isMilitary} onChange={(e) => setIsMilitary(e.target.checked)} className="mt-1 accent-sky-500"/> I've served in the military
-              </label>
+              {/* TOUR DATE (ONLY FOR TOUR) */}
+              {inquiryType === "request_tour" && (
+                <div className="mb-6">
+                  <label className="text-sm font-medium text-gray-700 mb-3 block">Choose your preferred visit date</label>
+
+                  <div className="relative">
+                    <button onClick={scrollLeft}
+                      className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white shadow border flex items-center justify-center hover:bg-sky-50">
+                      <IoIosArrowBack size={16} />
+                    </button>
+
+                    <div ref={sliderRef} className="flex gap-3 overflow-x-auto scroll-smooth px-10 pb-2 no-scrollbar">
+                      {nextDates.map((item, index) => (
+                        <button key={index} onClick={() => setSelectedDate(item.fullDate)}
+                          className={`min-w-[85px] border rounded-2xl py-3 px-3 text-center transition flex-shrink-0
+                            ${selectedDate === item.fullDate
+                                ? "border-sky-500 bg-sky-50 text-sky-600"
+                                : "border-gray-200 hover:border-sky-400 text-gray-600"
+                            }`
+                          }
+                        >
+                          <p className="text-xs">{item.day}</p>
+                          <p className="font-semibold">{item.date}</p>
+                        </button>
+                      ))}
+                    </div>
+
+                    <button onClick={scrollRight}
+                      className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white shadow border flex items-center justify-center hover:bg-sky-50">
+                      <IoIosArrowForward size={16} />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* INPUTS */}
+              <div className="space-y-4">
+                <input value={name} onChange={(e) => setName(e.target.value)} type="text" placeholder="Your full name"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-sky-500 outline-none"
+                />
+
+                <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Email address"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-sky-500 outline-none"
+                />
+
+                <input value={phone} onChange={(e) => setPhone(e.target.value)} type="text" placeholder="Phone number"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-sky-500 outline-none"
+                />
+              </div>
+
+              {/* MESSAGE */}
+              <div className="mt-4">
+                <label className="text-sm font-medium text-gray-700 mb-2 block">Additional details</label>
+
+                <textarea value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Tell us more about your requirement..."
+                  rows={4} className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-sky-500 outline-none"
+                />
+              </div>
 
               {/* BUTTON */}
               <button onClick={handleSubmit} disabled={loading}
-                className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-full font-semibold transition disabled:opacity-50">
-                {loading ? "Sending..." : "Request Tour"}
+                className="mt-6 w-full bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-600 hover:to-indigo-600 text-white py-3 rounded-full font-semibold transition disabled:opacity-50"
+              >
+                {loading ? "Sending request..." : "Submit Inquiry"}
               </button>
+
+              {/* SMALL NOTE */}
+              <p className="text-xs text-gray-400 text-center mt-4">
+                We usually respond within a few hours.
+              </p>
             </div>
 
             {/* AGENT CARD */}
@@ -666,6 +784,137 @@ const PropertyDetails = ({setShowLogin}) => {
           </div>
         </div>
       </div>
+        
+      {soldProperties.length > 0 && (
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="bg-white/60 backdrop-blur-xl border rounded-3xl p-6 mb-8 text-center pt-6 mt-4">
+            <div className="max-w-[1280px] mx-auto px-4 lg:px-6">
+
+              {/* HEADER */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-10 gap-4">
+
+                <div>
+                  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
+                    Sold Properties
+                  </h2>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Recently completed and sold listings
+                  </p>
+                </div>
+
+                <span className="bg-red-50 text-red-600 border border-red-100 px-4 py-2 rounded-full text-sm font-medium w-fit">
+                  {soldProperties.length} Sold
+                </span>
+
+              </div>
+
+              {/* GRID */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+                {paginated.map((item) => {
+                  const text = stripHtml(item.description || "");
+                  const isLong = text.length > 80;
+
+                  return (
+                    <div
+                      key={item.id}
+                      className="group bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                    >
+
+                      {/* IMAGE */}
+                      <div className="relative h-48 overflow-hidden">
+                        <img
+                          src={
+                            item.image?.length
+                              ? `https://lightblue-moose-690494.hostingersite.com/public/${item.image[0]?.path}`
+                              : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
+                          }
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          alt={item.title}
+                        />
+
+                        {/* SOLD BADGE */}
+                        <div className="absolute top-3 left-3 bg-red-600 text-white text-xs px-3 py-1 rounded-full shadow">
+                          SOLD
+                        </div>
+                      </div>
+
+                      {/* CONTENT */}
+                      <div className="p-4 space-y-3">
+
+                        <h3 className="font-semibold text-gray-900 line-clamp-1">
+                          {item.title}
+                        </h3>
+
+                        <p className="text-sm text-gray-500 line-clamp-1">
+                          📍 {item.location}
+                        </p>
+
+                        <p className="text-xs sm:text-sm text-gray-500 min-h-[42px] leading-relaxed">
+                          {expanded === item.id
+                            ? text
+                            : text.slice(0, 80) + (isLong ? "..." : "")}
+                        </p>
+
+                        {isLong && (
+                          <button
+                            onClick={() =>
+                              setExpanded(expanded === item.id ? null : item.id)
+                            }
+                            className="text-sky-500 text-xs sm:text-sm font-medium hover:underline"
+                          >
+                            {expanded === item.id ? "Show Less" : "Read More"}
+                          </button>
+                        )}
+
+                        {/* PRICE + BUTTON */}
+                        <div className="flex justify-between items-center pt-2">
+
+                          <p className="text-lg font-bold text-sky-600">
+                            ₹ {item.sale_price || item.monthly_rent}
+                          </p>
+
+                          <button
+                            onClick={() => navigate(`/property/${item.id}`)}
+                            className="px-4 py-2 bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-600 hover:to-indigo-600 text-white rounded-xl text-sm font-medium transition"
+                          >
+                            View
+                          </button>
+
+                        </div>
+
+                      </div>
+                    </div>
+                  );
+                })}
+
+              </div>
+
+              {/* PAGINATION */}
+              {soldTotalPages > 1 && (
+                <div className="flex justify-center mt-10 gap-2 flex-wrap">
+
+                  {[...Array(soldTotalPages)].map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setSoldPage(i + 1)}
+                      className={`px-4 py-2 rounded-xl text-sm font-medium transition ${
+                        soldPage === i + 1
+                          ? "bg-sky-500 text-white shadow"
+                          : "bg-white border hover:bg-gray-50"
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+
+                </div>
+              )}
+
+            </div>
+          </div>
+        </div>
+      )}
     </div>
       
     {/* FULL SCREEN GALLERY */}

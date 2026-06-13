@@ -44,6 +44,7 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
 
       const updated = {
         ...filters,
+        customer_email: localStorage.getItem("customer_email") || null,
         type: firstId,
         type_name: firstType?.name || "",
       };
@@ -230,19 +231,24 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
             onLoad={(ref) => (autoRef.current = ref)}
             onPlaceChanged={() => {
               const place = autoRef.current.getPlace();
+
               if (place?.formatted_address) {
-                const updated = {
+                setFilters({
                   ...filters,
                   location: place.formatted_address,
-                };
-                setFilters(updated);
+                  location_selected: true,
+                });
               }
             }}
           >
             <input type="text" placeholder="Location" className="w-full h-12 border border-gray-300 rounded-xl px-4 bg-white focus:ring-2 focus:ring-sky-500 outline-none"
               value={filters.location || ""}
               onChange={(e) =>
-                setFilters({ ...filters, location: e.target.value })
+                setFilters({
+                  ...filters,
+                  location: e.target.value,
+                  location_selected: false,
+                })
               }
             />
           </Autocomplete>

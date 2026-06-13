@@ -1,19 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
-import {
-  FaHeart,
-  FaHome,
-  FaSearch,
-  FaCog,
-  FaUser, FaSignOutAlt
-} from "react-icons/fa";
+import { FaUserCircle, FaHeart, FaHome, FaSearch, FaCog, FaBuilding, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { useWishlist } from "./WishlistContext";
 
 const Navbar = ({ setShowLogin, customer, setCustomer }) => {
   const [open, setOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const { wishlist } = useWishlist();
+
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setProfileOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem("customer_token");
@@ -26,19 +37,19 @@ const Navbar = ({ setShowLogin, customer, setCustomer }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("customer_token");
+    localStorage.removeItem("customer_id");
+    localStorage.removeItem("customer_name");
     localStorage.removeItem("customer_email");
+    localStorage.removeItem("customer_phone");
     localStorage.removeItem("wishlist");
 
+    setProfileOpen(false);
     setCustomer(null);
     setShowLogin(false);
   };
 
   const navClass = ({ isActive }) =>
-    `px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
-      isActive
-        ? "bg-sky-100 text-sky-600 shadow-sm"
-        : "text-gray-600 hover:text-sky-500 hover:bg-gray-50"
-    }`;
+    `px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${isActive ? "bg-sky-100 text-sky-600 shadow-sm" : "text-gray-600 hover:text-sky-500 hover:bg-gray-50"}`;
 
   return (
     <>
@@ -80,21 +91,84 @@ const Navbar = ({ setShowLogin, customer, setCustomer }) => {
                 </button>
               ) : (
                 <>
-                  {/* WISHLIST ICON WITH COUNT */}
-                  <NavLink to="/wishlist" className="relative px-3 py-2 rounded-xl text-gray-600 hover:bg-red-50 hover:text-red-500 transition">
-                    <FaHeart />
+                  <div className="relative" ref={profileRef}>
+  
 
-                    {/* 🔥 BADGE */}
-                    {wishlist?.length > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">
-                        {wishlist.length}
-                      </span>
+                    {/* Profile Button */}
+                    <button
+                      onClick={() => setProfileOpen(!profileOpen)}
+                      className="ml-2 w-11 h-11 rounded-full bg-sky-100 hover:bg-sky-200 flex items-center justify-center transition"
+                    >
+                      <FaUserCircle className="text-3xl text-sky-600" />
+                    </button>
+
+                    {/* Dropdown */}
+                    {profileOpen && (
+                      <div className="absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50">
+
+                        {/* Header */}
+                        <div className="px-5 py-4 bg-gradient-to-r from-sky-500 to-blue-500 text-white">
+                          <div className="flex items-center gap-3">
+                            <FaUserCircle className="text-5xl" />
+
+                            <div>
+                              <h4 className="font-semibold">
+                                {localStorage.getItem("customer_name") || "Customer"}
+                              </h4>
+
+                              <p className="text-xs text-sky-100">
+                                {localStorage.getItem("customer_email")}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Menu */}
+                        <div className="p-2">
+
+                          <Link
+                            to="/profile"
+                            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-sky-50 transition"
+                            onClick={() => setProfileOpen(false)}
+                          >
+                            <FaUser className="text-sky-500" />
+                            My Profile
+                          </Link>
+
+                          <Link
+                            to="/wishlist"
+                            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-sky-50 transition"
+                            onClick={() => setProfileOpen(false)}
+                          >
+                            <FaHeart className="text-red-500" />
+                            Wishlist
+                          </Link>
+
+                          <Link
+                            to="/properties"
+                            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-sky-50 transition"
+                            onClick={() => setProfileOpen(false)}
+                          >
+                            <FaBuilding className="text-sky-500" />
+                            Browse Properties
+                          </Link>
+
+                          <hr className="my-2" />
+
+                          <button
+                            onClick={() => {
+                              setProfileOpen(false);
+                              handleLogout();
+                            }}
+                            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-red-500 transition"
+                          >
+                            <FaSignOutAlt />
+                            Logout
+                          </button>
+                        </div>
+                      </div>
                     )}
-                  </NavLink>
-
-                  <button onClick={handleLogout} className="border border-red-300 text-red-500 px-4 py-2 rounded-xl hover:bg-red-50 transition">
-                    Logout
-                  </button>
+                  </div>
                 </>
               )}
             </div>

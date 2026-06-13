@@ -77,12 +77,20 @@ const FeaturedProperties = () => {
                 {/* IMAGE */}
                 <div className="relative h-44 sm:h-52 overflow-hidden bg-gray-100">
                   <img className="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt={item.title}
-                    src={
-                      item.image && item.image.length > 0
-                        ? `https://lightblue-moose-690494.hostingersite.com/public/${item.image[0]?.path || item.image[0]}`
+                    src={item.image && item.image.length > 0 ? `https://lightblue-moose-690494.hostingersite.com/public/${item.image[0]?.path || item.image[0]}`
                         : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
                     }
                   />
+
+                  {/* Status Badge */}
+                  <div className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm
+                      ${item.status === "active" ? "bg-green-500/90 text-white" : item.status === "pending" ? "bg-yellow-500/90 text-white" : item.status === "sold"
+                        ? "bg-red-500/90 text-white" : item.status === "rented" ? "bg-blue-500/90 text-white" : "bg-gray-700/90 text-white"
+                      }`
+                    }
+                  >
+                    {item.status?.charAt(0).toUpperCase() + item.status?.slice(1)}
+                  </div>
                 </div>
 
                 {/* CONTENT */}
@@ -101,11 +109,7 @@ const FeaturedProperties = () => {
                   </p>
 
                   {isLong && (
-                    <button className="text-sky-500 text-xs sm:text-sm hover:underline self-start"
-                      onClick={() =>
-                        setExpanded(expanded === item.id ? null : item.id)
-                      }
-                    >
+                    <button className="text-sky-500 text-xs sm:text-sm hover:underline self-start" onClick={() => setExpanded(expanded === item.id ? null : item.id)}>
                       {expanded === item.id ? "Show Less" : "Read More"}
                     </button>
                   )}
