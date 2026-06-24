@@ -286,12 +286,21 @@ const AgentProfile = () => {
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
               {paginated.map((item) => (
-                <div key={item.id} className="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                <div key={item.id} className="relative bg-white rounded-3xl overflow-hidden border border-gray-100 shadow hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                   <img className="h-52 w-full object-cover"
                     src={
                       item.image?.length ? `https://lightblue-moose-690494.hostingersite.com/public/${item.image[0]?.path}` : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
                     }
                   />
+                  {/* Status Badge */}
+                  <div className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm
+                      ${item.status === "active" ? "bg-green-500/90 text-white" : item.status === "pending" ? "bg-yellow-500/90 text-white" : item.status === "sold"
+                        ? "bg-red-500/90 text-white" : item.status === "rented" ? "bg-blue-500/90 text-white" : "bg-gray-700/90 text-white"
+                      }`
+                    }
+                  >
+                    {item.status?.charAt(0).toUpperCase() + item.status?.slice(1)}
+                  </div>
 
                   <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-8">
                     <h3 className="font-semibold line-clamp-1">
