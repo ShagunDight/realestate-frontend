@@ -8,7 +8,7 @@ const Navbar = ({ setShowLogin, customer, setCustomer }) => {
   const [open, setOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const { wishlist } = useWishlist();
-
+  const [customerInfo, setCustomerInfo] = useState(null);
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
 
@@ -28,24 +28,30 @@ const Navbar = ({ setShowLogin, customer, setCustomer }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("customer_token");
-    const email = localStorage.getItem("customer_email");
+    const cu = localStorage.getItem("customer");
 
-    if (token && email) {
-      setCustomer({ email });
+    if (cu) {
+      try {
+        setCustomerInfo(JSON.parse(cu));
+      } catch (err) {
+        console.log("navbar Do not have a values");
+      }
     }
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("customer_token");
     localStorage.removeItem("customer_id");
-    localStorage.removeItem("customer_name");
-    localStorage.removeItem("customer_email");
-    localStorage.removeItem("customer_phone");
+    localStorage.removeItem("customer");
     localStorage.removeItem("wishlist");
 
     setProfileOpen(false);
     setCustomer(null);
     setShowLogin(false);
+    
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
   };
 
   const navClass = ({ isActive }) =>
@@ -85,7 +91,7 @@ const Navbar = ({ setShowLogin, customer, setCustomer }) => {
             {/* AUTH */}
             <div className="ml-3 flex items-center gap-2">
 
-              {!customer ? (
+              {!customerInfo ? (
                 <button onClick={() => setShowLogin(true)} className="bg-sky-500 text-white px-5 py-2 rounded-xl hover:bg-sky-600 shadow-md transition">
                   Login
                 </button>
@@ -95,11 +101,12 @@ const Navbar = ({ setShowLogin, customer, setCustomer }) => {
   
 
                     {/* Profile Button */}
-                    <button
+                    <button className="ml-2 w-11 h-11 rounded-full bg-sky-100 hover:bg-sky-200 flex items-center justify-center transition"
                       onClick={() => setProfileOpen(!profileOpen)}
-                      className="ml-2 w-11 h-11 rounded-full bg-sky-100 hover:bg-sky-200 flex items-center justify-center transition"
                     >
-                      <FaUserCircle className="text-3xl text-sky-600" />
+                      <img alt="" className="w-10 h-10 rounded-full mx-auto border-4 border-sky-500 object-cover"
+                          src={ customerInfo.image ? `http://127.0.0.1:8001${customerInfo.image}` : `https://ui-avatars.com/api/?name=${customerInfo.name}`}
+                      />
                     </button>
 
                     {/* Dropdown */}
@@ -113,11 +120,11 @@ const Navbar = ({ setShowLogin, customer, setCustomer }) => {
 
                             <div>
                               <h4 className="font-semibold">
-                                {localStorage.getItem("customer_name") || "Customer"}
+                                {customerInfo?.name || "Customer"}
                               </h4>
 
                               <p className="text-xs text-sky-100">
-                                {localStorage.getItem("customer_email")}
+                                {customerInfo?.email || ""}
                               </p>
                             </div>
                           </div>
@@ -126,41 +133,28 @@ const Navbar = ({ setShowLogin, customer, setCustomer }) => {
                         {/* Menu */}
                         <div className="p-2">
 
-                          <Link
-                            to="/profile"
-                            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-sky-50 transition"
-                            onClick={() => setProfileOpen(false)}
-                          >
+                          <Link to="/profile" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-sky-50 transition" onClick={() => setProfileOpen(false)}>
                             <FaUser className="text-sky-500" />
                             My Profile
                           </Link>
 
-                          <Link
-                            to="/wishlist"
-                            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-sky-50 transition"
-                            onClick={() => setProfileOpen(false)}
-                          >
+                          <Link to="/wishlist" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-sky-50 transition" onClick={() => setProfileOpen(false)}>
                             <FaHeart className="text-red-500" />
                             Wishlist
                           </Link>
 
-                          <Link
-                            to="/properties"
-                            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-sky-50 transition"
-                            onClick={() => setProfileOpen(false)}
-                          >
+                          <Link to="/properties" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-sky-50 transition" onClick={() => setProfileOpen(false)}>
                             <FaBuilding className="text-sky-500" />
                             Browse Properties
                           </Link>
 
                           <hr className="my-2" />
 
-                          <button
+                          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-red-500 transition"
                             onClick={() => {
                               setProfileOpen(false);
                               handleLogout();
                             }}
-                            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-red-500 transition"
                           >
                             <FaSignOutAlt />
                             Logout
@@ -175,15 +169,70 @@ const Navbar = ({ setShowLogin, customer, setCustomer }) => {
           </div>
 
           {/* MOBILE AUTH BUTTON (ONLY MOBILE) */}
-          <div className="md:hidden">
-            {!customer ? (
-              <button onClick={() => setShowLogin(true)} className="bg-sky-500 text-white px-3 py-3 rounded-xl hover:bg-sky-600 shadow-md transition">
+          <div className="md:hidden relative" ref={profileRef}>
+            {!customerInfo ? (
+              <button
+                onClick={() => setShowLogin(true)}
+                className="bg-sky-500 text-white px-3 py-3 rounded-xl shadow-md"
+              >
                 <FaUser />
               </button>
             ) : (
-              <button onClick={handleLogout} className="bg-red-500 text-white px-3 py-3 rounded-xl hover:bg-red-600 shadow-md transition">
-                <FaSignOutAlt />
-              </button>
+              <>
+                {/* PROFILE BUTTON */}
+                <button
+                  onClick={() => setProfileOpen(!profileOpen)}
+                  className="bg-sky-100 text-sky-600 px-3 py-3 rounded-xl shadow-md"
+                >
+                  <FaUserCircle size={22} />
+                </button>
+
+                {/* DROPDOWN */}
+                {profileOpen && (
+                  <div className="absolute right-0 top-14 w-64 bg-white rounded-2xl shadow-2xl border z-50 overflow-hidden">
+
+                    {/* HEADER */}
+                    <div className="bg-gradient-to-r from-sky-500 to-blue-500 text-white p-4">
+                      <p className="font-semibold">
+                        {customerInfo?.name || "Customer"}
+                      </p>
+                      <p className="text-xs text-sky-100">
+                        {customerInfo?.email}
+                      </p>
+                    </div>
+
+                    {/* MENU */}
+                    <div className="p-2">
+                      <Link to="/profile" onClick={() => setProfileOpen(false)} className="flex items-center gap-3 p-3 hover:bg-sky-50 rounded-xl">
+                        <FaUser className="text-sky-500" />
+                        My Profile
+                      </Link>
+
+                      <Link to="/wishlist" onClick={() => setProfileOpen(false)} className="flex items-center gap-3 p-3 hover:bg-sky-50 rounded-xl">
+                        <FaHeart className="text-red-500" />
+                        Wishlist
+                      </Link>
+                        
+                      <Link to="/properties" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-sky-50 transition" onClick={() => setProfileOpen(false)}>
+                        <FaBuilding className="text-sky-500" />
+                        Browse Properties
+                      </Link>
+
+                      <hr className="my-2" />
+
+                      <button className="w-full flex items-center gap-3 p-3 text-red-500 hover:bg-red-50 rounded-xl"
+                        onClick={() => {
+                          setProfileOpen(false);
+                          handleLogout();
+                        }}
+                      >
+                        <FaSignOutAlt />
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
@@ -200,8 +249,8 @@ const Navbar = ({ setShowLogin, customer, setCustomer }) => {
           </NavLink>
 
           {/* WISHLIST */}
-          <NavLink to={customer ? "/wishlist" : "#"} onClick={(e) => {
-            if (!customer) {
+          <NavLink to={customerInfo ? "/wishlist" : "#"} onClick={(e) => {
+            if (!customerInfo) {
               e.preventDefault();
               setShowLogin(true);
             }

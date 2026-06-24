@@ -17,6 +17,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import FAQPage from "./pages/FAQPage";
 import { LoadScript } from "@react-google-maps/api";
 import { WishlistProvider } from "./components/WishlistContext";
+import CustomerProfile from "./pages/CustomerProfile";
 
 const API_KEY = "AIzaSyD-5EHYR_BK19i4x7gASRqFx0qvVW0u28w";
 
@@ -24,33 +25,15 @@ function App() {
   const [showLogin, setShowLogin] = useState(false);
 
   const [customer, setCustomer] = useState(() => {
-    const token = localStorage.getItem("customer_token");
-    const email = localStorage.getItem("customer_email");
-    return token && email ? { email } : null;
+    const storedCustomer = localStorage.getItem("customer");
   });
 
   return (
     <LoadScript googleMapsApiKey={API_KEY} libraries={["places"]}>
-
       <WishlistProvider>
-
         <div className="min-h-screen bg-white">
-
-          {/* LOGIN MODAL */}
-          <CustomerLogin
-            open={showLogin}
-            setOpen={setShowLogin}
-            setCustomer={setCustomer}
-          />
-
-          {/* NAVBAR */}
-          <Navbar
-            setShowLogin={setShowLogin}
-            customer={customer}
-            setCustomer={setCustomer}
-          />
-
-          {/* ROUTES */}
+          <CustomerLogin open={showLogin} setOpen={setShowLogin} setCustomer={setCustomer}/>
+          <Navbar setShowLogin={setShowLogin} customer={customer} setCustomer={setCustomer}/>
           <div className="pb-12 md:pb-0">
             <Routes>
 
@@ -69,10 +52,10 @@ function App() {
               <Route path="/wishlist" element={<WishlistPage />} />
               <Route path="/faq" element={<FAQPage />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/profile" element={<CustomerProfile />} />
 
               {/* 404 */}
-              <Route
-                path="*"
+              <Route path="*"
                 element={
                   <div className="flex items-center justify-center min-h-[80vh]">
                     <h1 className="text-3xl font-bold text-gray-700">
@@ -81,13 +64,10 @@ function App() {
                   </div>
                 }
               />
-
             </Routes>
           </div>
         </div>
-
       </WishlistProvider>
-
     </LoadScript>
   );
 }

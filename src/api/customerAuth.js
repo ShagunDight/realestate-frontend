@@ -38,8 +38,22 @@ export const verifyOtp = async (email, otp) => {
 
   if (data.token) {
     localStorage.setItem("customer_token", data.token);
-    localStorage.setItem("customer_email", email);
-    localStorage.setItem("customer", data.customer);
+
+    localStorage.setItem(
+      "customer",
+      JSON.stringify({
+        id: data.customer._id || data.customer.id,
+        name: data.customer.name,
+        email: data.customer.email,
+        phone: data.customer.phone || null,
+        image: data.customer.img || null,
+      })
+    );
+    localStorage.setItem("customer_id", data.customer._id || data.customer.id);
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
   }
 
   return data;
@@ -66,6 +80,22 @@ export const loginWithPassword = async (email, password) => {
 
   if (data.token) {
     localStorage.setItem("customer_token", data.token);
+
+    localStorage.setItem(
+      "customer",
+      JSON.stringify({
+        id: data.customer._id || data.customer.id,
+        name: data.customer.name,
+        email: data.customer.email,
+        phone: data.customer.phone || null,
+        image: data.customer.img || null,
+      })
+    );
+    localStorage.setItem("customer_id", data.customer._id || data.customer.id);
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
   }
 
   return data;

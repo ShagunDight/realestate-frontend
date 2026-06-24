@@ -99,7 +99,7 @@ const MapView = ({ properties, location, onBoundsChange }) => {
           lng: pos.lng(),
         });
 
-        mapRef.current.setZoom(12);
+        mapRef.current.setZoom(8);
       }
     });
   }, [location]);
@@ -225,7 +225,7 @@ const MapView = ({ properties, location, onBoundsChange }) => {
               if (window.innerWidth < 768) {
                 mapRef.current.setZoom(13);
               } else {
-                mapRef.current.setZoom(14);
+                mapRef.current.setZoom(10);
               }
             }
           }}

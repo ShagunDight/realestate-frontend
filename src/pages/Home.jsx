@@ -89,23 +89,14 @@ const Home = () => {
                 {/* glow */}
                 <div className="absolute inset-0 bg-sky-300/20 blur-[80px] sm:blur-[100px] rounded-full"></div>
 
-                <img
-                  src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00"
-                  alt="building"
-                  className="w-full h-full object-cover rounded-2xl sm:rounded-[32px] shadow-2xl"
-                />
+                <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00" alt="building" className="w-full h-full object-cover rounded-2xl sm:rounded-[32px] shadow-2xl"/>
 
                 {/* ROTATING CIRCLE (HIDE ON SMALL SCREENS) */}
                 <div className="hidden sm:block absolute left-[-40px] lg:left-[-50px] top-1/2 -translate-y-1/2">
-
                   <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center rounded-full bg-white/80 backdrop-blur-md border border-sky-200 shadow-lg">
-
                     <svg className="absolute w-full h-full animate-spin-slow" viewBox="0 0 100 100">
                       <defs>
-                        <path
-                          id="circlePath"
-                          d="M 50,50 m -40,0 a 40,40 0 1,1 80,0 a 40,40 0 1,1 -80,0"
-                        />
+                        <path id="circlePath" d="M 50,50 m -40,0 a 40,40 0 1,1 80,0 a 40,40 0 1,1 -80,0"/>
                       </defs>
 
                       <text fill="#0EA5E9" fontSize="10" letterSpacing="2">

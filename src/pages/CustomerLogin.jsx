@@ -65,6 +65,65 @@ const CustomerLogin = ({ open, setOpen, setCustomer }) => {
     }
   };
 
+  const handleOtpChange = (e, index) => {
+    const value = e.target.value.replace(/\D/g, "");
+
+    const newOtp = [...otp];
+
+    // Allow delete
+    if (value === "") {
+      newOtp[index] = "";
+      setOtp(newOtp);
+      return;
+    }
+
+    newOtp[index] = value[0];
+    setOtp(newOtp);
+
+    // Move to next input
+    if (index < otp.length - 1) {
+      otpRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (e, index) => {
+    if (e.key === "Backspace") {
+      // Current box has value -> clear it
+      if (otp[index]) {
+        const newOtp = [...otp];
+        newOtp[index] = "";
+        setOtp(newOtp);
+        return;
+      }
+
+      // Current box empty -> move previous
+      if (index > 0) {
+        otpRefs.current[index - 1]?.focus();
+
+        const newOtp = [...otp];
+        newOtp[index - 1] = "";
+        setOtp(newOtp);
+      }
+    }
+  };
+
+  const handleOtpPaste = (e) => {
+    e.preventDefault();
+
+    const pasted = e.clipboardData
+      .getData("text")
+      .replace(/\D/g, "")
+      .slice(0, 6);
+
+    const newOtp = [...otp];
+
+    pasted.split("").forEach((digit, i) => {
+      newOtp[i] = digit;
+    });
+
+    setOtp(newOtp);
+  };
+
   // SEND OTP
   const handleSendOtp = async (e) => {
     e.preventDefault();
@@ -223,14 +282,14 @@ const CustomerLogin = ({ open, setOpen, setCustomer }) => {
                       <input
                         key={i}
                         ref={(el) => (otpRefs.current[i] = el)}
+                        type="text"
+                        inputMode="numeric"
                         maxLength={1}
                         value={val}
-                        onChange={(e) => {
-                          const newOtp = [...otp];
-                          newOtp[i] = e.target.value;
-                          setOtp(newOtp);
-                        }}
-                        className="w-12 h-12 text-center text-lg rounded-xl border border-blue-100 focus:ring-2 focus:ring-sky-400 outline-none"
+                        onChange={(e) => handleOtpChange(e, i)}
+                        onKeyDown={(e) => handleOtpKeyDown(e, i)}
+                        onPaste={handleOtpPaste}
+                        className="w-12 h-12 text-center text-lg font-semibold rounded-xl border border-blue-100 focus:ring-2 focus:ring-sky-400 outline-none"
                       />
                     ))}
                   </div>

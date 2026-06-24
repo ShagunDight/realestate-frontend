@@ -230,25 +230,27 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
           <Autocomplete
             onLoad={(ref) => (autoRef.current = ref)}
             onPlaceChanged={() => {
-              const place = autoRef.current.getPlace();
+              const place = autoRef.current?.getPlace();
 
               if (place?.formatted_address) {
-                setFilters({
-                  ...filters,
+                setFilters(prev => ({
+                  ...prev,
                   location: place.formatted_address,
+                  latitude: place.geometry.location.lat(),
+                  longitude: place.geometry.location.lng(),
                   location_selected: true,
-                });
+                }));
               }
             }}
           >
             <input type="text" placeholder="Location" className="w-full h-12 border border-gray-300 rounded-xl px-4 bg-white focus:ring-2 focus:ring-sky-500 outline-none"
               value={filters.location || ""}
               onChange={(e) =>
-                setFilters({
-                  ...filters,
+                setFilters(prev => ({
+                  ...prev,
                   location: e.target.value,
                   location_selected: false,
-                })
+                }))
               }
             />
           </Autocomplete>
