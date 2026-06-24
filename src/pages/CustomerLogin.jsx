@@ -277,7 +277,7 @@ const CustomerLogin = ({ open, setOpen, setCustomer }) => {
                     Enter 6-digit OTP sent to your email
                   </p>
 
-                  <div className="flex justify-between gap-2">
+                  <div className="flex justify-center gap-1">
                     {otp.map((val, i) => (
                       <input
                         key={i}

@@ -13,20 +13,6 @@ const Navbar = ({ setShowLogin, customer, setCustomer }) => {
   const profileRef = useRef(null);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (profileRef.current && !profileRef.current.contains(event.target)) {
-        setProfileOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  useEffect(() => {
     const token = localStorage.getItem("customer_token");
     const cu = localStorage.getItem("customer");
 
@@ -171,25 +157,24 @@ const Navbar = ({ setShowLogin, customer, setCustomer }) => {
           {/* MOBILE AUTH BUTTON (ONLY MOBILE) */}
           <div className="md:hidden relative" ref={profileRef}>
             {!customerInfo ? (
-              <button
-                onClick={() => setShowLogin(true)}
-                className="bg-sky-500 text-white px-3 py-3 rounded-xl shadow-md"
-              >
+              <button onClick={() => setShowLogin(true)} className="bg-sky-500 text-white px-3 py-3 rounded-xl shadow-md">
                 <FaUser />
               </button>
             ) : (
               <>
                 {/* PROFILE BUTTON */}
-                <button
-                  onClick={() => setProfileOpen(!profileOpen)}
-                  className="bg-sky-100 text-sky-600 px-3 py-3 rounded-xl shadow-md"
-                >
-                  <FaUserCircle size={22} />
+                <button onClick={() => setProfileOpen(!profileOpen)} className="bg-sky-100 text-sky-600 px-1 py-1 rounded-xl shadow-md">
+                  <img alt="" className="w-12 h-12 rounded-full mx-auto border-4 border-sky-500 object-cover"
+                    src={ customerInfo.image ? `https://lightblue-moose-690494.hostingersite.com/public${customerInfo.image}` : `https://ui-avatars.com/api/?name=${customerInfo.name}`}
+                  />
                 </button>
 
                 {/* DROPDOWN */}
                 {profileOpen && (
-                  <div className="absolute right-0 top-14 w-64 bg-white rounded-2xl shadow-2xl border z-50 overflow-hidden">
+                  <div className={`absolute right-0 top-14 w-64 bg-white rounded-2xl shadow-2xl border z-50 overflow-hidden transition-all duration-150 ${
+                      profileOpen ? "opacity-100 visible" : "opacity-0 invisible"
+                    }`}
+                  >
 
                     {/* HEADER */}
                     <div className="bg-gradient-to-r from-sky-500 to-blue-500 text-white p-4">
@@ -203,17 +188,27 @@ const Navbar = ({ setShowLogin, customer, setCustomer }) => {
 
                     {/* MENU */}
                     <div className="p-2">
-                      <Link to="/profile" onClick={() => setProfileOpen(false)} className="flex items-center gap-3 p-3 hover:bg-sky-50 rounded-xl">
+                        <Link to="/profile"
+                          onClick={() => {
+                            setProfileOpen(false);
+                          }}
+                          className="flex items-center gap-3 p-3 hover:bg-sky-50 rounded-xl">
                         <FaUser className="text-sky-500" />
                         My Profile
                       </Link>
 
-                      <Link to="/wishlist" onClick={() => setProfileOpen(false)} className="flex items-center gap-3 p-3 hover:bg-sky-50 rounded-xl">
+                        <Link to="/wishlist"
+                          onClick={() => {
+                            setProfileOpen(false);
+                          }}
+                          className="flex items-center gap-3 p-3 hover:bg-sky-50 rounded-xl">
                         <FaHeart className="text-red-500" />
                         Wishlist
                       </Link>
                         
-                      <Link to="/properties" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-sky-50 transition" onClick={() => setProfileOpen(false)}>
+                        <Link to="/properties" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-sky-50 transition"
+                          onClick={() => setProfileOpen(false)}
+                        >
                         <FaBuilding className="text-sky-500" />
                         Browse Properties
                       </Link>
