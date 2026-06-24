@@ -16,7 +16,7 @@ const AgentProfile = () => {
   const limit = 12;
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8001/api/agent/profile/${id}`)
+    fetch(`https://lightblue-moose-690494.hostingersite.com/api/agent/profile/${id}`)
       .then((res) => res.json())
       .then((data) => setAgent(data.data))
       .catch((err) => console.error(err));
@@ -214,7 +214,7 @@ const AgentProfile = () => {
                 {/* Team Cover */}
                 <div className="relative h-72">
                   <img
-                    src={`http://127.0.0.1:8001${team.photo}`}
+                    src={`https://lightblue-moose-690494.hostingersite.com/public${team.photo}`}
                     alt={team.name}
                     className="w-full h-full object-cover"
                   />
@@ -248,7 +248,7 @@ const AgentProfile = () => {
                         className="bg-white rounded-2xl border border-gray-100 p-5 text-center hover:-translate-y-2 hover:shadow-xl transition-all duration-300"
                       >
                         <img
-                          src={`http://127.0.0.1:8001${member.photo}`}
+                          src={`https://lightblue-moose-690494.hostingersite.com/public${member.photo}`}
                           alt={member.name}
                           className="w-24 h-24 rounded-full mx-auto object-cover border-4 border-sky-500 shadow-md"
                         />

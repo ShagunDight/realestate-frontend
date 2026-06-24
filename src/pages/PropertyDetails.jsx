@@ -63,7 +63,7 @@ const PropertyDetails = ({ setShowLogin }) => {
 
     const trackView = async () => {
       try {
-        await fetch("http://127.0.0.1:8001/api/property-view", {
+        await fetch("https://lightblue-moose-690494.hostingersite.com/api/property-view", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -96,7 +96,7 @@ const PropertyDetails = ({ setShowLogin }) => {
   const fetchSoldProperties = async () => {
     try {
       const res = await fetch(
-        "http://127.0.0.1:8001/api/sold-properties"
+        "https://lightblue-moose-690494.hostingersite.com/api/sold-properties"
       );
 
       const data = await res.json();
@@ -168,7 +168,7 @@ const PropertyDetails = ({ setShowLogin }) => {
     setLoading(true);
 
     try {
-      const res = await fetch("http://127.0.0.1:8001/api/visit-request", {
+      const res = await fetch("https://lightblue-moose-690494.hostingersite.com/api/visit-request", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

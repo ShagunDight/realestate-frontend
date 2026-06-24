@@ -54,7 +54,7 @@ const Properties = ({ setShowLogin }) => {
   const fetchSoldProperties = async () => {
     try {
       const res = await fetch(
-        "http://127.0.0.1:8001/api/sold-properties"
+        "https://lightblue-moose-690494.hostingersite.com/api/sold-properties"
       );
 
       const data = await res.json();
@@ -91,7 +91,7 @@ const Properties = ({ setShowLogin }) => {
       const query = new URLSearchParams(queryObj).toString();
 
       const res = await fetch(
-        `http://127.0.0.1:8001/api/properties?${query}`
+        `https://lightblue-moose-690494.hostingersite.com/api/properties?${query}`
       );
 
       const data = await res.json();

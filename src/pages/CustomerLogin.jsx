@@ -43,7 +43,7 @@ const CustomerLogin = ({ open, setOpen, setCustomer }) => {
     if (!emailValue) return null;
     try {
       const res = await fetch(
-        "http://127.0.0.1:8001/api/customer/check-user",
+        "https://lightblue-moose-690494.hostingersite.com/api/customer/check-user",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

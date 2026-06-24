@@ -105,7 +105,7 @@ const Navbar = ({ setShowLogin, customer, setCustomer }) => {
                       onClick={() => setProfileOpen(!profileOpen)}
                     >
                       <img alt="" className="w-10 h-10 rounded-full mx-auto border-4 border-sky-500 object-cover"
-                          src={ customerInfo.image ? `http://127.0.0.1:8001${customerInfo.image}` : `https://ui-avatars.com/api/?name=${customerInfo.name}`}
+                          src={ customerInfo.image ? `https://lightblue-moose-690494.hostingersite.com/public${customerInfo.image}` : `https://ui-avatars.com/api/?name=${customerInfo.name}`}
                       />
                     </button>
 

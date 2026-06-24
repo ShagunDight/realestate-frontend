@@ -61,7 +61,7 @@ export const verifyOtp = async (email, otp) => {
 
 export const loginWithPassword = async (email, password) => {
   const res = await fetch(
-    "http://127.0.0.1:8001/api/customer/login",
+    "https://lightblue-moose-690494.hostingersite.com/api/customer/login",
     {
       method: "POST",
       headers: {

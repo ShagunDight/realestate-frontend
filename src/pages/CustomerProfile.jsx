@@ -38,7 +38,7 @@ const CustomerProfile = () => {
   useEffect(() => {
     const id = localStorage.getItem("customer_id") || null;
       
-    fetch(`http://127.0.0.1:8001/api/customer/profile/${id}`)
+    fetch(`https://lightblue-moose-690494.hostingersite.com/api/customer/profile/${id}`)
     .then((res) => res.json())
       .then((data) => {
       
@@ -85,7 +85,7 @@ const CustomerProfile = () => {
     });
 
     const res = await fetch(
-      "http://127.0.0.1:8001/api/customer/profile/update",
+      "https://lightblue-moose-690494.hostingersite.com/api/customer/profile/update",
       {
         method: "POST",
         headers: {
@@ -121,7 +121,7 @@ const CustomerProfile = () => {
 
   const handleUpdatePassword = async () => {
     const res = await fetch(
-      "http://127.0.0.1:8001/api/customer/change-password",
+      "https://lightblue-moose-690494.hostingersite.com/api/customer/change-password",
       {
         method: "POST",
         headers: {
@@ -162,7 +162,7 @@ const CustomerProfile = () => {
           {/* LEFT CARD */}
           <div className="bg-white rounded-3xl shadow-lg border p-6 text-center h-fit">
             <img alt="" className="w-32 h-32 rounded-full mx-auto border-4 border-sky-500 object-cover"
-              src={ customer.img ? `http://127.0.0.1:8001${customer.img}` : `https://ui-avatars.com/api/?name=${customer.name}`}
+              src={ customer.img ? `https://lightblue-moose-690494.hostingersite.com/public${customer.img}` : `https://ui-avatars.com/api/?name=${customer.name}`}
             />
 
             <h2 className="text-2xl font-bold mt-4">
