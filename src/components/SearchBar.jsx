@@ -4,7 +4,7 @@ import FilterModal from "./FilterModal";
 import SpaceUseDropdown from "./SpaceUseDropdown";
 import { useNavigate, useLocation } from "react-router-dom";
 
-const SearchBar = ({ filters, setFilters, onSearch }) => {
+const SearchBar = ({ filters, setFilters, onSearch, hideAdvancedFilters = false, }) => {
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -281,7 +281,7 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
         </div>
 
         {/* PRICE FILTER */}
-        {filters.type_name && (
+        {!hideAdvancedFilters && filters.type_name && (
           <div className="relative w-full">
             <div className="border p-3 rounded-lg bg-white cursor-pointer" onClick={() => setShowPrice(!showPrice)} >
               {filters.min_price || filters.max_price ? `${filters.min_price || 0}-${filters.max_price || 0}` : filters.type_name?.toLowerCase().includes("sale")
@@ -306,34 +306,36 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
         )}
 
         {/* SIZE FILTER */}
-        <div className="relative w-full">
-          <div className="border p-3 rounded-lg bg-white cursor-pointer" onClick={() => setShowSize(!showSize)} >
-            {filters.building_min_size || filters.building_max_size
-              ? `${filters.building_min_size || 0}-${filters.building_max_size || 0} sqft`
-              : "Building Size"}
-          </div>
-
-          {showSize && (
-            <div className="absolute top-full left-0 right-0 bg-white border rounded-xl p-3 mt-2 shadow-xl z-50">
-              <input placeholder="Min SF" className="border p-2 w-full mb-2" value={filters.building_min_size || ""}
-                onChange={(e) =>
-                  setFilters({
-                    ...filters,
-                    building_min_size: e.target.value,
-                  })
-                }
-              />
-              <input placeholder="Max SF" className="border p-2 w-full" value={filters.building_max_size || ""}
-                onChange={(e) =>
-                  setFilters({
-                    ...filters,
-                    building_max_size: e.target.value,
-                  })
-                }
-              />
+        {!hideAdvancedFilters && (
+          <div className="relative w-full">
+            <div className="border p-3 rounded-lg bg-white cursor-pointer" onClick={() => setShowSize(!showSize)} >
+              {filters.building_min_size || filters.building_max_size
+                ? `${filters.building_min_size || 0}-${filters.building_max_size || 0} sqft`
+                : "Building Size"}
             </div>
-          )}
-        </div>
+
+            {showSize && (
+              <div className="absolute top-full left-0 right-0 bg-white border rounded-xl p-3 mt-2 shadow-xl z-50">
+                <input placeholder="Min SF" className="border p-2 w-full mb-2" value={filters.building_min_size || ""}
+                  onChange={(e) =>
+                    setFilters({
+                      ...filters,
+                      building_min_size: e.target.value,
+                    })
+                  }
+                />
+                <input placeholder="Max SF" className="border p-2 w-full" value={filters.building_max_size || ""}
+                  onChange={(e) =>
+                    setFilters({
+                      ...filters,
+                      building_max_size: e.target.value,
+                    })
+                  }
+                />
+              </div>
+            )}
+          </div>
+        )}
         
         {showModal && (
           <FilterModal filters={filters} setFilters={setFilters} onClose={() => setShowModal(false)} onSearch={onSearch} />
@@ -342,37 +344,40 @@ const SearchBar = ({ filters, setFilters, onSearch }) => {
         {/* BUTTONS WRAP FIX */}
         <div className="col-span-1 sm:col-span-2 xl:col-span-1 flex flex-row sm:flex-row gap-2 w-full">
 
-          <button onClick={() => setShowModal(true)} className="bg-sky-500 hover:bg-sky-600 text-white px-3 py-1 rounded-lg w-full sm:w-auto">
-            All Filters
-          </button>
+          {!hideAdvancedFilters && (
+            <button onClick={() => setShowModal(true)} className="bg-sky-500 hover:bg-sky-600 text-white px-3 py-1 rounded-lg w-full sm:w-auto">
+              All Filters
+            </button>
+          )}
 
-          <button
-            onClick={() => {
-              const resetFilters = {
-                location: "",
-                type: "",
-                type_name: "",
-                space_use: [],
-                space_use_id: [],
-                listing_type: "",
-                min_price: "",
-                max_price: "",
-                land_size_min: "",
-                land_size_max: "",
-                building_size_min: "",
-                building_size_max: "",
-                year_built_min: "",
-                year_built_max: "",
-              };
+          {!hideAdvancedFilters && (
+            <button
+              onClick={() => {
+                const resetFilters = {
+                  location: "",
+                  type: "",
+                  type_name: "",
+                  space_use: [],
+                  space_use_id: [],
+                  listing_type: "",
+                  min_price: "",
+                  max_price: "",
+                  land_size_min: "",
+                  land_size_max: "",
+                  building_size_min: "",
+                  building_size_max: "",
+                  year_built_min: "",
+                  year_built_max: "",
+                };
 
-              setFilters(resetFilters);
-              setSpaceUses([]);
-              setShowPrice(false);
-              setShowSize(false);
-            }} className="bg-gray-200 text-gray-800 px-4 py-3 rounded-lg hover:bg-gray-300 w-full sm:w-auto" >
-            Clear
-          </button>
-
+                setFilters(resetFilters);
+                setSpaceUses([]);
+                setShowPrice(false);
+                setShowSize(false);
+              }} className="bg-gray-200 text-gray-800 px-4 py-3 rounded-lg hover:bg-gray-300 w-full sm:w-auto" >
+              Clear
+            </button>
+          )}
           <button
             onClick={() => {
               navigate("/properties", {

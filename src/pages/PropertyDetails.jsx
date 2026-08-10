@@ -414,7 +414,7 @@ const PropertyDetails = ({ setShowLogin }) => {
               </div>
 
               {/* MAP */}
-              <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+              <div className="bg-white p-3 rounded-3xl shadow-sm border border-gray-100">
 
                 {/* TABS */}
                 <div className="flex gap-6 border-b mb-5">
@@ -439,45 +439,45 @@ const PropertyDetails = ({ setShowLogin }) => {
                   </button>
                 </div>
 
-              <div className="h-[250px] sm:h-[300px] md:h-[350px] rounded-2xl overflow-hidden">
-                {view === "aerial" ? (
-                  <div className="relative h-full rounded-2xl overflow-hidden bg-gray-100">
-                    <img className="w-full h-full object-cover" alt=""
-                      src={
-                        images.length
-                          ? `https://lightblue-moose-690494.hostingersite.com/public/${images[aerialImage]?.path}`
-                          : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
-                      }
+                <div className="h-[250px] sm:h-[300px] md:h-[350px] rounded-2xl overflow-hidden">
+                  {view === "aerial" ? (
+                    <div className="relative h-full rounded-2xl overflow-hidden bg-gray-100">
+                      <img className="w-full h-full object-cover" alt=""
+                        src={
+                          images.length
+                            ? `https://lightblue-moose-690494.hostingersite.com/public/${images[aerialImage]?.path}`
+                            : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg"
+                        }
+                      />
+
+                      <button
+                        onClick={() =>
+                          setAerialImage(
+                            aerialImage === 0 ? images.length - 1 : aerialImage - 1
+                          )
+                        } className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 p-3 rounded-full"
+                      >
+                        <IoIosArrowBack size={20} />
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          setAerialImage(
+                            aerialImage === images.length - 1 ? 0 : aerialImage + 1
+                          )
+                        }
+                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 p-3 rounded-full"
+                      >
+                        <IoIosArrowForward size={20} />
+                      </button>
+                    </div>
+                  ) : (
+                    <iframe width="100%" height="100%" title="map"
+                      src={`https://maps.google.com/maps?q=${property.latitude},${property.longitude}&z=15&output=embed`}
                     />
-
-                    <button
-                      onClick={() =>
-                        setAerialImage(
-                          aerialImage === 0 ? images.length - 1 : aerialImage - 1
-                        )
-                      } className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 p-3 rounded-full"
-                    >
-                      <IoIosArrowBack size={20} />
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        setAerialImage(
-                          aerialImage === images.length - 1 ? 0 : aerialImage + 1
-                        )
-                      }
-                      className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 p-3 rounded-full"
-                    >
-                      <IoIosArrowForward size={20} />
-                    </button>
-                  </div>
-                ) : (
-                  <iframe width="100%" height="100%" title="map"
-                    src={`https://maps.google.com/maps?q=${property.latitude},${property.longitude}&z=15&output=embed`}
-                  />
-                )}
+                  )}
+                </div>
               </div>
-            </div>
 
             {/* PROPERTY OVERVIEW */}
             {property.property_overview && (
@@ -786,9 +786,9 @@ const PropertyDetails = ({ setShowLogin }) => {
       </div>
         
       {soldProperties.length > 0 && (
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto">
           <div className="bg-white/60 backdrop-blur-xl border rounded-3xl p-6 mb-8 text-center pt-6 mt-4">
-            <div className="max-w-[1280px] mx-auto px-4 lg:px-6">
+            <div className="max-w-[1280px] mx-auto lg:px-6">
 
               {/* HEADER */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-10 gap-4">

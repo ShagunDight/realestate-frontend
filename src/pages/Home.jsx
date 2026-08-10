@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { HiSparkles } from "react-icons/hi";
+import React, { useEffect, useState } from "react";
+
 import Features from "../components/Features";
 import FeaturedProperties from "../components/FeaturedProperties";
 import Testimonials from "../components/Testimonials";
@@ -8,8 +8,10 @@ import CTASection from "../components/CTASection";
 import Footer from "../components/Footer";
 import SearchBar from "../components/SearchBar";
 import MultiImageSlider from "../components/MultiImageSlider";
+import MobileNearbyProperties from "../components/MobileNearbyProperties";
 
 const Home = () => {
+
   const [filters, setFilters] = useState({
     location: "",
     type: "",
@@ -19,25 +21,199 @@ const Home = () => {
     max_price: "",
   });
 
-  const handleSearch = async () => {
+  const getMobileProperties = async (latitude = null, longitude = null) => {
+
     try {
+
+      let url = "https://lightblue-moose-690494.hostingersite.com/api/properties";
+
+      const params = new URLSearchParams();
+
+      if (latitude && longitude) {
+
+        params.append("latitude", latitude);
+        params.append("longitude", longitude);
+      }
+
+      const response = await fetch(`${url}?${params.toString()}`);
+
+      const data = await response.json();
+
+      const properties =
+        data?.data ||
+        data?.properties ||
+        data ||
+        [];
+
+
+    } catch (error) {
+
+      console.error("Property Error:", error);
+
+    } finally {
+
+    }
+  };
+
+  useEffect(() => {
+
+    if (!navigator.geolocation) {
+      getMobileProperties();
+
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+
+      (position) => {
+
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+        console.log("CURRENT LOCATION:", {
+          latitude,
+          longitude,
+        });
+
+        getMobileProperties(latitude, longitude);
+      },
+
+      (error) => {
+
+        console.log("Location permission denied:", error);
+
+        getMobileProperties();
+      },
+
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000,
+      }
+    );
+  }, []);
+
+
+  const handleSearch = async () => {
+
+    try {
+
       const query = new URLSearchParams(filters).toString();
 
       const res = await fetch(`https://lightblue-moose-690494.hostingersite.com/api/properties?${query}`);
 
       const data = await res.json();
 
-      console.log("RESULT:", data);
+      console.log("SEARCH RESULT:", data);
+
     } catch (err) {
+
       console.error(err);
     }
   };
+
+
+  const MobilePropertyCard = ({ property }) => {
+
+    const image =
+      property?.images?.[0] ||
+      property?.image ||
+      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
+
+
+    return (
+      <div className="min-w-[285px] max-w-[285px] overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-[0_8px_25px_rgba(0,0,0,0.07)]">
+
+        {/* IMAGE */}
+
+        <div className="relative h-[175px] w-full">
+          <img src={image} alt={property?.title || "Property"} className="h-full w-full object-cover"/>
+
+          {/* Listing Badge */}
+
+          {property?.listing_type && (
+            <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-[10px] font-semibold text-sky-600 backdrop-blur">
+              {property.listing_type}
+            </span>
+          )}
+        </div>
+
+
+        {/* CONTENT */}
+
+        <div className="p-4">
+          <h3 className="truncate text-base font-bold text-gray-900">
+            {property?.title || "Beautiful Property"}
+          </h3>
+
+          <p className="mt-1 truncate text-xs text-gray-500">
+            📍 {property?.location || "Nearby location"}
+          </p>
+
+
+          <div className="mt-4 flex items-center justify-between">
+            <div>
+              <p className="text-[10px] text-gray-400">
+                Price
+              </p>
+
+              <p className="text-sm font-bold text-sky-500">
+                {property?.price ? `₹${property.price}` : "Price on request"}
+              </p>
+            </div>
+
+
+            <button className="rounded-lg bg-sky-500 px-3 py-2 text-xs font-semibold text-white">
+              View
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+
   return (
     <>
-      {/* HERO SECTION */}
-      <section className="relative overflow-visible bg-gradient-to-b from-sky-50 via-white to-white pt-14 sm:pt-16 md:pt-20 pb-12 md:pb-4">
-        <div className="max-w-[1300px] mx-auto px-4 sm:px-6">
+      <section className="block overflow-hidden bg-white lg:hidden">
 
+        {/* MOBILE HERO */}
+
+        <div className="bg-gradient-to-b from-sky-50 to-white px-4 pb-7 pt-9">
+          <div className="text-center">
+
+            <h1 className="text-[36px] font-extrabold leading-[1.08] tracking-tight text-gray-900">
+              Find Your
+
+              <span className="block text-sky-500">
+                Dream Property
+              </span>
+
+              With Confidence
+            </h1>
+
+            <p className="mx-auto mt-4 max-w-[350px] text-sm leading-6 text-gray-600">
+              Find the perfect property easily with our modern
+              platform designed to simplify your search.
+            </p>
+
+          </div>
+
+
+          {/* SEARCH */}
+
+          <div className="mt-7">
+            <SearchBar filters={filters} setFilters={setFilters} onSearch={handleSearch} hideAdvancedFilters={true} />
+          </div>
+        </div>
+
+        <MobileNearbyProperties />
+
+      </section>
+
+
+      <section className=" relative hidden overflow-hidden bg-white lg:block">
+        <div className="max-w-[1300px] mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
 
             {/* LEFT */}
@@ -60,30 +236,28 @@ const Home = () => {
               {/* STATS */}
               <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-xl mx-auto lg:mx-0">
 
-                {[
-                  { num: "200+", text: "Customers" },
-                  { num: "10k+", text: "Properties" },
-                  { num: "16+", text: "Experience" },
-                ].map((item, i) => (
-                  <div
-                    key={i}
-                    className="bg-white border border-gray-100 rounded-2xl py-4 sm:py-5 shadow-lg text-center"
-                  >
-                    <h2 className="text-base sm:text-lg font-bold text-gray-900">
-                      {item.num}
-                    </h2>
-                    <p className="text-xs text-gray-500">
-                      {item.text}
-                    </p>
-                  </div>
-                ))}
+                {
+                  [
+                    { num: "200+", text: "Customers" },
+                    { num: "10k+", text: "Properties" },
+                    { num: "16+", text: "Experience" },
+                  ].map((item, i) => (
+                    <div key={i} className="bg-white border border-gray-100 rounded-2xl py-4 sm:py-5 shadow-lg text-center">
+                      <h2 className="text-base sm:text-lg font-bold text-gray-900">
+                        {item.num}
+                      </h2>
+                      <p className="text-xs text-gray-500">
+                        {item.text}
+                      </p>
+                    </div>
+                  )
+                )}
 
               </div>
             </div>
 
             {/* RIGHT */}
             <div className="relative flex justify-center lg:justify-end">
-
               <div className="relative w-full max-w-[500px] lg:max-w-[650px] h-[260px] sm:h-[320px] md:h-[380px] lg:h-[400px]">
 
                 {/* glow */}
@@ -112,32 +286,38 @@ const Home = () => {
 
                   </div>
                 </div>
-
               </div>
             </div>
-
           </div>
         </div>
 
-        {/* SEARCH BAR */}
+
+        {/* DESKTOP SEARCH */}
+
         <div className="max-w-[1320px] mx-auto px-4 sm:px-6">
           <div className="mt-6 md:mt-8 mb-6 md:mb-8">
-            <SearchBar
-              filters={filters}
-              setFilters={setFilters}
-              onSearch={handleSearch}
-            />
+
+            <SearchBar filters={filters} setFilters={setFilters} onSearch={handleSearch}/>
+
           </div>
         </div>
       </section>
-      {}
+
+
       <Features />
+
       <FeaturedProperties />
+
       <MultiImageSlider />
+
       <Testimonials />
+
       <CTASection />
+
       <FAQ />
+
       <Footer />
+
     </>
   );
 };

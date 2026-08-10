@@ -134,8 +134,7 @@ const MultiImageSlider = () => {
                 <div className="h-[200px] sm:h-[260px] md:h-[320px] rounded-2xl overflow-hidden shadow-lg relative bg-gray-200">
 
                   {/* IMAGE */}
-                  <img src={`https://lightblue-moose-690494.hostingersite.com/public${n.image}`} alt={n.title}
-                    className="w-full h-full object-cover hover:scale-110 transition duration-700"/>
+                  <img src={`https://lightblue-moose-690494.hostingersite.com/public${n.image}`} alt={n.title} className="w-full h-full object-cover hover:scale-110 transition duration-700"/>
 
                   {/* OVERLAY */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-4 sm:p-5">
@@ -157,9 +156,9 @@ const MultiImageSlider = () => {
 
           {/* LEFT BUTTON */}
           {news.length > visibleItems && (
-            <button onClick={prevSlide} type="button" aria-label="Previous" className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center 
-              justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 shadow-xl border border-gray-200 z-30 cursor-pointer opacity-100 
-              lg:opacity-0 lg:group-hover:opacity-100 hover:scale-110 hover:bg-sky-500 hover:text-white transition-all duration-300">
+            <button onClick={prevSlide} type="button" aria-label="Previous" className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 
+              sm:w-12 sm:h-12 rounded-full bg-white/95 shadow-xl border border-gray-200 z-30 cursor-pointer opacity-100 lg:opacity-0 lg:group-hover:opacity-100
+              hover:scale-110 hover:bg-sky-500 hover:text-white transition-all duration-300">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
               </svg>
@@ -168,8 +167,8 @@ const MultiImageSlider = () => {
 
           {/* RIGHT BUTTON */}
           {news.length > visibleItems && (
-            <button onClick={nextSlide} type="button" aria-label="Next" className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center 
-              w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 shadow-xl border border-gray-200 z-30 cursor-pointer opacity-100 lg:opacity-0 lg:group-hover:opacity-100
+            <button onClick={nextSlide} type="button" aria-label="Next" className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 
+              sm:w-12 sm:h-12 rounded-full bg-white/95 shadow-xl border border-gray-200 z-30 cursor-pointer opacity-100 lg:opacity-0 lg:group-hover:opacity-100
               hover:scale-110 hover:bg-sky-500 hover:text-white transition-all duration-300">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>

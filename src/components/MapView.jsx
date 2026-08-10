@@ -111,15 +111,15 @@ const MapView = ({ properties, location, onBoundsChange }) => {
     if (!properties?.length) return;
 
     const validMarkers = properties.filter((p) => p.latitude && p.longitude).map((p) => {
-        return {
-          id: p.id,
-          title: p.title,
-          price: p.monthly_rent,
-          image: p.image,
-          lat: parseFloat(p.latitude),
-          lng: parseFloat(p.longitude),
-        };
-      });
+      return {
+        id: p.id,
+        title: p.title,
+        price: p.monthly_rent,
+        image: p.image,
+        lat: parseFloat(p.latitude),
+        lng: parseFloat(p.longitude),
+      };
+    });
 
     setMarkers(validMarkers);
   }, [properties]);

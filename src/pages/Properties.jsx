@@ -146,7 +146,7 @@ const Properties = ({ setShowLogin }) => {
 
         {/* SEARCH */}
         <div className="p-3 py-4">
-          <SearchBar filters={filters} setFilters={setFilters} />
+          <SearchBar filters={filters} setFilters={setFilters} hideAdvancedFilters={false}/>
 
           {showModal && (
             <FilterModal filters={filters} setFilters={setFilters} onClose={() => setShowModal(false)}

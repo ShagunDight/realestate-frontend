@@ -63,7 +63,8 @@ const FAQPage = () => {
                   </button>
 
                   {/* ANSWER */}
-                  <div className={`px-6 overflow-hidden transition-all duration-300 text-gray-600 text-sm leading-relaxed ${
+                  <div className={`px-6 overflow-hidden transition-all duration-300 text-gray-600 text-sm leading-relaxed 
+                    ${
                       openIndex === index
                         ? "max-h-96 pb-5"
                         : "max-h-0"
