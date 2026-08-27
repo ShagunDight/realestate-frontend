@@ -304,8 +304,6 @@ const Home = () => {
                     </div>
                   </div>
                 </div>
-
-                <div className="absolute -bottom-5 -right-5 h-20 w-20 rounded-3xl border border-sky-100 bg-white/80 shadow-lg backdrop-blur-md" />
               </div>
             </div>
           </div>
