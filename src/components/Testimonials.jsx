@@ -1,5 +1,6 @@
 import React from "react";
-import { FaStar } from "react-icons/fa";
+import { FaStar, FaQuoteRight } from "react-icons/fa";
+import { FiArrowLeft, FiArrowRight, FiMapPin } from "react-icons/fi";
 
 const testimonials = [
   {
@@ -24,89 +25,307 @@ const testimonials = [
 
 const Testimonials = () => {
   return (
-    <section className="bg-white py-16 md:py-12 px-4 sm:px-6">
-      <div className="max-w-[1300px] mx-auto">
+    <section className="relative overflow-hidden bg-white px-4 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+      {/* =====================================================
+          BACKGROUND DECORATION
+      ====================================================== */}
 
-        {/* HEADER */}
-        <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-12">
+      <div className="pointer-events-none absolute -left-32 top-20 h-72 w-72 rounded-full bg-sky-50 blur-3xl" />
 
-          <div>
-            {/* DECORATIVE ICONS */}
-            <div className="flex items-center gap-2 mb-3">
-              <span className="w-2 h-2 bg-sky-400 rounded-full"></span>
-              <span className="w-3 h-3 bg-sky-500 rounded-full"></span>
-              <span className="w-2 h-2 bg-sky-300 rounded-full"></span>
+      <div className="pointer-events-none absolute -right-40 top-1/3 h-80 w-80 rounded-full bg-blue-50 blur-3xl" />
+
+      <div className="pointer-events-none absolute left-1/2 top-0 h-40 w-40 -translate-x-1/2 rounded-full bg-sky-50/50 blur-3xl" />
+
+      <div className="relative mx-auto max-w-[1300px]">
+        {/* =====================================================
+            HEADER
+        ====================================================== */}
+
+        <div className="mb-10 flex flex-col gap-5 md:mb-12 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
+            <div className="mb-3 flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-sky-500" />
+
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-sky-500 sm:text-xs">
+                Client Reviews
+              </p>
             </div>
 
-            <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-2">
-              What Our Clients Say
+            <h2 className="text-3xl font-extrabold tracking-[-0.03em] text-gray-900 sm:text-4xl lg:text-[42px]">
+              Loved by People
+              <span className="block text-sky-500">
+                Who Found Their Place
+              </span>
             </h2>
 
-            <p className="text-gray-500 text-sm max-w-xl">
-              Read the success stories and heartfelt testimonials from our valued clients.
+            <p className="mt-4 max-w-xl text-xs leading-6 text-gray-500 sm:text-sm sm:leading-7 lg:text-base">
+              Real experiences from clients who trusted Estatein
+              to make their property journey simpler and more
+              successful.
             </p>
           </div>
 
-          {/* <button className="w-fit px-5 py-2 border border-gray-300 rounded-lg hover:bg-sky-500 hover:text-white transition">
-            View All
-          </button> */}
-        </div>
-
-        {/* CARDS */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {testimonials.map((item, index) => (
-            <div key={index}
-              className="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300" >
-              {/* STARS */}
-              <div className="flex gap-1 mb-4 text-sky-400">
-                {[...Array(5)].map((_, i) => (
-                  <FaStar key={i} className="text-sky-400" />
-                ))}
-              </div>
-
-              {/* TITLE */}
-              <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-2">
-                Exceptional Service!
-              </h3>
-
-              {/* TEXT */}
-              <p className="text-gray-500 text-sm leading-relaxed mb-5">
-                {item.text}
-              </p>
-
-              {/* USER */}
-              <div className="flex items-center gap-3">
-                <img src={item.image} alt="" className="w-10 h-10 rounded-full object-cover"/>
-
-                <div>
-                  <p className="text-sm font-medium text-gray-800">
-                    {item.name}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    {item.location}
-                  </p>
-                </div>
-              </div>
+          {/* REVIEW SUMMARY */}
+          <div className="flex w-fit items-center gap-3 rounded-2xl border border-sky-100 bg-sky-50/80 px-4 py-3 shadow-sm">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-sky-500 shadow-sm">
+              <FaStar size={15} />
             </div>
-          ))}
-        </div>
 
-        {/* FOOTER */}
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mt-10 text-gray-500 text-sm">
-          <p className="text-center sm:text-left">
-            01 of 10
-          </p>
+            <div>
+              <div className="flex items-center gap-1">
+                <span className="text-lg font-extrabold text-gray-900">
+                  4.9
+                </span>
 
-          <div className="flex justify-center sm:justify-end gap-3">
-            <button className="w-9 h-9 flex items-center justify-center border border-gray-300 rounded-full hover:bg-sky-500 hover:text-white transition">
-              ←
-            </button>
-            <button className="w-9 h-9 flex items-center justify-center border border-gray-300 rounded-full hover:bg-sky-500 hover:text-white transition">
-              →
-            </button>
+                <span className="text-xs text-gray-400">
+                  / 5.0
+                </span>
+              </div>
+
+              <p className="text-[10px] font-medium text-gray-500">
+                From our valued clients
+              </p>
+            </div>
           </div>
         </div>
 
+        {/* =====================================================
+            TESTIMONIAL GRID
+        ====================================================== */}
+
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {testimonials.map((item, index) => (
+            <article
+              key={index}
+              className={`
+                group
+                relative
+                flex
+                min-h-[340px]
+                flex-col
+                overflow-hidden
+                rounded-[28px]
+                border
+                border-gray-100
+                bg-white
+                p-5
+                shadow-[0_10px_35px_rgba(15,23,42,0.06)]
+                transition-all
+                duration-500
+                hover:-translate-y-1.5
+                hover:border-sky-100
+                hover:shadow-[0_22px_50px_rgba(14,165,233,0.12)]
+                sm:p-6
+                ${
+                  index === 1
+                    ? "lg:-translate-y-3 lg:hover:-translate-y-4"
+                    : ""
+                }
+              `}
+            >
+              {/* TOP LINE */}
+              <div
+                className="
+                  absolute
+                  left-0
+                  right-0
+                  top-0
+                  h-1
+                  bg-gradient-to-r
+                  from-sky-400
+                  via-sky-500
+                  to-blue-500
+                  opacity-0
+                  transition-opacity
+                  duration-300
+                  group-hover:opacity-100
+                "
+              />
+
+              {/* LARGE QUOTE ICON */}
+              <div
+                className="
+                  absolute
+                  right-5
+                  top-5
+                  flex
+                  h-12
+                  w-12
+                  items-center
+                  justify-center
+                  rounded-2xl
+                  bg-sky-50
+                  text-sky-300
+                  transition-all
+                  duration-300
+                  group-hover:rotate-3
+                  group-hover:bg-sky-500
+                  group-hover:text-white
+                "
+              >
+                <FaQuoteRight size={18} />
+              </div>
+
+              {/* INDEX */}
+              <div className="mb-6 text-[10px] font-bold tracking-[0.2em] text-gray-300">
+                TESTIMONIAL 0{index + 1}
+              </div>
+
+              {/* RATING */}
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 rounded-full bg-sky-50 px-3 py-1.5">
+                  {[...Array(5)].map((_, i) => (
+                    <FaStar
+                      key={i}
+                      className="text-[10px] text-sky-500 sm:text-[11px]"
+                    />
+                  ))}
+                </div>
+
+                <span className="text-[10px] font-semibold text-gray-400">
+                  5.0
+                </span>
+              </div>
+
+              {/* TITLE */}
+              <h3 className="mt-5 max-w-[75%] text-lg font-extrabold leading-6 tracking-tight text-gray-900 sm:text-xl">
+                Exceptional Service
+              </h3>
+
+              {/* TEXT */}
+              <p className="mt-3 text-sm leading-7 text-gray-500">
+                “{item.text}”
+              </p>
+
+              {/* DIVIDER */}
+              <div className="my-6 h-px w-full bg-gray-100" />
+
+              {/* USER */}
+              <div className="mt-auto flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  {/* AVATAR */}
+                  <div className="relative">
+                    <div className="h-12 w-12 overflow-hidden rounded-full border-[3px] border-white bg-gray-100 shadow-md ring-1 ring-sky-100">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="
+                          h-full
+                          w-full
+                          object-cover
+                          transition-transform
+                          duration-500
+                          group-hover:scale-105
+                        "
+                      />
+                    </div>
+
+                    <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-sky-500" />
+                  </div>
+
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-bold text-gray-900">
+                      {item.name}
+                    </p>
+
+                    <div className="mt-1 flex items-center gap-1 text-[10px] text-gray-400">
+                      <FiMapPin size={11} className="text-sky-500" />
+
+                      <span className="truncate">
+                        {item.location}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* VERIFIED */}
+                <span className="hidden rounded-full border border-green-100 bg-green-50 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wide text-green-600 sm:inline-flex">
+                  Verified
+                </span>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        {/* =====================================================
+            FOOTER / NAVIGATION
+        ====================================================== */}
+
+        <div className="mt-8 flex flex-col gap-5 border-t border-gray-100 pt-6 sm:mt-10 sm:flex-row sm:items-center sm:justify-between">
+          {/* PAGE INFO */}
+          <div className="text-center sm:text-left">
+            <p className="text-xs font-medium text-gray-400">
+              Showing{" "}
+              <span className="font-bold text-gray-900">
+                3
+              </span>{" "}
+              of{" "}
+              <span className="font-bold text-gray-900">
+                10
+              </span>{" "}
+              client stories
+            </p>
+          </div>
+
+          {/* CONTROLS */}
+          <div className="flex items-center justify-center gap-2">
+            <button
+              type="button"
+              className="
+                flex
+                h-11
+                w-11
+                items-center
+                justify-center
+                rounded-xl
+                border
+                border-gray-200
+                bg-white
+                text-gray-500
+                shadow-sm
+                transition-all
+                duration-300
+                hover:border-sky-200
+                hover:bg-sky-50
+                hover:text-sky-500
+                active:scale-95
+              "
+              aria-label="Previous testimonial"
+            >
+              <FiArrowLeft size={17} />
+            </button>
+
+            <div className="flex h-11 min-w-[72px] items-center justify-center rounded-xl border border-sky-100 bg-sky-50 px-4 text-xs font-bold text-sky-600">
+              01 / 10
+            </div>
+
+            <button
+              type="button"
+              className="
+                flex
+                h-11
+                w-11
+                items-center
+                justify-center
+                rounded-xl
+                border
+                border-gray-200
+                bg-white
+                text-gray-500
+                shadow-sm
+                transition-all
+                duration-300
+                hover:border-sky-200
+                hover:bg-sky-50
+                hover:text-sky-500
+                active:scale-95
+              "
+              aria-label="Next testimonial"
+            >
+              <FiArrowRight size={17} />
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   );

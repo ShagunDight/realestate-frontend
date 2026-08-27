@@ -13,11 +13,13 @@ import {
   FaFileAlt,
   FaHandshake,
   FaArrowRight,
+  FaCheck,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 export default function ServicesPage() {
   const navigate = useNavigate();
+
   const [services, setServices] = useState({});
   const [services1, setServices1] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -60,118 +62,255 @@ export default function ServicesPage() {
   };
 
   const ICONS = {
-    FaHome: FaHome,
-    FaBuilding: FaBuilding,
-    FaChartLine: FaChartLine,
-    FaCogs: FaCogs,
-    FaLightbulb: FaLightbulb,
-    FaChartBar: FaChartBar,
-    FaPercentage: FaPercentage,
-    FaDraftingCompass: FaDraftingCompass,
-    FaFileAlt: FaFileAlt,
-    FaHandshake: FaHandshake,
+    FaHome,
+    FaBuilding,
+    FaChartLine,
+    FaCogs,
+    FaLightbulb,
+    FaChartBar,
+    FaPercentage,
+    FaDraftingCompass,
+    FaFileAlt,
+    FaHandshake,
   };
 
-  // =========================
-  // SERVICE CARD
-  // =========================
-  const Section = ({ title, desc, icon, features }) => (
-    <div className="group relative bg-white border border-gray-100 rounded-[2rem] p-8 overflow-hidden transition duration-300 hover:-translate-y-2 hover:shadow-[0_25px_80px_rgba(14,165,233,0.15)]">
+  // =========================================================
+  // STATIC SERVICE CARD
+  // =========================================================
+  const Section = ({ title, desc, icon, features = [] }) => (
+    <div
+      className="
+        group relative h-full overflow-hidden
+        bg-white
+        border border-gray-100
+        rounded-[1.75rem] sm:rounded-[2rem]
+        p-6 sm:p-7 lg:p-8
+        shadow-sm
+        transition-all duration-500
+        hover:-translate-y-2
+        hover:shadow-[0_25px_70px_rgba(14,165,233,0.14)]
+        hover:border-sky-100
+      "
+    >
+      {/* TOP ACCENT */}
+      <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-sky-400 via-sky-500 to-cyan-400" />
 
-      {/* top gradient */}
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-sky-400 via-sky-500 to-cyan-400"></div>
+      {/* BACKGROUND GLOW */}
+      <div
+        className="
+          absolute -top-24 -right-24
+          w-56 h-56
+          rounded-full
+          bg-sky-100
+          blur-3xl
+          opacity-30
+          group-hover:opacity-60
+          transition-opacity duration-500
+        "
+      />
 
-      {/* bg glow */}
-      <div className="absolute -top-20 -right-20 w-52 h-52 bg-sky-100 rounded-full blur-3xl opacity-40 group-hover:opacity-60 transition"></div>
+      {/* SMALL DECORATION */}
+      <div
+        className="
+          absolute right-6 top-6
+          w-10 h-10
+          rounded-full
+          border border-sky-100
+          opacity-50
+          group-hover:scale-125
+          transition-transform duration-500
+        "
+      />
 
-      {/* ICON */}
-      <div className="relative z-10 mb-8">
-        <div className="w-24 h-24 rounded-[2rem] bg-gradient-to-br from-sky-50 to-white border border-sky-100 shadow-[0_20px_60px_rgba(14,165,233,0.15)] flex items-center justify-center text-sky-500 text-5xl group-hover:scale-105 transition duration-300">
-          {icon}
+      <div className="relative z-10 h-full flex flex-col">
+        {/* ICON */}
+        <div className="mb-7">
+          <div
+            className="
+              w-16 h-16 sm:w-18 sm:h-18
+              rounded-2xl sm:rounded-[1.35rem]
+              bg-gradient-to-br from-sky-50 to-white
+              border border-sky-100
+              shadow-[0_12px_35px_rgba(14,165,233,0.12)]
+              flex items-center justify-center
+              text-sky-500
+              text-3xl sm:text-4xl
+              group-hover:bg-sky-500
+              group-hover:text-white
+              group-hover:scale-105
+              group-hover:rotate-2
+              transition-all duration-500
+            "
+          >
+            {icon}
+          </div>
         </div>
-      </div>
 
-      {/* CONTENT */}
-      <div className="relative z-10">
-
-        <p className="text-sky-500 text-xs tracking-[0.2em] uppercase mb-3 font-semibold">
+        {/* LABEL */}
+        <p className="text-sky-500 text-[10px] sm:text-xs tracking-[0.2em] uppercase mb-3 font-bold">
           Premium Service
         </p>
 
-        <h3 className="text-2xl font-bold text-gray-900 mb-4 leading-snug">
+        {/* TITLE */}
+        <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 leading-snug">
           {title}
         </h3>
 
-        <p className="text-gray-600 text-sm leading-relaxed mb-7">
+        {/* DESCRIPTION */}
+        <p className="text-gray-500 text-sm leading-7 mb-7">
           {desc}
         </p>
 
         {/* FEATURES */}
-        <div className="space-y-3 mb-8">
-          {features.map((f, i) => (
-            <div
-              key={i}
-              className="flex items-start gap-3 text-sm text-gray-700"
-            >
-              <span className="w-2 h-2 rounded-full bg-sky-500 mt-2 flex-shrink-0"></span>
-              {f}
-            </div>
-          ))}
-        </div>
+        {features.length > 0 && (
+          <div className="space-y-3 mt-auto pt-5 border-t border-gray-100">
+            {features.map((feature, i) => (
+              <div
+                key={i}
+                className="flex items-start gap-3 text-sm text-gray-600"
+              >
+                <span
+                  className="
+                    mt-0.5
+                    w-5 h-5
+                    rounded-full
+                    bg-sky-50
+                    border border-sky-100
+                    text-sky-500
+                    flex items-center justify-center
+                    flex-shrink-0
+                  "
+                >
+                  <FaCheck className="text-[9px]" />
+                </span>
 
-        {/* BUTTON */}
-        {/* <button className="inline-flex items-center gap-2 text-sky-500 text-sm font-semibold hover:gap-3 transition-all">
-          Learn More
-          <FaArrowRight className="text-xs" />
-        </button> */}
-
+                <span className="leading-5">
+                  {feature}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 
-  // =========================
-  // DYNAMIC CARD
-  // =========================
+  // =========================================================
+  // API SERVICE CARD
+  // =========================================================
   const Card = ({ item }) => (
-    <div className="group relative bg-white border border-gray-100 rounded-3xl p-7 overflow-hidden transition duration-300 hover:-translate-y-2 hover:shadow-[0_20px_60px_rgba(14,165,233,0.15)]">
+    <div
+      className="
+        group relative h-full overflow-hidden
+        bg-white
+        border border-gray-100
+        rounded-[1.5rem] sm:rounded-[1.75rem]
+        p-6
+        shadow-sm
+        transition-all duration-500
+        hover:-translate-y-2
+        hover:shadow-[0_22px_60px_rgba(14,165,233,0.14)]
+        hover:border-sky-100
+      "
+    >
+      {/* TOP LINE */}
+      <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-sky-400 via-sky-500 to-cyan-400" />
 
-      {/* glow */}
-      <div className="absolute -top-16 -right-16 w-40 h-40 bg-sky-100 rounded-full blur-3xl opacity-30 group-hover:opacity-50 transition"></div>
-
-      {/* top line */}
-      <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-sky-400 via-sky-500 to-cyan-400"></div>
+      {/* GLOW */}
+      <div
+        className="
+          absolute -top-20 -right-20
+          w-48 h-48
+          rounded-full
+          bg-sky-100
+          blur-3xl
+          opacity-25
+          group-hover:opacity-50
+          transition-opacity duration-500
+        "
+      />
 
       <div className="relative z-10">
-
         {/* ICON */}
-        <div className="w-16 h-16 rounded-2xl bg-sky-50 border border-sky-100 flex items-center justify-center mb-6 group-hover:bg-sky-500 transition">
-
+        <div
+          className="
+            w-16 h-16
+            rounded-2xl
+            bg-sky-50
+            border border-sky-100
+            flex items-center justify-center
+            mb-6
+            transition-all duration-500
+            group-hover:bg-sky-500
+            group-hover:shadow-lg
+            group-hover:shadow-sky-200
+          "
+        >
           <img
             src={`https://lightblue-moose-690494.hostingersite.com/public${item.icon}`}
             alt={item.title}
-            className="w-8 h-8 object-contain group-hover:brightness-0 group-hover:invert transition"
+            className="
+              w-8 h-8
+              object-contain
+              transition-all duration-500
+              group-hover:brightness-0
+              group-hover:invert
+              group-hover:scale-110
+            "
           />
+        </div>
 
+        {/* NUMBER */}
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-[10px] font-bold tracking-[0.18em] uppercase text-sky-500">
+            Service
+          </span>
+
+          <span className="h-px w-8 bg-sky-100" />
         </div>
 
         {/* TITLE */}
-        <h3 className="text-xl font-bold text-gray-900 mb-3 leading-snug">
+        <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-3 leading-snug">
           {item.title}
         </h3>
 
-        {/* DESC */}
-        <p className="text-gray-500 text-sm leading-relaxed">
+        {/* DESCRIPTION */}
+        <p className="text-gray-500 text-sm leading-7">
           {item.description}
         </p>
 
+        {/* BOTTOM DECORATION */}
+        <div className="mt-6 flex items-center gap-2 text-sky-500 text-xs font-semibold opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+          <span>Professional Solution</span>
+          <FaArrowRight className="text-[10px]" />
+        </div>
       </div>
     </div>
   );
 
+  // =========================================================
+  // LOADING
+  // =========================================================
   if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center bg-white">
-        <p className="text-gray-500 text-lg">Loading Services...</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-sky-50 to-white">
+        <div className="text-center">
+          <div
+            className="
+              w-12 h-12
+              rounded-full
+              border-4
+              border-sky-100
+              border-t-sky-500
+              animate-spin
+              mx-auto mb-4
+            "
+          />
+
+          <p className="text-gray-500 text-sm font-medium">
+            Loading Services...
+          </p>
+        </div>
       </div>
     );
   }
@@ -180,47 +319,165 @@ export default function ServicesPage() {
     <>
       <div className="bg-white overflow-hidden">
 
-        {/* ================= HERO ================= */}
-        <div className="relative bg-gradient-to-b from-sky-50 via-white to-white py-24">
+        {/* =====================================================
+            HERO
+        ====================================================== */}
+        <section className="relative overflow-hidden bg-gradient-to-b from-sky-50 via-white to-white">
 
-          {/* bg blur */}
-          <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
-            <div className="absolute top-10 left-10 w-72 h-72 bg-sky-100 rounded-full blur-3xl opacity-30"></div>
-            <div className="absolute bottom-0 right-0 w-96 h-96 bg-cyan-100 rounded-full blur-3xl opacity-20"></div>
+          {/* BACKGROUND GLOWS */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div
+              className="
+                absolute
+                -top-32
+                -left-20
+                w-72 sm:w-96
+                h-72 sm:h-96
+                rounded-full
+                bg-sky-200
+                blur-3xl
+                opacity-25
+              "
+            />
+
+            <div
+              className="
+                absolute
+                top-20
+                right-[-100px]
+                w-72 sm:w-96
+                h-72 sm:h-96
+                rounded-full
+                bg-cyan-100
+                blur-3xl
+                opacity-30
+              "
+            />
           </div>
 
-          <div className="relative max-w-7xl mx-auto px-6 md:px-20 text-center">
+          {/* GRID PATTERN */}
+          <div
+            className="
+              absolute inset-0
+              opacity-[0.035]
+              pointer-events-none
+              bg-[linear-gradient(to_right,#0ea5e9_1px,transparent_1px),linear-gradient(to_bottom,#0ea5e9_1px,transparent_1px)]
+              bg-[size:40px_40px]
+            "
+          />
 
-            <p className="text-sky-500 mb-4 text-sm tracking-[0.3em] uppercase font-semibold">
-              Real Estate Services
-            </p>
+          <div className="relative max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pt-16 sm:pt-20 lg:pt-24 pb-28 sm:pb-32 lg:pb-36">
 
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 leading-tight mb-6">
-              Elevate Your <span className="text-sky-500">Real Estate</span>
-              <br />
-              Experience
-            </h1>
+            {/* LABEL */}
+            <div className="flex justify-center">
+              <div
+                className="
+                  inline-flex items-center gap-2
+                  px-4 py-2
+                  rounded-full
+                  bg-white
+                  border border-sky-100
+                  shadow-sm
+                "
+              >
+                <span className="w-2 h-2 rounded-full bg-sky-500 animate-pulse" />
 
-            <p className="text-gray-600 text-sm md:text-lg max-w-3xl mx-auto leading-relaxed">
-              We provide professional property buying, selling, valuation,
-              investment and architectural planning services with complete
-              transparency and expert guidance.
-            </p>
-
-          </div>
-        </div>
-
-        <div className="bg-white min-h-screen px-6 md:px-20">
-
-          {/* ================= MINI CARDS ================= */}
-          <div className="relative -mt-14 z-20 max-w-7xl mx-auto mb-14">
-
-            {/* background blur */}
-            <div className="absolute inset-0 flex justify-center">
-              <div className="w-[80%] h-40 bg-sky-100 blur-3xl opacity-30 rounded-full"></div>
+                <span className="text-sky-600 text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase">
+                  Real Estate Services
+                </span>
+              </div>
             </div>
 
-            <div className="relative grid md:grid-cols-2 xl:grid-cols-4 gap-6">
+            {/* HEADING */}
+            <div className="text-center mt-7 sm:mt-8">
+              <h1
+                className="
+                  text-4xl
+                  sm:text-5xl
+                  lg:text-6xl
+                  xl:text-7xl
+                  font-bold
+                  text-gray-900
+                  leading-[1.08]
+                  tracking-tight
+                "
+              >
+                Elevate Your{" "}
+                <span className="text-sky-500">
+                  Real Estate
+                </span>
+
+                <br className="hidden sm:block" />
+
+                <span className="text-gray-900">
+                  Experience
+                </span>
+              </h1>
+
+              <p
+                className="
+                  text-gray-500
+                  text-sm
+                  sm:text-base
+                  lg:text-lg
+                  max-w-3xl
+                  mx-auto
+                  mt-6
+                  leading-7
+                  sm:leading-8
+                "
+              >
+                Professional property buying, selling, valuation,
+                investment and architectural planning services —
+                all backed by expert guidance and complete transparency.
+              </p>
+            </div>
+
+            {/* HERO BOTTOM STATS */}
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-5 mt-9">
+              {[
+                "Verified Properties",
+                "Expert Guidance",
+                "Transparent Process",
+              ].map((item, index) => (
+                <div
+                  key={index}
+                  className="
+                    inline-flex items-center gap-2
+                    px-3.5 sm:px-4
+                    py-2
+                    rounded-full
+                    bg-white/80
+                    border border-gray-100
+                    shadow-sm
+                    text-xs sm:text-sm
+                    text-gray-600
+                  "
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* =====================================================
+            MAIN
+        ====================================================== */}
+        <div className="bg-white px-5 sm:px-6 lg:px-8">
+
+          {/* =================================================
+              MINI SERVICE CARDS
+          ================================================== */}
+          <section className="relative -mt-16 sm:-mt-20 z-20 max-w-7xl mx-auto">
+
+            {/* SOFT GLOW */}
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center pointer-events-none">
+              <div className="w-[70%] h-40 bg-sky-100 blur-3xl rounded-full opacity-40" />
+            </div>
+
+            <div className="relative grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
 
               {[
                 {
@@ -244,78 +501,118 @@ export default function ServicesPage() {
                   icon: <FaLightbulb />,
                 },
               ].map((item, i) => (
-
                 <div
                   key={i}
-                  className="group relative overflow-hidden bg-white/90 backdrop-blur-xl border border-white rounded-[2rem] p-7 shadow-[0_10px_40px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_60px_rgba(14,165,233,0.18)] transition duration-500 hover:-translate-y-3"
+                  className="
+                    group relative overflow-hidden
+                    bg-white
+                    border border-gray-100
+                    rounded-[1.5rem] sm:rounded-[1.75rem]
+                    p-5 sm:p-6
+                    shadow-[0_10px_40px_rgba(0,0,0,0.06)]
+                    hover:shadow-[0_20px_60px_rgba(14,165,233,0.16)]
+                    hover:-translate-y-2
+                    transition-all duration-500
+                  "
                 >
+                  {/* TOP LINE */}
+                  <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-sky-400 via-sky-500 to-cyan-400" />
 
-                  {/* hover gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-sky-50 via-white to-cyan-50 opacity-0 group-hover:opacity-100 transition duration-500"></div>
-
-                  {/* top border */}
-                  <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-sky-400 via-sky-500 to-cyan-400"></div>
+                  {/* HOVER BG */}
+                  <div
+                    className="
+                      absolute inset-0
+                      bg-gradient-to-br from-sky-50 via-white to-cyan-50
+                      opacity-0
+                      group-hover:opacity-100
+                      transition-opacity duration-500
+                    "
+                  />
 
                   <div className="relative z-10">
 
-                    {/* icon */}
-                    <div className="relative mb-6 group">
-
-                    <div className="w-18 h-18 mx-auto flex items-center justify-center relative z-10">
-
-                      <div className="w-16 h-16 rounded-2xl border border-sky-100 text-sky-500 text-2xl flex items-center justify-center shadow-[0_10px_30px_rgba(14,165,233,0.12)] group-hover:scale-110 group-hover:bg-sky-500 group-hover:text-white transition duration-500">
+                    {/* ICON */}
+                    <div className="flex justify-center mb-5">
+                      <div
+                        className="
+                          w-14 h-14 sm:w-16 sm:h-16
+                          rounded-2xl
+                          bg-sky-50
+                          border border-sky-100
+                          text-sky-500
+                          text-xl sm:text-2xl
+                          flex items-center justify-center
+                          shadow-[0_10px_30px_rgba(14,165,233,0.10)]
+                          group-hover:bg-sky-500
+                          group-hover:text-white
+                          group-hover:scale-110
+                          transition-all duration-500
+                        "
+                      >
                         {item.icon}
                       </div>
-
                     </div>
 
-                    {/* glow */}
-                    <div className="absolute inset-0 blur-2xl bg-sky-200 opacity-0 group-hover:opacity-40 transition duration-500"></div>
-
-                  </div>
-
-                    {/* content */}
+                    {/* CONTENT */}
                     <div className="text-center">
-
-                      <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
+                      <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2.5 leading-snug">
                         {item.title}
                       </h3>
 
-                      <p className="text-sm text-gray-500 leading-relaxed">
+                      <p className="text-xs sm:text-sm text-gray-500 leading-6">
                         {item.desc}
                       </p>
-
                     </div>
-
                   </div>
                 </div>
               ))}
             </div>
-          </div>
+          </section>
 
-          {/* ================= STATIC SERVICES ================= */}
-          <div className="max-w-7xl mx-auto py-8">
+          {/* =================================================
+              STATIC SERVICES
+          ================================================== */}
+          <section className="max-w-7xl mx-auto pt-24 sm:pt-28 lg:pt-32 pb-12">
 
-            {/* heading */}
-            <div className="text-center mb-20">
-              <p className="text-sky-500 text-sm tracking-[0.2em] uppercase mb-3 font-semibold">
-                What We Offer
-              </p>
+            {/* HEADING */}
+            <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
 
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-5">
-                Complete Property Solutions
+              <div className="inline-flex items-center gap-2 mb-4">
+                <span className="w-8 h-px bg-sky-300" />
+
+                <p className="text-sky-500 text-[10px] sm:text-xs tracking-[0.22em] uppercase font-bold">
+                  What We Offer
+                </p>
+
+                <span className="w-8 h-px bg-sky-300" />
+              </div>
+
+              <h2
+                className="
+                  text-3xl
+                  sm:text-4xl
+                  lg:text-5xl
+                  font-bold
+                  text-gray-900
+                  leading-tight
+                "
+              >
+                Complete Property{" "}
+                <span className="text-sky-500">
+                  Solutions
+                </span>
               </h2>
 
-              <p className="text-gray-500 max-w-3xl mx-auto text-sm md:text-base leading-relaxed">
+              <p className="text-gray-500 text-sm sm:text-base leading-7 mt-5">
                 From property buying and selling to valuation, legal
-                documentation and floor planning — we provide complete real
-                estate services tailored to your needs.
+                documentation and floor planning — we provide complete
+                real estate services tailored to your needs.
               </p>
             </div>
 
-            {/* services grid */}
-            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
-              
+            {/* SERVICES GRID */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6 lg:gap-7">
+
               {services1.map((item) => {
                 const Icon = ICONS[item.icon] || FaCogs;
 
@@ -329,76 +626,166 @@ export default function ServicesPage() {
                   />
                 );
               })}
-
             </div>
-          </div>
+          </section>
 
-          {/* ================= DYNAMIC API SECTIONS ================= */}
-          {Object.entries(services).map(([sectionName, sectionItems], index) => (
-            <div key={index} className="py-12 border-t border-gray-100 max-w-7xl mx-auto">
+          {/* =================================================
+              DYNAMIC API SERVICES
+          ================================================== */}
+          {Object.entries(services).map(
+            ([sectionName, sectionItems], index) => (
+              <section
+                key={index}
+                className="
+                  max-w-7xl mx-auto
+                  py-14 sm:py-16 lg:py-20
+                  border-t border-gray-100
+                "
+              >
+                {/* SECTION HEADER */}
+                <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5 mb-10 sm:mb-12">
 
-              <div className="mb-14">
-                <p className="text-sky-500 text-sm tracking-[0.2em] uppercase mb-3 font-semibold">
-                  Additional Services
-                </p>
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="w-2 h-2 rounded-full bg-sky-500" />
 
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                  {sectionName}
-                </h2>
+                      <p className="text-sky-500 text-[10px] sm:text-xs tracking-[0.2em] uppercase font-bold">
+                        Additional Services
+                      </p>
+                    </div>
 
-                <p className="text-gray-500 max-w-3xl leading-relaxed">
-                  Explore our premium {sectionName.toLowerCase()} services
-                  designed to simplify and enhance your real estate journey.
-                </p>
-              </div>
+                    <h2
+                      className="
+                        text-3xl
+                        sm:text-4xl
+                        font-bold
+                        text-gray-900
+                        leading-tight
+                      "
+                    >
+                      {sectionName}
+                    </h2>
+                  </div>
 
-              <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-7">
+                  <p className="text-gray-500 text-sm leading-6 max-w-xl lg:text-right">
+                    Explore our premium{" "}
+                    <span className="text-gray-700 font-medium">
+                      {sectionName.toLowerCase()}
+                    </span>{" "}
+                    services designed to simplify and enhance your
+                    real estate journey.
+                  </p>
+                </div>
 
-                {sectionItems.map((item) => (
-                  <Card key={item.id} item={item} />
-                ))}
+                {/* CARDS */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 sm:gap-6">
 
-              </div>
-            </div>
-          ))}
+                  {sectionItems.map((item) => (
+                    <Card key={item.id} item={item} />
+                  ))}
 
-          {/* FAQ */}
-          <div className="py-6">
+                </div>
+              </section>
+            )
+          )}
+
+          {/* =================================================
+              FAQ
+          ================================================== */}
+          <section className="py-10 sm:py-14">
             <FAQ />
-          </div>
+          </section>
 
-          {/* ================= CTA SECTION ================= */}
-          <div className="relative mt-10 mb-16 sm:mb-20 lg:mb-24 overflow-hidden rounded-2xl sm:rounded-[2rem] bg-gradient-to-r from-sky-500 to-cyan-500 p-6 sm:p-10 md:p-16 text-white">
+          {/* =================================================
+              CTA
+          ================================================== */}
+          <section
+            className="
+              relative
+              max-w-7xl mx-auto
+              mt-6 sm:mt-10
+              mb-16 sm:mb-20 lg:mb-24
+              overflow-hidden
+              rounded-[1.5rem] sm:rounded-[2rem] lg:rounded-[2.5rem]
+              bg-gradient-to-br from-sky-500 via-sky-500 to-cyan-500
+              p-6 sm:p-9 md:p-12 lg:p-16
+              text-white
+            "
+          >
+            {/* GLOWS */}
+            <div className="absolute -top-24 -right-24 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
 
-            {/* glow */}
-            <div className="absolute top-0 right-0 w-48 sm:w-72 md:w-96 h-48 sm:h-72 md:h-96 bg-white opacity-10 blur-3xl rounded-full"></div>
+            <div className="absolute -bottom-32 -left-20 w-80 h-80 bg-cyan-300/20 rounded-full blur-3xl" />
 
-            <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 md:gap-12 items-center">
+            {/* DECORATIVE CIRCLE */}
+            <div className="absolute top-8 right-8 w-24 h-24 rounded-full border border-white/10 hidden sm:block" />
+
+            <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
 
               {/* LEFT */}
               <div className="text-center lg:text-left">
 
-                <p className="uppercase tracking-[0.15em] sm:tracking-[0.2em] text-xs sm:text-sm mb-3 text-sky-100">
-                  Smart Investment
-                </p>
+                <div className="inline-flex items-center gap-2 mb-4">
+                  <span className="w-2 h-2 rounded-full bg-white" />
 
-                <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-4 sm:mb-5 leading-tight">
+                  <p className="uppercase tracking-[0.18em] text-[10px] sm:text-xs font-bold text-sky-100">
+                    Smart Investment
+                  </p>
+                </div>
+
+                <h2
+                  className="
+                    text-2xl
+                    sm:text-3xl
+                    md:text-4xl
+                    lg:text-5xl
+                    font-bold
+                    leading-tight
+                    mb-4 sm:mb-5
+                  "
+                >
                   Build Wealth Through Real Estate
                 </h2>
 
-                <p className="text-sky-100 text-sm sm:text-base leading-relaxed mb-6 sm:mb-8 max-w-xl mx-auto lg:mx-0">
-                  Get expert investment guidance, market insights and property
-                  strategies designed to maximize long-term returns.
+                <p
+                  className="
+                    text-sky-100
+                    text-sm sm:text-base
+                    leading-7
+                    max-w-xl
+                    mx-auto lg:mx-0
+                    mb-6 sm:mb-8
+                  "
+                >
+                  Get expert investment guidance, market insights and
+                  property strategies designed to maximize long-term
+                  returns.
                 </p>
 
-                <button onClick={() => navigate(`/contact`)} className="bg-white text-sky-600 px-5 sm:px-7 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold hover:bg-sky-50 transition">
+                <button
+                  onClick={() => navigate(`/contact`)}
+                  className="
+                    inline-flex items-center justify-center gap-2
+                    bg-white
+                    text-sky-600
+                    px-5 sm:px-7
+                    py-3
+                    rounded-xl
+                    font-semibold
+                    text-sm
+                    shadow-lg
+                    hover:bg-sky-50
+                    hover:-translate-y-0.5
+                    transition-all duration-300
+                  "
+                >
                   Get Consultation
+                  <FaArrowRight className="text-xs" />
                 </button>
-
               </div>
 
-              {/* RIGHT */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+              {/* RIGHT CARDS */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
 
                 {[
                   {
@@ -424,29 +811,47 @@ export default function ServicesPage() {
                 ].map((item, i) => (
                   <div
                     key={i}
-                    className="bg-white/10 backdrop-blur-md border border-white/10 rounded-xl sm:rounded-2xl p-4 sm:p-5"
+                    className="
+                      group
+                      bg-white/10
+                      backdrop-blur-md
+                      border border-white/15
+                      rounded-2xl
+                      p-4 sm:p-5
+                      hover:bg-white/15
+                      transition-all duration-300
+                    "
                   >
-
-                    <div className="w-10 sm:w-12 h-10 sm:h-12 flex items-center justify-center rounded-lg sm:rounded-xl bg-white/20 text-white text-base sm:text-lg mb-3 sm:mb-4">
+                    <div
+                      className="
+                        w-10 h-10 sm:w-11 sm:h-11
+                        flex items-center justify-center
+                        rounded-xl
+                        bg-white/15
+                        border border-white/10
+                        text-white
+                        text-base sm:text-lg
+                        mb-3 sm:mb-4
+                        group-hover:bg-white
+                        group-hover:text-sky-500
+                        transition-all duration-300
+                      "
+                    >
                       {item.icon}
                     </div>
 
-                    <h3 className="font-semibold text-sm sm:text-base mb-1 sm:mb-2">
+                    <h3 className="font-semibold text-sm sm:text-base mb-1.5">
                       {item.title}
                     </h3>
 
-                    <p className="text-xs sm:text-sm text-sky-100 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-sky-100 leading-6">
                       {item.desc}
                     </p>
-
                   </div>
                 ))}
-
               </div>
-
             </div>
-          </div>
-
+          </section>
         </div>
       </div>
 

@@ -6,7 +6,6 @@ const API_URL =
 
 const NEARBY_RADIUS_KM = 25;
 
-
 /*
 |--------------------------------------------------------------------------
 | Calculate distance between two coordinates
@@ -19,7 +18,6 @@ const calculateDistance = (
   propertyLat,
   propertyLng
 ) => {
-
   const R = 6371;
 
   const dLat =
@@ -44,7 +42,6 @@ const calculateDistance = (
   return R * c;
 };
 
-
 /*
 |--------------------------------------------------------------------------
 | Fetch all properties
@@ -52,7 +49,6 @@ const calculateDistance = (
 */
 
 const fetchProperties = async () => {
-
   const response = await fetch(API_URL);
 
   if (!response.ok) {
@@ -69,7 +65,6 @@ const fetchProperties = async () => {
   );
 };
 
-
 /*
 |--------------------------------------------------------------------------
 | Reverse Geocoding
@@ -80,9 +75,7 @@ const getLocationDetails = async (
   latitude,
   longitude
 ) => {
-
   try {
-
     const response = await fetch(
       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`,
       {
@@ -106,7 +99,6 @@ const getLocationDetails = async (
       data?.address || {};
 
     return {
-
       city:
         address.city ||
         address.town ||
@@ -121,11 +113,8 @@ const getLocationDetails = async (
       country:
         address.country ||
         "",
-
     };
-
   } catch (error) {
-
     console.error(
       "Reverse geocoding error:",
       error
@@ -139,7 +128,6 @@ const getLocationDetails = async (
   }
 };
 
-
 /*
 |--------------------------------------------------------------------------
 | Normalize value
@@ -147,13 +135,10 @@ const getLocationDetails = async (
 */
 
 const normalize = (value) => {
-
   return String(value || "")
     .trim()
     .toLowerCase();
-
 };
-
 
 /*
 |--------------------------------------------------------------------------
@@ -162,31 +147,16 @@ const normalize = (value) => {
 */
 
 const MobileNearbyProperties = () => {
-
   const navigate = useNavigate();
 
-  const [
-    properties,
-    setProperties
-  ] = useState([]);
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [
-    loading,
-    setLoading
-  ] = useState(true);
-
-  const [
-    locationStatus,
-    setLocationStatus
-  ] = useState(
+  const [locationStatus, setLocationStatus] = useState(
     "Finding properties near you..."
   );
 
-  const [
-    showAll,
-    setShowAll
-  ] = useState(false);
-
+  const [showAll, setShowAll] = useState(false);
 
   /*
   |--------------------------------------------------------------------------
@@ -195,11 +165,8 @@ const MobileNearbyProperties = () => {
   */
 
   useEffect(() => {
-
     loadProperties();
-
   }, []);
-
 
   /*
   |--------------------------------------------------------------------------
@@ -208,24 +175,17 @@ const MobileNearbyProperties = () => {
   */
 
   const loadProperties = async () => {
-
     try {
       setLoading(true);
 
-      setLocationStatus("Finding properties near you...");
-
-      /*
-      |--------------------------------------------------------------------------
-      | Get ALL properties
-      |--------------------------------------------------------------------------
-      */
+      setLocationStatus(
+        "Finding properties near you..."
+      );
 
       const allProperties =
         await fetchProperties();
 
-
       if (!allProperties.length) {
-
         setProperties([]);
 
         setLocationStatus(
@@ -235,18 +195,8 @@ const MobileNearbyProperties = () => {
         return;
       }
 
-
-      /*
-      |--------------------------------------------------------------------------
-      | Browser location unavailable
-      |--------------------------------------------------------------------------
-      */
-
       if (!navigator.geolocation) {
-
-        setProperties(
-          allProperties
-        );
+        setProperties(allProperties);
 
         setLocationStatus(
           "Featured Properties"
@@ -255,19 +205,9 @@ const MobileNearbyProperties = () => {
         return;
       }
 
-
-      /*
-      |--------------------------------------------------------------------------
-      | Get current location
-      |--------------------------------------------------------------------------
-      */
-
       navigator.geolocation.getCurrentPosition(
-
         async (position) => {
-
           try {
-
             const userLat =
               position.coords.latitude;
 
@@ -279,12 +219,6 @@ const MobileNearbyProperties = () => {
               userLat,
               userLng
             );
-
-            /*
-            |--------------------------------------------------------------------------
-            | Get city/state/country
-            |--------------------------------------------------------------------------
-            */
 
             const location =
               await getLocationDetails(
@@ -306,7 +240,6 @@ const MobileNearbyProperties = () => {
             const nearbyProperties =
               allProperties
                 .map((property) => {
-
                   const propertyLat =
                     parseFloat(
                       property?.latitude
@@ -321,7 +254,6 @@ const MobileNearbyProperties = () => {
                     Number.isNaN(propertyLat) ||
                     Number.isNaN(propertyLng)
                   ) {
-
                     return null;
                   }
 
@@ -337,7 +269,6 @@ const MobileNearbyProperties = () => {
                     ...property,
                     distance,
                   };
-
                 })
                 .filter(
                   (property) =>
@@ -354,7 +285,6 @@ const MobileNearbyProperties = () => {
             if (
               nearbyProperties.length > 0
             ) {
-
               setProperties(
                 nearbyProperties
               );
@@ -366,7 +296,6 @@ const MobileNearbyProperties = () => {
               return;
             }
 
-
             /*
             |--------------------------------------------------------------------------
             | 2. CITY
@@ -374,10 +303,8 @@ const MobileNearbyProperties = () => {
             */
 
             if (location.city) {
-
               const city =
                 normalize(location.city);
-
 
               const cityProperties =
                 allProperties.filter(
@@ -390,7 +317,6 @@ const MobileNearbyProperties = () => {
               if (
                 cityProperties.length > 0
               ) {
-
                 setProperties(
                   cityProperties
                 );
@@ -403,18 +329,13 @@ const MobileNearbyProperties = () => {
               }
             }
 
-
             /*
             |--------------------------------------------------------------------------
             | 3. STATE
             |--------------------------------------------------------------------------
-            |
-            | State optional hai.
-            |
             */
 
             if (location.state) {
-
               const state =
                 normalize(location.state);
 
@@ -429,7 +350,6 @@ const MobileNearbyProperties = () => {
               if (
                 stateProperties.length > 0
               ) {
-
                 setProperties(
                   stateProperties
                 );
@@ -442,7 +362,6 @@ const MobileNearbyProperties = () => {
               }
             }
 
-
             /*
             |--------------------------------------------------------------------------
             | 4. COUNTRY
@@ -450,12 +369,10 @@ const MobileNearbyProperties = () => {
             */
 
             if (location.country) {
-
               const country =
                 normalize(
                   location.country
                 );
-
 
               const countryProperties =
                 allProperties.filter(
@@ -465,11 +382,9 @@ const MobileNearbyProperties = () => {
                     ) === country
                 );
 
-
               if (
                 countryProperties.length > 0
               ) {
-
                 setProperties(
                   countryProperties
                 );
@@ -479,11 +394,8 @@ const MobileNearbyProperties = () => {
                 );
 
                 return;
-
               }
-
             }
-
 
             /*
             |--------------------------------------------------------------------------
@@ -498,14 +410,11 @@ const MobileNearbyProperties = () => {
             setLocationStatus(
               "Featured Properties"
             );
-
           } catch (error) {
-
             console.error(
               "Location processing error:",
               error
             );
-
 
             setProperties(
               allProperties
@@ -514,24 +423,12 @@ const MobileNearbyProperties = () => {
             setLocationStatus(
               "Featured Properties"
             );
-
           } finally {
-
             setLoading(false);
-
           }
-
         },
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Location denied
-        |--------------------------------------------------------------------------
-        */
-
         () => {
-
           setProperties(
             allProperties
           );
@@ -541,22 +438,15 @@ const MobileNearbyProperties = () => {
           );
 
           setLoading(false);
-
         },
-
 
         {
           enableHighAccuracy: true,
-
           timeout: 10000,
-
           maximumAge: 300000,
         }
-
       );
-
     } catch (error) {
-
       console.error(
         "Mobile properties error:",
         error
@@ -567,15 +457,10 @@ const MobileNearbyProperties = () => {
       setLocationStatus(
         "No Properties Available"
       );
-
     } finally {
-
       setLoading(false);
-
     }
-
   };
-
 
   /*
   |--------------------------------------------------------------------------
@@ -584,19 +469,14 @@ const MobileNearbyProperties = () => {
   */
 
   const handleViewAll = async () => {
-
     if (showAll) {
-
       loadProperties();
-
       setShowAll(false);
 
       return;
-
     }
 
     try {
-
       setLoading(true);
 
       const allProperties =
@@ -611,19 +491,12 @@ const MobileNearbyProperties = () => {
       );
 
       setShowAll(true);
-
     } catch (error) {
-
       console.error(error);
-
     } finally {
-
       setLoading(false);
-
     }
-
   };
-
 
   /*
   |--------------------------------------------------------------------------
@@ -634,7 +507,6 @@ const MobileNearbyProperties = () => {
   const MobilePropertyCard = ({
     property,
   }) => {
-
     const image =
       property?.image?.[0]?.path
         ? `https://lightblue-moose-690494.hostingersite.com/public/${property.image[0].path}`
@@ -642,11 +514,9 @@ const MobileNearbyProperties = () => {
         ? `https://lightblue-moose-690494.hostingersite.com/public/${property.image[0]}`
         : "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
 
-
     const propertyId =
       property?._id ||
       property?.id;
-
 
     const price =
       property?.property_type?.name
@@ -654,26 +524,27 @@ const MobileNearbyProperties = () => {
         ? property?.monthly_rent
         : property?.sale_price;
 
-
     return (
-
-      <div
+      <article
         className="
-          min-w-[285px]
-          max-w-[285px]
+          group
+          min-w-[292px]
+          max-w-[292px]
           overflow-hidden
-          rounded-2xl
+          rounded-[22px]
           border
           border-gray-100
           bg-white
-          shadow-[0_8px_25px_rgba(0,0,0,0.07)]
+          shadow-[0_10px_30px_rgba(0,0,0,0.07)]
+          transition-all
+          duration-300
+          hover:-translate-y-1
+          hover:border-sky-100
+          hover:shadow-[0_18px_40px_rgba(14,165,233,0.12)]
         "
       >
-
         {/* IMAGE */}
-
-        <div className="relative h-[175px] w-full">
-
+        <div className="relative h-[185px] overflow-hidden bg-gray-100">
           <img
             src={image}
             alt={
@@ -684,47 +555,71 @@ const MobileNearbyProperties = () => {
               h-full
               w-full
               object-cover
+              transition-transform
+              duration-500
+              group-hover:scale-[1.04]
             "
           />
 
+          {/* OVERLAY */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-80" />
 
           {/* STATUS */}
-
           {property?.status && (
-
             <span
               className="
                 absolute
                 right-3
                 top-3
                 rounded-full
+                border
+                border-white/70
                 bg-white/90
                 px-3
-                py-1
-                text-[10px]
-                font-semibold
-                capitalize
+                py-1.5
+                text-[9px]
+                font-bold
+                uppercase
+                tracking-wide
                 text-gray-700
-                backdrop-blur
+                shadow-sm
+                backdrop-blur-md
               "
             >
               {property.status}
             </span>
-
           )}
 
+          {/* PROPERTY TYPE */}
+          {property?.property_type?.name && (
+            <span
+              className="
+                absolute
+                bottom-3
+                left-3
+                rounded-full
+                bg-sky-500/95
+                px-3
+                py-1.5
+                text-[9px]
+                font-semibold
+                text-white
+                shadow-md
+              "
+            >
+              {property.property_type.name}
+            </span>
+          )}
         </div>
 
-
         {/* CONTENT */}
-
         <div className="p-4">
-
           <h3
             className="
               truncate
-              text-base
+              text-[15px]
               font-bold
+              tracking-tight
               text-gray-900
             "
           >
@@ -732,12 +627,12 @@ const MobileNearbyProperties = () => {
               "Beautiful Property"}
           </h3>
 
-
           <p
             className="
-              mt-1
+              mt-1.5
               truncate
-              text-xs
+              text-[11px]
+              font-medium
               text-gray-500
             "
           >
@@ -747,66 +642,34 @@ const MobileNearbyProperties = () => {
               "Location not available"}
           </p>
 
-
           {/* DISTANCE */}
-
           {property?.distance !==
             undefined && (
+            <div className="mt-2 flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-sky-500" />
 
-            <p
-              className="
-                mt-1
-                text-[11px]
-                font-medium
-                text-sky-500
-              "
-            >
-              📍{" "}
-              {property.distance.toFixed(
-                1
-              )}{" "}
-              km away
-            </p>
-
+              <p className="text-[10px] font-semibold text-sky-500">
+                {property.distance.toFixed(1)} km away
+              </p>
+            </div>
           )}
 
+          {/* DIVIDER */}
+          <div className="my-4 border-t border-gray-100" />
 
           {/* FOOTER */}
-
-          <div
-            className="
-              mt-4
-              flex
-              items-center
-              justify-between
-            "
-          >
-
-            <div>
-
-              <p
-                className="
-                  text-[10px]
-                  text-gray-400
-                "
-              >
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-[9px] font-medium uppercase tracking-wider text-gray-400">
                 Price
               </p>
 
-              <p
-                className="
-                  text-sm
-                  font-bold
-                  text-sky-500
-                "
-              >
+              <p className="mt-0.5 truncate text-sm font-bold text-sky-500">
                 {price
                   ? `₹${Number(price).toLocaleString("en-IN")}`
                   : "Price on request"}
               </p>
-
             </div>
-
 
             <button
               type="button"
@@ -816,30 +679,29 @@ const MobileNearbyProperties = () => {
                 )
               }
               className="
-                rounded-lg
+                shrink-0
+                rounded-xl
                 bg-sky-500
-                px-3
-                py-2
-                text-xs
-                font-semibold
+                px-4
+                py-2.5
+                text-[11px]
+                font-bold
                 text-white
-                transition
+                shadow-[0_7px_18px_rgba(14,165,233,0.20)]
+                transition-all
+                duration-300
                 hover:bg-sky-600
+                hover:shadow-[0_9px_22px_rgba(14,165,233,0.28)]
+                active:scale-95
               "
             >
-              View
+              View Property
             </button>
-
           </div>
-
         </div>
-
-      </div>
-
+      </article>
     );
-
   };
-
 
   /*
   |--------------------------------------------------------------------------
@@ -848,99 +710,109 @@ const MobileNearbyProperties = () => {
   */
 
   return (
-
-    <section className="px-4 py-7">
+    <section className="px-0 py-7 sm:py-8">
 
       {/* HEADER */}
-
       <div
         className="
-          mb-4
+          mb-5
           flex
-          items-center
+          items-end
           justify-between
+          gap-4
         "
       >
+        <div className="min-w-0">
+          <div className="mb-1.5 flex items-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-sky-500" />
 
-        <div>
-
-          <p
-            className="
-              text-xs
-              font-medium
-              text-sky-500
-            "
-          >
-            Discover
-          </p>
-
+            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-sky-500">
+              Discover
+            </p>
+          </div>
 
           <h2
             className="
-              mt-1
+              truncate
               text-xl
-              font-bold
+              font-extrabold
+              tracking-tight
               text-gray-900
+              sm:text-2xl
             "
           >
             {locationStatus}
           </h2>
 
+          <p className="mt-1 text-[11px] leading-5 text-gray-400">
+            Handpicked properties based on your location
+          </p>
         </div>
-
 
         <button
           type="button"
           onClick={handleViewAll}
           className="
-            text-xs
-            font-semibold
+            shrink-0
+            rounded-xl
+            border
+            border-sky-100
+            bg-sky-50
+            px-3.5
+            py-2
+            text-[10px]
+            font-bold
             text-sky-500
+            transition-all
+            duration-300
+            hover:border-sky-200
+            hover:bg-sky-100
+            active:scale-95
+            sm:px-4
+            sm:text-xs
           "
         >
           {showAll
             ? "Nearby"
             : "View All"}
         </button>
-
       </div>
 
-
       {/* LOADING */}
-
       {loading && (
-
         <div
           className="
-            flex
-            items-center
-            justify-center
+            rounded-[22px]
+            border
+            border-gray-100
+            bg-gray-50/70
+            px-5
             py-10
           "
         >
+          <div className="flex flex-col items-center justify-center">
+            <div
+              className="
+                h-9
+                w-9
+                animate-spin
+                rounded-full
+                border-[3px]
+                border-gray-200
+                border-t-sky-500
+              "
+            />
 
-          <div
-            className="
-              h-7
-              w-7
-              animate-spin
-              rounded-full
-              border-2
-              border-gray-200
-              border-t-sky-500
-            "
-          />
-
+            <p className="mt-3 text-[11px] font-medium text-gray-400">
+              Finding properties near you...
+            </p>
+          </div>
         </div>
-
       )}
 
-
       {/* PROPERTIES */}
-
       {!loading &&
         properties.length > 0 && (
-
           <div
             className="
               -mx-4
@@ -948,14 +820,17 @@ const MobileNearbyProperties = () => {
               gap-4
               overflow-x-auto
               px-4
-              pb-3
+              pb-4
+              pt-1
               scrollbar-hide
+              sm:-mx-6
+              sm:px-6
+              md:-mx-8
+              md:px-8
             "
           >
-
             {properties.map(
               (property, index) => (
-
                 <MobilePropertyCard
                   key={
                     property?._id ||
@@ -966,69 +841,44 @@ const MobileNearbyProperties = () => {
                     property
                   }
                 />
-
               )
             )}
-
           </div>
-
         )}
 
-
       {/* NO PROPERTIES */}
-
       {!loading &&
         properties.length === 0 && (
-
           <div
             className="
-              rounded-2xl
+              rounded-[22px]
               border
               border-gray-100
-              bg-gray-50
+              bg-gradient-to-b
+              from-gray-50
+              to-white
               px-5
-              py-8
+              py-10
               text-center
+              shadow-sm
             "
           >
-
-            <div className="text-3xl">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-50 text-2xl">
               🏠
             </div>
 
-
-            <h3
-              className="
-                mt-3
-                text-sm
-                font-bold
-                text-gray-800
-              "
-            >
+            <h3 className="mt-4 text-sm font-bold text-gray-800">
               No properties found
             </h3>
 
-
-            <p
-              className="
-                mt-1
-                text-xs
-                leading-5
-                text-gray-500
-              "
-            >
+            <p className="mx-auto mt-1 max-w-xs text-[11px] leading-5 text-gray-500">
               No properties are currently
-              available.
+              available in your area.
             </p>
-
           </div>
-
         )}
-
     </section>
-
   );
-
 };
 
 export default MobileNearbyProperties;
