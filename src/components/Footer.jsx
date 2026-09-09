@@ -11,12 +11,10 @@ const Footer = () => {
   return (
     <footer className="hidden bg-sky-400 px-6 pb-10 pt-12 text-white md:block lg:px-8">
       <div className="mx-auto max-w-[1300px]">
-
         {/* =====================================================
             MAIN FOOTER
         ====================================================== */}
         <div className="grid gap-10 md:grid-cols-3 md:gap-12 lg:gap-16">
-
           {/* =================================================
               LOGO + DESCRIPTION
           ================================================== */}
@@ -28,21 +26,17 @@ const Footer = () => {
             <div className="mb-4 h-1 w-10 rounded-full bg-white/70" />
 
             <p className="text-sm leading-7 text-white/85">
-              Discover premium properties and make your real estate
-              journey smooth and successful with Estatein.
+              Discover premium properties and make your real estate journey
+              smooth and successful with Estatein.
             </p>
 
             {/* SOCIAL */}
             <div className="mt-5 flex gap-2.5">
-              {[
-                FaFacebookF,
-                FaTwitter,
-                FaInstagram,
-                FaLinkedinIn,
-              ].map((Icon, i) => (
-                <div
-                  key={i}
-                  className="
+              {[FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn].map(
+                (Icon, i) => (
+                  <div
+                    key={i}
+                    className="
                     flex
                     h-10
                     w-10
@@ -63,10 +57,11 @@ const Footer = () => {
                     hover:text-sky-500
                     hover:shadow-lg
                   "
-                >
-                  <Icon size={14} />
-                </div>
-              ))}
+                  >
+                    <Icon size={14} />
+                  </div>
+                ),
+              )}
             </div>
           </div>
 
@@ -74,7 +69,6 @@ const Footer = () => {
               LINKS
           ================================================== */}
           <div className="flex justify-between gap-8 sm:justify-start sm:gap-20">
-
             {/* QUICK LINKS */}
             <div>
               <h3 className="mb-4 text-sm font-bold tracking-wide text-white">
@@ -91,9 +85,7 @@ const Footer = () => {
                 </li>
 
                 <li className="transition-colors duration-200 hover:text-white">
-                  <NavLink to="/properties">
-                    Properties
-                  </NavLink>
+                  <NavLink to="/properties">Properties</NavLink>
                 </li>
 
                 <li className="transition-colors duration-200 hover:text-white">
@@ -122,9 +114,7 @@ const Footer = () => {
                 </li>
 
                 <li className="transition-colors duration-200 hover:text-white">
-                  <NavLink to="/privacy-policy">
-                    Privacy Policy
-                  </NavLink>
+                  <NavLink to="/privacy-policy">Privacy Policy</NavLink>
                 </li>
 
                 <li className="transition-colors duration-200 hover:text-white">
@@ -191,9 +181,7 @@ const Footer = () => {
         ====================================================== */}
         <div className="mt-10 border-t border-white/25 pt-6">
           <div className="flex flex-col items-center justify-around gap-3 text-center text-sm text-white/80 md:flex-row md:text-left">
-            <p>
-              © 2024 Estatein. All rights reserved.
-            </p>
+            <p>© 2026 Estatein. All rights reserved.</p>
           </div>
         </div>
       </div>

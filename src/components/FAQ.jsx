@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  FiArrowUpRight,
-  FiPlus,
-  FiMinus,
-  FiHelpCircle,
-} from "react-icons/fi";
+import { FiArrowUpRight, FiPlus, FiMinus, FiHelpCircle } from "react-icons/fi";
 
 const FAQ = () => {
   const navigate = useNavigate();
@@ -14,18 +9,12 @@ const FAQ = () => {
   const [active, setActive] = useState(null);
 
   useEffect(() => {
-    fetch(
-      "https://lightblue-moose-690494.hostingersite.com/api/faqs"
-    )
+    fetch("https://lightblue-moose-690494.hostingersite.com/api/faqs")
       .then((res) => res.json())
       .then((data) => {
         const finalData = data.data || data;
 
-        setFaqs(
-          Array.isArray(finalData)
-            ? finalData
-            : []
-        );
+        setFaqs(Array.isArray(finalData) ? finalData : []);
       })
       .catch(() => setFaqs([]));
   }, []);
@@ -45,9 +34,7 @@ const FAQ = () => {
   };
 
   const toggleFaq = (index) => {
-    setActive((prev) =>
-      prev === index ? null : index
-    );
+    setActive((prev) => (prev === index ? null : index));
   };
 
   return (
@@ -63,15 +50,12 @@ const FAQ = () => {
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-100/30 blur-3xl" />
 
       <div className="relative mx-auto max-w-[1200px]">
-
         {/* =====================================================
             HEADER
         ====================================================== */}
 
         <div className="mb-9 flex flex-col gap-6 sm:mb-11 lg:flex-row lg:items-end lg:justify-between">
-
           <div className="max-w-2xl">
-
             <div className="mb-3 flex items-center gap-2">
               <span className="h-1.5 w-1.5 rounded-full bg-sky-500" />
 
@@ -82,17 +66,13 @@ const FAQ = () => {
 
             <h2 className="text-3xl font-extrabold tracking-[-0.03em] text-gray-900 sm:text-4xl lg:text-[42px]">
               Frequently Asked
-              <span className="block text-sky-500">
-                Questions
-              </span>
+              <span className="block text-sky-500">Questions</span>
             </h2>
 
             <p className="mt-4 max-w-xl text-xs leading-6 text-gray-500 sm:text-sm sm:leading-7 lg:text-base">
-              Everything you need to know about properties,
-              listings and services before making your next
-              real-estate decision.
+              Everything you need to know about properties, listings and
+              services before making your next real-estate decision.
             </p>
-
           </div>
 
           {/* VIEW ALL */}
@@ -129,7 +109,6 @@ const FAQ = () => {
             "
           >
             View All
-
             <span className="flex h-7 w-7 items-center justify-center rounded-full bg-sky-50 text-sky-500 transition-all duration-300 group-hover:bg-white group-hover:text-sky-500">
               <FiArrowUpRight size={14} />
             </span>
@@ -142,23 +121,16 @@ const FAQ = () => {
 
         {faqs.length > 0 ? (
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-
             {faqs.slice(0, 3).map((item, index) => {
+              const isActive = active === index;
 
-              const isActive =
-                active === index;
+              const answer = item?.answer || "";
 
-              const answer =
-                item?.answer || "";
-
-              const hasLongAnswer =
-                isLongText(answer);
+              const hasLongAnswer = isLongText(answer);
 
               return (
                 <article
-                  key={
-                    item.id || index
-                  }
+                  key={item.id || index}
                   className={`
                     group
                     relative
@@ -180,7 +152,6 @@ const FAQ = () => {
                     }
                   `}
                 >
-
                   {/* TOP ACCENT */}
 
                   <div
@@ -207,7 +178,6 @@ const FAQ = () => {
                   {/* TOP ROW */}
 
                   <div className="flex items-start justify-between gap-3">
-
                     {/* NUMBER */}
 
                     <div
@@ -237,17 +207,9 @@ const FAQ = () => {
 
                     <button
                       type="button"
-                      onClick={() =>
-                        toggleFaq(index)
-                      }
-                      aria-expanded={
-                        isActive
-                      }
-                      aria-label={
-                        isActive
-                          ? "Show less"
-                          : "Show more"
-                      }
+                      onClick={() => toggleFaq(index)}
+                      aria-expanded={isActive}
+                      aria-label={isActive ? "Show less" : "Show more"}
                       className={`
                         flex
                         h-10
@@ -266,13 +228,8 @@ const FAQ = () => {
                         }
                       `}
                     >
-                      {isActive ? (
-                        <FiMinus size={16} />
-                      ) : (
-                        <FiPlus size={16} />
-                      )}
+                      {isActive ? <FiMinus size={16} /> : <FiPlus size={16} />}
                     </button>
-
                   </div>
 
                   {/* QUESTION ICON */}
@@ -284,14 +241,12 @@ const FAQ = () => {
                   {/* QUESTION */}
 
                   <h3 className="mt-4 text-base font-extrabold leading-6 tracking-tight text-gray-900 sm:text-lg">
-                    {item?.question ||
-                      "No Question"}
+                    {item?.question || "No Question"}
                   </h3>
 
                   {/* ANSWER */}
 
                   <div className="mt-3">
-
                     <p
                       className={`
                         text-xs
@@ -301,17 +256,10 @@ const FAQ = () => {
                         duration-300
                         sm:text-sm
                         sm:leading-6
-                        ${
-                          isActive
-                            ? "max-h-[500px]"
-                            : "max-h-[72px]"
-                        }
+                        ${isActive ? "max-h-[500px]" : "max-h-[72px]"}
                       `}
                     >
-                      {getAnswerText(
-                        answer,
-                        index
-                      )}
+                      {getAnswerText(answer, index)}
                     </p>
 
                     {/* READ MORE / SHOW LESS */}
@@ -319,11 +267,7 @@ const FAQ = () => {
                     {hasLongAnswer && (
                       <button
                         type="button"
-                        onClick={() =>
-                          toggleFaq(
-                            index
-                          )
-                        }
+                        onClick={() => toggleFaq(index)}
                         className="
                           mt-3
                           inline-flex
@@ -339,24 +283,15 @@ const FAQ = () => {
                           hover:text-sky-600
                         "
                       >
-                        <span>
-                          {isActive
-                            ? "Show Less"
-                            : "Read More"}
-                        </span>
+                        <span>{isActive ? "Show Less" : "Read More"}</span>
 
                         {isActive ? (
-                          <FiMinus
-                            size={12}
-                          />
+                          <FiMinus size={12} />
                         ) : (
-                          <FiArrowUpRight
-                            size={12}
-                          />
+                          <FiArrowUpRight size={12} />
                         )}
                       </button>
                     )}
-
                   </div>
 
                   {/* BOTTOM GLOW */}
@@ -381,11 +316,9 @@ const FAQ = () => {
                       }
                     `}
                   />
-
                 </article>
               );
             })}
-
           </div>
         ) : (
           /* =====================================================
@@ -393,7 +326,6 @@ const FAQ = () => {
           ====================================================== */
 
           <div className="rounded-[26px] border border-gray-100 bg-white px-6 py-14 text-center shadow-sm">
-
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-50 text-sky-500">
               <FiHelpCircle size={24} />
             </div>
@@ -403,10 +335,8 @@ const FAQ = () => {
             </h3>
 
             <p className="mt-1 text-xs text-gray-400">
-              There are currently no frequently asked
-              questions available.
+              There are currently no frequently asked questions available.
             </p>
-
           </div>
         )}
 
@@ -416,9 +346,7 @@ const FAQ = () => {
 
         {faqs.length > 0 && (
           <div className="mt-8 flex flex-col items-center justify-between gap-4 rounded-2xl border border-sky-100 bg-sky-50/60 px-5 py-4 sm:flex-row">
-
             <div className="flex items-center gap-3">
-
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-sky-500 shadow-sm">
                 <FiHelpCircle size={16} />
               </div>
@@ -432,14 +360,11 @@ const FAQ = () => {
                   Explore our complete FAQ section for more answers.
                 </p>
               </div>
-
             </div>
 
             <button
               type="button"
-              onClick={() =>
-                navigate("/faq")
-              }
+              onClick={() => navigate("/faq")}
               className="
                 inline-flex
                 items-center
@@ -460,15 +385,10 @@ const FAQ = () => {
               "
             >
               Explore FAQ
-
-              <FiArrowUpRight
-                size={13}
-              />
+              <FiArrowUpRight size={13} />
             </button>
-
           </div>
         )}
-
       </div>
     </section>
   );

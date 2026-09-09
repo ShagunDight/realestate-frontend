@@ -18,10 +18,7 @@ const FeaturedProperties = () => {
   const [loading, setLoading] = useState(false);
 
   const stripHtml = (html) => {
-    const doc = new DOMParser().parseFromString(
-      html || "",
-      "text/html"
-    );
+    const doc = new DOMParser().parseFromString(html || "", "text/html");
 
     return doc.body.textContent || "";
   };
@@ -31,7 +28,7 @@ const FeaturedProperties = () => {
 
     try {
       const res = await fetch(
-        `https://lightblue-moose-690494.hostingersite.com/api/featuredProperty?page=${pageNo}`
+        `https://lightblue-moose-690494.hostingersite.com/api/featuredProperty?page=${pageNo}`,
       );
 
       const data = await res.json();
@@ -87,8 +84,8 @@ const FeaturedProperties = () => {
                 </h2>
 
                 <p className="mt-3 max-w-xl text-xs leading-6 text-gray-500 sm:text-sm sm:leading-7">
-                  Explore handpicked premium properties for
-                  investment, living and business opportunities.
+                  Explore handpicked premium properties for investment, living
+                  and business opportunities.
                 </p>
               </div>
 
@@ -127,28 +124,21 @@ const FeaturedProperties = () => {
                 ================================================== */}
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                   {properties.map((item) => {
-                    const text = stripHtml(
-                      item.description || ""
-                    );
+                    const text = stripHtml(item.description || "");
 
                     const isLong = text.length > 80;
 
-                    const propertyId =
-                      item._id || item.id;
+                    const propertyId = item._id || item.id;
 
                     const image =
-                      item.image &&
-                      item.image.length > 0
+                      item.image && item.image.length > 0
                         ? `https://lightblue-moose-690494.hostingersite.com/public/${
-                            item.image[0]?.path ||
-                            item.image[0]
+                            item.image[0]?.path || item.image[0]
                           }`
                         : "https://thumbs.dreamstime.com/b/dummy-neighbor-chat-23372551.jpg";
 
                     const price =
-                      item.property_type?.name
-                        ?.toLowerCase() ===
-                      "for lease"
+                      item.property_type?.name?.toLowerCase() === "for lease"
                         ? item.monthly_rent
                         : item.sale_price;
 
@@ -187,10 +177,7 @@ const FeaturedProperties = () => {
                               ease-out
                               group-hover:scale-[1.045]
                             "
-                            alt={
-                              item.title ||
-                              "Property"
-                            }
+                            alt={item.title || "Property"}
                             src={image}
                           />
 
@@ -216,35 +203,25 @@ const FeaturedProperties = () => {
                               shadow-sm
                               backdrop-blur-md
                               ${
-                                item.status ===
-                                "active"
+                                item.status === "active"
                                   ? "bg-green-500/90"
-                                  : item.status ===
-                                      "pending"
-                                  ? "bg-yellow-500/90"
-                                  : item.status ===
-                                      "sold"
-                                  ? "bg-red-500/90"
-                                  : item.status ===
-                                      "rented"
-                                  ? "bg-blue-500/90"
-                                  : "bg-gray-700/90"
+                                  : item.status === "pending"
+                                    ? "bg-yellow-500/90"
+                                    : item.status === "sold"
+                                      ? "bg-red-500/90"
+                                      : item.status === "rented"
+                                        ? "bg-blue-500/90"
+                                        : "bg-gray-700/90"
                               }
                             `}
                           >
-                            {item.status
-                              ?.charAt(0)
-                              .toUpperCase() +
-                              item.status?.slice(
-                                1
-                              )}
+                            {item.status?.charAt(0).toUpperCase() +
+                              item.status?.slice(1)}
                           </div>
 
                           {/* FEATURED BADGE */}
                           <div className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-white/90 text-sky-500 shadow-lg backdrop-blur-md">
-                            <FiArrowUpRight
-                              size={16}
-                            />
+                            <FiArrowUpRight size={16} />
                           </div>
 
                           {/* IMAGE BOTTOM TAG */}
@@ -283,21 +260,16 @@ const FeaturedProperties = () => {
                             />
 
                             <p className="truncate text-[11px] font-medium text-gray-500 sm:text-xs">
-                              {item.location ||
-                                "Location not available"}
+                              {item.location || "Location not available"}
                             </p>
                           </div>
 
                           {/* DESCRIPTION */}
                           <div className="mt-3 min-h-[46px]">
                             <p className="text-[11px] leading-5 text-gray-500 sm:text-xs sm:leading-5">
-                              {expanded ===
-                              propertyId
+                              {expanded === propertyId
                                 ? text
-                                : text.slice(0, 80) +
-                                  (isLong
-                                    ? "..."
-                                    : "")}
+                                : text.slice(0, 80) + (isLong ? "..." : "")}
                             </p>
 
                             {isLong && (
@@ -306,15 +278,11 @@ const FeaturedProperties = () => {
                                 className="mt-1.5 text-[11px] font-semibold text-sky-500 transition-colors hover:text-sky-600 sm:text-xs"
                                 onClick={() =>
                                   setExpanded(
-                                    expanded ===
-                                      propertyId
-                                      ? null
-                                      : propertyId
+                                    expanded === propertyId ? null : propertyId,
                                   )
                                 }
                               >
-                                {expanded ===
-                                propertyId
+                                {expanded === propertyId
                                   ? "Show Less"
                                   : "Read More"}
                               </button>
@@ -329,8 +297,7 @@ const FeaturedProperties = () => {
                             {/* PRICE */}
                             <div className="min-w-0">
                               <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-gray-400">
-                                {item.property_type?.name
-                                  ?.toLowerCase() ===
+                                {item.property_type?.name?.toLowerCase() ===
                                 "for lease"
                                   ? "Monthly Rent"
                                   : "Price"}
@@ -339,11 +306,7 @@ const FeaturedProperties = () => {
                               <div className="mt-1 truncate text-sm font-extrabold tracking-tight text-gray-900 sm:text-base">
                                 ₹{" "}
                                 {price
-                                  ? Number(
-                                      price
-                                    ).toLocaleString(
-                                      "en-IN"
-                                    )
+                                  ? Number(price).toLocaleString("en-IN")
                                   : "N/A"}
                               </div>
                             </div>
@@ -352,9 +315,7 @@ const FeaturedProperties = () => {
                             <button
                               type="button"
                               onClick={() =>
-                                navigate(
-                                  `/property/${propertyId}`
-                                )
+                                navigate(`/property/${propertyId}`)
                               }
                               className="
                                 inline-flex
@@ -381,9 +342,7 @@ const FeaturedProperties = () => {
                               "
                             >
                               View
-                              <FiArrowUpRight
-                                size={13}
-                              />
+                              <FiArrowUpRight size={13} />
                             </button>
                           </div>
                         </div>
@@ -414,10 +373,7 @@ const FeaturedProperties = () => {
                   <div className="text-center sm:text-left">
                     <p className="text-xs font-medium text-gray-400">
                       Showing page{" "}
-                      <span className="font-bold text-gray-800">
-                        {page}
-                      </span>{" "}
-                      of{" "}
+                      <span className="font-bold text-gray-800">{page}</span> of{" "}
                       <span className="font-bold text-gray-800">
                         {lastPage}
                       </span>
@@ -428,11 +384,7 @@ const FeaturedProperties = () => {
                   <div className="flex items-center justify-center gap-2">
                     <button
                       type="button"
-                      onClick={() =>
-                        changePage(
-                          page - 1
-                        )
-                      }
+                      onClick={() => changePage(page - 1)}
                       disabled={page === 1}
                       className="
                         flex
@@ -459,9 +411,7 @@ const FeaturedProperties = () => {
                       "
                       aria-label="Previous page"
                     >
-                      <FiArrowLeft
-                        size={16}
-                      />
+                      <FiArrowLeft size={16} />
                     </button>
 
                     <div className="flex h-10 min-w-16 items-center justify-center rounded-xl border border-sky-100 bg-sky-50 px-3 text-xs font-bold text-sky-600">
@@ -470,14 +420,8 @@ const FeaturedProperties = () => {
 
                     <button
                       type="button"
-                      onClick={() =>
-                        changePage(
-                          page + 1
-                        )
-                      }
-                      disabled={
-                        page === lastPage
-                      }
+                      onClick={() => changePage(page + 1)}
+                      disabled={page === lastPage}
                       className="
                         flex
                         h-10
@@ -503,9 +447,7 @@ const FeaturedProperties = () => {
                       "
                       aria-label="Next page"
                     >
-                      <FiArrowRight
-                        size={16}
-                      />
+                      <FiArrowRight size={16} />
                     </button>
                   </div>
                 </div>

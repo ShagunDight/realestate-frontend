@@ -157,9 +157,7 @@ export default function ServicesPage() {
         </h3>
 
         {/* DESCRIPTION */}
-        <p className="text-gray-500 text-sm leading-7 mb-7">
-          {desc}
-        </p>
+        <p className="text-gray-500 text-sm leading-7 mb-7">{desc}</p>
 
         {/* FEATURES */}
         {features.length > 0 && (
@@ -169,24 +167,11 @@ export default function ServicesPage() {
                 key={i}
                 className="flex items-start gap-3 text-sm text-gray-600"
               >
-                <span
-                  className="
-                    mt-0.5
-                    w-5 h-5
-                    rounded-full
-                    bg-sky-50
-                    border border-sky-100
-                    text-sky-500
-                    flex items-center justify-center
-                    flex-shrink-0
-                  "
-                >
+                <span className="mt-0.5 w-5 h-5 rounded-full bg-sky-50 border border-sky-100 text-sky-500 flex items-center justify-center flex-shrink-0">
                   <FaCheck className="text-[9px]" />
                 </span>
 
-                <span className="leading-5">
-                  {feature}
-                </span>
+                <span className="leading-5">{feature}</span>
               </div>
             ))}
           </div>
@@ -275,9 +260,7 @@ export default function ServicesPage() {
         </h3>
 
         {/* DESCRIPTION */}
-        <p className="text-gray-500 text-sm leading-7">
-          {item.description}
-        </p>
+        <p className="text-gray-500 text-sm leading-7">{item.description}</p>
 
         {/* BOTTOM DECORATION */}
         <div className="mt-6 flex items-center gap-2 text-sky-500 text-xs font-semibold opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
@@ -318,12 +301,10 @@ export default function ServicesPage() {
   return (
     <>
       <div className="bg-white overflow-hidden">
-
         {/* =====================================================
             HERO
         ====================================================== */}
         <section className="relative overflow-hidden bg-gradient-to-b from-sky-50 via-white to-white">
-
           {/* BACKGROUND GLOWS */}
           <div className="absolute inset-0 pointer-events-none">
             <div
@@ -367,7 +348,6 @@ export default function ServicesPage() {
           />
 
           <div className="relative max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pt-16 sm:pt-20 lg:pt-24 pb-28 sm:pb-32 lg:pb-36">
-
             {/* LABEL */}
             <div className="flex justify-center">
               <div
@@ -402,16 +382,9 @@ export default function ServicesPage() {
                   tracking-tight
                 "
               >
-                Elevate Your{" "}
-                <span className="text-sky-500">
-                  Real Estate
-                </span>
-
+                Elevate Your <span className="text-sky-500">Real Estate</span>
                 <br className="hidden sm:block" />
-
-                <span className="text-gray-900">
-                  Experience
-                </span>
+                <span className="text-gray-900">Experience</span>
               </h1>
 
               <p
@@ -427,9 +400,9 @@ export default function ServicesPage() {
                   sm:leading-8
                 "
               >
-                Professional property buying, selling, valuation,
-                investment and architectural planning services —
-                all backed by expert guidance and complete transparency.
+                Professional property buying, selling, valuation, investment and
+                architectural planning services — all backed by expert guidance
+                and complete transparency.
               </p>
             </div>
 
@@ -466,19 +439,16 @@ export default function ServicesPage() {
             MAIN
         ====================================================== */}
         <div className="bg-white px-5 sm:px-6 lg:px-8">
-
           {/* =================================================
               MINI SERVICE CARDS
           ================================================== */}
           <section className="relative -mt-16 sm:-mt-20 z-20 max-w-7xl mx-auto">
-
             {/* SOFT GLOW */}
             <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center pointer-events-none">
               <div className="w-[70%] h-40 bg-sky-100 blur-3xl rounded-full opacity-40" />
             </div>
 
             <div className="relative grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
-
               {[
                 {
                   title: "Find Your Dream Home",
@@ -530,7 +500,6 @@ export default function ServicesPage() {
                   />
 
                   <div className="relative z-10">
-
                     {/* ICON */}
                     <div className="flex justify-center mb-5">
                       <div
@@ -573,10 +542,8 @@ export default function ServicesPage() {
               STATIC SERVICES
           ================================================== */}
           <section className="max-w-7xl mx-auto pt-24 sm:pt-28 lg:pt-32 pb-12">
-
             {/* HEADING */}
             <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-
               <div className="inline-flex items-center gap-2 mb-4">
                 <span className="w-8 h-px bg-sky-300" />
 
@@ -598,21 +565,18 @@ export default function ServicesPage() {
                 "
               >
                 Complete Property{" "}
-                <span className="text-sky-500">
-                  Solutions
-                </span>
+                <span className="text-sky-500">Solutions</span>
               </h2>
 
               <p className="text-gray-500 text-sm sm:text-base leading-7 mt-5">
                 From property buying and selling to valuation, legal
-                documentation and floor planning — we provide complete
-                real estate services tailored to your needs.
+                documentation and floor planning — we provide complete real
+                estate services tailored to your needs.
               </p>
             </div>
 
             {/* SERVICES GRID */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6 lg:gap-7">
-
               {services1.map((item) => {
                 const Icon = ICONS[item.icon] || FaCogs;
 
@@ -644,7 +608,6 @@ export default function ServicesPage() {
               >
                 {/* SECTION HEADER */}
                 <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5 mb-10 sm:mb-12">
-
                   <div>
                     <div className="flex items-center gap-2 mb-3">
                       <span className="w-2 h-2 rounded-full bg-sky-500" />
@@ -672,21 +635,19 @@ export default function ServicesPage() {
                     <span className="text-gray-700 font-medium">
                       {sectionName.toLowerCase()}
                     </span>{" "}
-                    services designed to simplify and enhance your
-                    real estate journey.
+                    services designed to simplify and enhance your real estate
+                    journey.
                   </p>
                 </div>
 
                 {/* CARDS */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 sm:gap-6">
-
                   {sectionItems.map((item) => (
                     <Card key={item.id} item={item} />
                   ))}
-
                 </div>
               </section>
-            )
+            ),
           )}
 
           {/* =================================================
@@ -721,10 +682,8 @@ export default function ServicesPage() {
             <div className="absolute top-8 right-8 w-24 h-24 rounded-full border border-white/10 hidden sm:block" />
 
             <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-
               {/* LEFT */}
               <div className="text-center lg:text-left">
-
                 <div className="inline-flex items-center gap-2 mb-4">
                   <span className="w-2 h-2 rounded-full bg-white" />
 
@@ -757,9 +716,8 @@ export default function ServicesPage() {
                     mb-6 sm:mb-8
                   "
                 >
-                  Get expert investment guidance, market insights and
-                  property strategies designed to maximize long-term
-                  returns.
+                  Get expert investment guidance, market insights and property
+                  strategies designed to maximize long-term returns.
                 </p>
 
                 <button
@@ -786,7 +744,6 @@ export default function ServicesPage() {
 
               {/* RIGHT CARDS */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-
                 {[
                   {
                     title: "Market Insight",

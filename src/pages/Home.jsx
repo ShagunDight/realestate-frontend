@@ -25,7 +25,7 @@ const Home = () => {
       const query = new URLSearchParams(filters).toString();
 
       const res = await fetch(
-        `https://lightblue-moose-690494.hostingersite.com/api/properties?${query}`
+        `https://lightblue-moose-690494.hostingersite.com/api/properties?${query}`,
       );
 
       const data = await res.json();
@@ -62,16 +62,14 @@ const Home = () => {
 
               <h1 className="text-[34px] font-extrabold leading-[1.04] tracking-[-0.04em] text-gray-900 sm:text-[44px] md:text-[52px]">
                 Find Your
-                <span className="block text-sky-500">
-                  Dream Property
-                </span>
+                <span className="block text-sky-500">Dream Property</span>
                 With Confidence
               </h1>
 
               <p className="mx-auto mt-4 max-w-[620px] text-[13px] leading-6 text-gray-600 sm:text-sm sm:leading-7 md:text-base">
-                Find the perfect property easily with our modern
-                platform designed to simplify your search and help
-                you discover a place that truly feels like home.
+                Find the perfect property easily with our modern platform
+                designed to simplify your search and help you discover a place
+                that truly feels like home.
               </p>
             </div>
 
@@ -162,17 +160,14 @@ const Home = () => {
 
               <h1 className="max-w-[680px] text-5xl font-extrabold leading-[1.02] tracking-[-0.045em] text-gray-900 xl:text-[68px]">
                 Find Your
-                <span className="block text-sky-500">
-                  Dream Property
-                </span>
+                <span className="block text-sky-500">Dream Property</span>
                 With Confidence
               </h1>
 
               <p className="mt-6 max-w-[560px] text-base leading-7 text-gray-600 xl:text-lg xl:leading-8">
-                Find the perfect property easily with our modern
-                platform designed to simplify your search and help
-                you discover homes that truly match your lifestyle
-                and budget.
+                Find the perfect property easily with our modern platform
+                designed to simplify your search and help you discover homes
+                that truly match your lifestyle and budget.
               </p>
 
               {/* STATS */}
@@ -224,9 +219,7 @@ const Home = () => {
               <div className="mt-6 flex items-center gap-3 text-xs text-gray-400">
                 <span className="h-px w-8 bg-gray-200" />
 
-                <span>
-                  Trusted by property seekers worldwide
-                </span>
+                <span>Trusted by property seekers worldwide</span>
               </div>
             </div>
 
@@ -288,11 +281,7 @@ const Home = () => {
                         />
                       </defs>
 
-                      <text
-                        fill="#0EA5E9"
-                        fontSize="10"
-                        letterSpacing="2"
-                      >
+                      <text fill="#0EA5E9" fontSize="10" letterSpacing="2">
                         <textPath href="#circlePath">
                           • DISCOVER • DREAM • PROPERTY •
                         </textPath>

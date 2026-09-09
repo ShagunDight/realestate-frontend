@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  HiHome,
-  HiLightningBolt,
-  HiCog,
-  HiTrendingUp,
-} from "react-icons/hi";
+import { HiHome, HiLightningBolt, HiCog, HiTrendingUp } from "react-icons/hi";
 
 const Features = () => {
   const data = [
@@ -28,7 +23,6 @@ const Features = () => {
 
   return (
     <section className="relative w-full overflow-hidden bg-sky-50 py-10 sm:py-12 md:py-14 lg:py-16">
-
       {/* =====================================================
           BACKGROUND DECORATION
       ====================================================== */}
@@ -39,12 +33,10 @@ const Features = () => {
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/40 blur-3xl" />
 
       <div className="relative z-10 mx-auto w-full max-w-[1300px] px-4 sm:px-6 lg:px-8">
-
         {/* =================================================
             SECTION INTRO
         ================================================== */}
         <div className="mx-auto mb-8 max-w-2xl text-center sm:mb-10 md:mb-12">
-          
           <div className="mb-3 flex items-center justify-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-sky-500" />
 
@@ -63,8 +55,8 @@ const Features = () => {
           </h2>
 
           <p className="mx-auto mt-3 max-w-xl text-xs leading-6 text-gray-600 sm:text-sm sm:leading-7 md:text-base">
-            Discover a simpler, smarter way to explore,
-            manage and invest in real estate.
+            Discover a simpler, smarter way to explore, manage and invest in
+            real estate.
           </p>
         </div>
 
@@ -72,7 +64,6 @@ const Features = () => {
             FEATURES GRID
         ================================================== */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4 lg:gap-5">
-
           {data.map((item, i) => (
             <div
               key={i}
