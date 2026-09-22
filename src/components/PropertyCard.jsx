@@ -1,45 +1,25 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  FaHeart,
-  FaRegHeart,
-} from "react-icons/fa";
-import {
-  FiArrowUpRight,
-  FiMapPin,
-} from "react-icons/fi";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { FiArrowUpRight, FiMapPin } from "react-icons/fi";
 import { useWishlist } from "./WishlistContext";
 
-const PropertyCard = ({
-  item,
-  setShowLogin,
-}) => {
+const PropertyCard = ({ item, setShowLogin }) => {
   const navigate = useNavigate();
 
-  const {
-    toggleWishlist,
-    isWished,
-  } = useWishlist();
+  const { toggleWishlist, isWished } = useWishlist();
 
   const stripHtml = (html) => {
-    const div =
-      document.createElement("div");
+    const div = document.createElement("div");
 
     div.innerHTML = html || "";
 
-    return (
-      div.textContent ||
-      div.innerText ||
-      ""
-    );
+    return div.textContent || div.innerText || "";
   };
 
-  const propertyId =
-    item._id || item.id;
+  const propertyId = item._id || item.id;
 
-  const isLoggedIn = !!localStorage.getItem(
-    "customer_token"
-  );
+  const isLoggedIn = !!localStorage.getItem("customer_token");
 
   const handleWishlistClick = () => {
     if (!isLoggedIn) {
@@ -56,6 +36,7 @@ const PropertyCard = ({
 
     let images = item.image;
 
+    // JSON string ko array mein convert karo
     if (typeof images === "string") {
       try {
         images = JSON.parse(images);
@@ -64,59 +45,68 @@ const PropertyCard = ({
       }
     }
 
-    if (
-      !Array.isArray(images) ||
-      images.length === 0
-    ) {
+    // Valid array check
+    if (!Array.isArray(images) || images.length === 0) {
       return fallback;
     }
 
-    const firstImage = images[0];
+    // Primary image find karo
+    const primaryImage = images.find(
+      (image) =>
+        image &&
+        typeof image === "object" &&
+        image.is_primary === true &&
+        image.path,
+    );
 
-    if (
-      typeof firstImage === "object" &&
-      firstImage.path
-    ) {
-      return `https://lightblue-moose-690494.hostingersite.com/public/${firstImage.path}`;
+    // Primary image mil gayi
+    if (primaryImage) {
+      return `https://lightblue-moose-690494.hostingersite.com/public/${primaryImage.path}`;
     }
 
-    if (
-      typeof firstImage === "string"
-    ) {
-      return `https://lightblue-moose-690494.hostingersite.com/public/${firstImage}`;
+    // Agar primary image nahi hai to first valid image fallback
+    const firstImage = images.find((image) => {
+      if (typeof image === "object") {
+        return image.path;
+      }
+
+      if (typeof image === "string") {
+        return image;
+      }
+
+      return false;
+    });
+
+    if (firstImage) {
+      const path =
+        typeof firstImage === "object" ? firstImage.path : firstImage;
+
+      return `https://lightblue-moose-690494.hostingersite.com/public/${path}`;
     }
 
     return fallback;
   };
 
   const statusStyles = {
-    active:
-      "bg-green-500/90 text-white border-green-300/30",
-    sold:
-      "bg-red-500/90 text-white border-red-300/30",
-    pending:
-      "bg-yellow-500/90 text-white border-yellow-300/30",
+    active: "bg-green-500/90 text-white border-green-300/30",
+    sold: "bg-red-500/90 text-white border-red-300/30",
+    pending: "bg-yellow-500/90 text-white border-yellow-300/30",
   };
 
   const statusLabel =
     item.status === "active"
       ? "Active"
       : item.status === "sold"
-      ? "Sold"
-      : item.status === "pending"
-      ? "Pending"
-      : "Unknown";
+        ? "Sold"
+        : item.status === "pending"
+          ? "Pending"
+          : "Unknown";
 
-  const price =
-    item.sale_price;
+  const price = item.sale_price;
 
   return (
     <article
-      onClick={() =>
-        navigate(
-          `/property/${propertyId}`
-        )
-      }
+      onClick={() => navigate(`/property/${propertyId}`)}
       className="
         group
         cursor-pointer
@@ -140,10 +130,7 @@ const PropertyCard = ({
       <div className="relative h-[220px] overflow-hidden bg-gray-100 sm:h-[230px]">
         <img
           src={getImage()}
-          alt={
-            item.title ||
-            "Property"
-          }
+          alt={item.title || "Property"}
           className="
             h-full
             w-full
@@ -178,9 +165,7 @@ const PropertyCard = ({
               shadow-md
               backdrop-blur-md
               ${
-                statusStyles[
-                  item.status
-                ] ||
+                statusStyles[item.status] ||
                 "bg-gray-700/90 text-white border-white/20"
               }
             `}
@@ -196,9 +181,7 @@ const PropertyCard = ({
         <button
           type="button"
           aria-label={
-            isWished(propertyId)
-              ? "Remove from wishlist"
-              : "Add to wishlist"
+            isWished(propertyId) ? "Remove from wishlist" : "Add to wishlist"
           }
           onClick={(e) => {
             e.stopPropagation();
@@ -230,10 +213,7 @@ const PropertyCard = ({
           {isWished(propertyId) ? (
             <FaHeart className="text-red-500" size={15} />
           ) : (
-            <FaRegHeart
-              className="text-gray-500"
-              size={15}
-            />
+            <FaRegHeart className="text-gray-500" size={15} />
           )}
         </button>
 
@@ -270,9 +250,7 @@ const PropertyCard = ({
             group-hover:text-white
           "
         >
-          <FiArrowUpRight
-            size={16}
-          />
+          <FiArrowUpRight size={16} />
         </div>
       </div>
 
@@ -281,7 +259,6 @@ const PropertyCard = ({
       ====================================================== */}
 
       <div className="p-4 sm:p-5">
-
         {/* TITLE */}
 
         <div className="flex items-start justify-between gap-3">
@@ -299,22 +276,17 @@ const PropertyCard = ({
               sm:text-[17px]
             "
           >
-            {item.title ||
-              "Beautiful Property"}
+            {item.title || "Beautiful Property"}
           </h3>
         </div>
 
         {/* LOCATION */}
 
         <div className="mt-2 flex items-center gap-1.5">
-          <FiMapPin
-            size={13}
-            className="shrink-0 text-sky-500"
-          />
+          <FiMapPin size={13} className="shrink-0 text-sky-500" />
 
           <p className="truncate text-xs font-medium text-gray-500">
-            {item.location ||
-              "Location not available"}
+            {item.location || "Location not available"}
           </p>
         </div>
 
@@ -348,7 +320,6 @@ const PropertyCard = ({
         {/* FOOTER */}
 
         <div className="flex items-end justify-between gap-3">
-
           {/* PRICE */}
 
           <div className="min-w-0">
@@ -358,12 +329,7 @@ const PropertyCard = ({
 
             {price ? (
               <p className="mt-1 truncate text-lg font-extrabold tracking-tight text-gray-900">
-                ₹
-                {Number(
-                  price
-                ).toLocaleString(
-                  "en-IN"
-                )}
+                ₹{Number(price).toLocaleString("en-IN")}
               </p>
             ) : (
               <p className="mt-1 text-sm font-bold text-gray-500">
@@ -379,9 +345,7 @@ const PropertyCard = ({
             onClick={(e) => {
               e.stopPropagation();
 
-              navigate(
-                `/property/${propertyId}`
-              );
+              navigate(`/property/${propertyId}`);
             }}
             className="
               inline-flex
@@ -407,10 +371,7 @@ const PropertyCard = ({
             "
           >
             View Details
-
-            <FiArrowUpRight
-              size={13}
-            />
+            <FiArrowUpRight size={13} />
           </button>
         </div>
       </div>

@@ -518,97 +518,6 @@ const FilterModal = ({
                   ))}
                 </select>
               </div>
-
-              {/* ADDITIONAL FILTERS */}
-              <div className="rounded-xl p-4">
-                <div className="mb-4 font-semibold text-gray-900">
-                  Additional Filters
-                </div>
-
-                {additionalFilters.length === 0 ? (
-                  <p className="text-sm text-gray-500">
-                    Select a space use to see additional filters.
-                  </p>
-                ) : (
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    {additionalFilters.map((item) => (
-                      <div key={item.id}>
-                        <label className="mb-1.5 block text-sm font-medium text-gray-700">
-                          {item.name}
-                        </label>
-
-                        {/* TEXT */}
-                        {item.field_type === "text" && (
-                          <input
-                            type="text"
-                            value={filters[item.name] || ""}
-                            className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
-                            onChange={(e) =>
-                              handleChange(item.name, e.target.value)
-                            }
-                          />
-                        )}
-
-                        {/* SELECT */}
-                        {(item.field_type === "select" ||
-                          item.field_type === "single_select") && (
-                          <select
-                            value={filters[item.name] || ""}
-                            className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
-                            onChange={(e) =>
-                              handleChange(item.name, e.target.value)
-                            }
-                          >
-                            <option value="">Select</option>
-
-                            {item.options?.map((opt, i) => (
-                              <option key={i} value={opt}>
-                                {opt}
-                              </option>
-                            ))}
-                          </select>
-                        )}
-
-                        {/* MULTI SELECT */}
-                        {item.field_type === "multi_select" && (
-                          <div className="flex flex-wrap gap-2">
-                            {item.options?.map((opt, i) => (
-                              <label
-                                key={i}
-                                className="flex cursor-pointer items-center gap-1.5 text-sm text-gray-600"
-                              >
-                                <input
-                                  type="checkbox"
-                                  value={opt}
-                                  checked={(filters[item.name] || []).includes(
-                                    opt,
-                                  )}
-                                  onChange={(e) => {
-                                    let updated = filters[item.name] || [];
-
-                                    if (e.target.checked) {
-                                      updated = [...updated, opt];
-                                    } else {
-                                      updated = updated.filter(
-                                        (v) => v !== opt,
-                                      );
-                                    }
-
-                                    handleChange(item.name, updated);
-                                  }}
-                                  className="h-4 w-4 rounded border-gray-300 text-sky-500 focus:ring-sky-500"
-                                />
-
-                                {opt}
-                              </label>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
             </div>
 
             {/* RIGHT SIDE PROPERTY FILTERS */}
@@ -736,6 +645,205 @@ const FilterModal = ({
                     )}
                   </div>
                 ))}
+              </div>
+
+              {/* ADDITIONAL FILTERS */}
+              <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-5">
+                {/* HEADER */}
+                <div className="mb-5 flex items-start justify-between gap-3">
+                  <div>
+                    <h4 className="text-base font-semibold text-gray-900">
+                      Additional Filters
+                    </h4>
+
+                    <p className="mt-1 text-xs leading-5 text-gray-500">
+                      Refine your property search with more specific options.
+                    </p>
+                  </div>
+
+                  {additionalFilters.length > 0 && (
+                    <span className="shrink-0 rounded-full bg-sky-50 px-2.5 py-1 text-xs font-medium text-sky-600">
+                      {additionalFilters.length}{" "}
+                      {additionalFilters.length === 1 ? "filter" : "filters"}
+                    </span>
+                  )}
+                </div>
+
+                {/* EMPTY STATE */}
+                {additionalFilters.length === 0 ? (
+                  <div className="flex min-h-[120px] items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50 px-4 py-6 text-center">
+                    <div>
+                      <div className="mx-auto mb-2 flex h-9 w-9 items-center justify-center rounded-full bg-white text-gray-400 shadow-sm">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={1.8}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 6v12m6-6H6"
+                          />
+                        </svg>
+                      </div>
+
+                      <p className="text-sm font-medium text-gray-600">
+                        No additional filters available
+                      </p>
+
+                      <p className="mt-1 text-xs text-gray-400">
+                        Select a space use to see more filtering options.
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                    {additionalFilters.map((item) => (
+                      <div
+                        key={item.id}
+                        className="group rounded-xl border border-gray-200 bg-gray-50/70 p-4 transition-all duration-200 hover:border-sky-200 hover:bg-white hover:shadow-sm"
+                      >
+                        {/* LABEL */}
+                        <label className="mb-2.5 block text-sm font-semibold text-gray-700">
+                          {item.name}
+                        </label>
+
+                        {/* TEXT */}
+                        {item.field_type === "text" && (
+                          <input
+                            type="text"
+                            value={filters[item.name] || ""}
+                            placeholder={`Enter ${item.name.toLowerCase()}`}
+                            className="h-11 w-full rounded-lg border border-gray-300 bg-white px-3.5 text-sm text-gray-700 placeholder:text-gray-400 outline-none transition-all focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10"
+                            onChange={(e) =>
+                              handleChange(item.name, e.target.value)
+                            }
+                          />
+                        )}
+
+                        {/* SELECT */}
+                        {(item.field_type === "select" ||
+                          item.field_type === "single_select") && (
+                          <div className="relative">
+                            <select
+                              value={filters[item.name] || ""}
+                              className="h-11 w-full appearance-none rounded-lg border border-gray-300 bg-white px-3.5 pr-10 text-sm text-gray-700 outline-none transition-all focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10"
+                              onChange={(e) =>
+                                handleChange(item.name, e.target.value)
+                              }
+                            >
+                              <option value="">Select {item.name}</option>
+
+                              {item.options?.map((opt, i) => (
+                                <option key={i} value={opt}>
+                                  {opt}
+                                </option>
+                              ))}
+                            </select>
+
+                            {/* SELECT ICON */}
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="m6 9 6 6 6-6"
+                              />
+                            </svg>
+                          </div>
+                        )}
+
+                        {/* MULTI SELECT */}
+                        {item.field_type === "multi_select" && (
+                          <div className="rounded-lg border border-gray-200 bg-white p-2">
+                            {item.options?.length > 0 ? (
+                              <div className="flex max-h-[150px] flex-wrap gap-2 overflow-y-auto p-1">
+                                {item.options.map((opt, i) => {
+                                  const selected = (
+                                    filters[item.name] || []
+                                  ).includes(opt);
+
+                                  return (
+                                    <label
+                                      key={i}
+                                      className={`inline-flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-all duration-200 ${
+                                        selected
+                                          ? "border-sky-500 bg-sky-50 text-sky-600"
+                                          : "border-gray-200 bg-gray-50 text-gray-600 hover:border-sky-200 hover:bg-sky-50/50"
+                                      }`}
+                                    >
+                                      <input
+                                        type="checkbox"
+                                        value={opt}
+                                        checked={selected}
+                                        onChange={(e) => {
+                                          let updated =
+                                            filters[item.name] || [];
+
+                                          if (e.target.checked) {
+                                            updated = [...updated, opt];
+                                          } else {
+                                            updated = updated.filter(
+                                              (v) => v !== opt,
+                                            );
+                                          }
+
+                                          handleChange(item.name, updated);
+                                        }}
+                                        className="sr-only"
+                                      />
+
+                                      {/* CUSTOM CHECK */}
+                                      <span
+                                        className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-all ${
+                                          selected
+                                            ? "border-sky-500 bg-sky-500 text-white"
+                                            : "border-gray-300 bg-white"
+                                        }`}
+                                      >
+                                        {selected && (
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-3 w-3"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                            strokeWidth={3}
+                                          >
+                                            <path
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              d="m5 12 4 4L19 7"
+                                            />
+                                          </svg>
+                                        )}
+                                      </span>
+
+                                      <span>{opt}</span>
+                                    </label>
+                                  );
+                                })}
+                              </div>
+                            ) : (
+                              <p className="px-2 py-2 text-xs text-gray-400">
+                                No options available
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -20,7 +20,6 @@ const SPACE_USES_API =
 |--------------------------------------------------------------------------
 | Shared request cache
 |
-| Important:
 | Home renders two SearchBar instances (mobile/tablet + desktop).
 | Both components can mount even though one is hidden with CSS.
 | These cached promises prevent duplicate network requests.
@@ -69,9 +68,7 @@ const fetchSpaceUsesCached = async (typeId) => {
   }
 
   if (!spaceUsesPromiseCache.has(typeId)) {
-    const request = fetch(
-      `${SPACE_USES_API}?type_id=${typeId}`
-    )
+    const request = fetch(`${SPACE_USES_API}?type_id=${typeId}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error("Unable to fetch space uses");
@@ -117,15 +114,11 @@ const SearchBar = ({
   |--------------------------------------------------------------------------
   */
 
-  const selectedParentIds = Array.isArray(
-    filters.space_use
-  )
+  const selectedParentIds = Array.isArray(filters?.space_use)
     ? filters.space_use
     : [];
 
-  const selectedChildIds = Array.isArray(
-    filters.space_use_id
-  )
+  const selectedChildIds = Array.isArray(filters?.space_use_id)
     ? filters.space_use_id
     : [];
 
@@ -140,17 +133,13 @@ const SearchBar = ({
 
     const loadTypes = async () => {
       try {
-        const data =
-          await fetchPropertyTypes();
+        const data = await fetchPropertyTypes();
 
         if (mounted) {
           setTypes(data);
         }
       } catch (error) {
-        console.error(
-          "Property types error:",
-          error
-        );
+        console.error("Property types error:", error);
       }
     };
 
@@ -168,25 +157,16 @@ const SearchBar = ({
   */
 
   useEffect(() => {
-    if (
-      types.length > 0 &&
-      !filters.type
-    ) {
+    if (types.length > 0 && !filters?.type) {
       const firstType = types[0];
 
-      const firstId =
-        firstType._id ||
-        firstType.id;
+      const firstId = firstType._id || firstType.id;
 
       const updated = {
         ...filters,
-        customer_email:
-          localStorage.getItem(
-            "customer_email"
-          ) || null,
+        customer_email: localStorage.getItem("customer_email") || null,
         type: firstId,
-        type_name:
-          firstType?.name || "",
+        type_name: firstType?.name || "",
       };
 
       setFilters(updated);
@@ -208,20 +188,13 @@ const SearchBar = ({
     }
 
     try {
-      const rawData =
-        await fetchSpaceUsesCached(
-          typeId
-        );
+      const rawData = await fetchSpaceUsesCached(typeId);
 
-      const tree =
-        buildTree(rawData);
+      const tree = buildTree(rawData);
 
       setSpaceUses(tree);
     } catch (error) {
-      console.error(
-        "Space uses error:",
-        error
-      );
+      console.error("Space uses error:", error);
 
       setSpaceUses([]);
     }
@@ -229,112 +202,244 @@ const SearchBar = ({
 
   /*
   |--------------------------------------------------------------------------
-  | Toggle Space Use Node
+  | Get All Descendant IDs
   |--------------------------------------------------------------------------
   */
 
-  const toggleNode = (
-    node,
-    checked
-  ) => {
-    let parentIds =
-      Array.isArray(
-        filters.space_use
-      )
-        ? [...filters.space_use]
-        : [];
+  const getAllChildIds = (item) => {
+    let ids = [];
 
-    let childIds =
-      Array.isArray(
-        filters.space_use_id
-      )
-        ? [...filters.space_use_id]
-        : [];
+    item?.children?.forEach((child) => {
+      ids.push(child.id);
 
-    const hasChildren =
-      node.children &&
-      node.children.length > 0;
-
-    const getAllChildIds = (
-      item
-    ) => {
-      let ids = [];
-
-      item.children?.forEach(
-        (c) => {
-          ids.push(c.id);
-
-          if (
-            c.children?.length
-          ) {
-            ids = ids.concat(
-              getAllChildIds(c)
-            );
-          }
-        }
-      );
-
-      return ids;
-    };
-
-    if (hasChildren) {
-      const allChildIds =
-        getAllChildIds(node);
-
-      if (checked) {
-        if (
-          !parentIds.includes(
-            node.id
-          )
-        ) {
-          parentIds.push(
-            node.id
-          );
-        }
-
-        allChildIds.forEach(
-          (id) => {
-            if (
-              !childIds.includes(id)
-            ) {
-              childIds.push(id);
-            }
-          }
-        );
-      } else {
-        parentIds =
-          parentIds.filter(
-            (id) =>
-              id !== node.id
-          );
-
-        childIds =
-          childIds.filter(
-            (id) =>
-              !allChildIds.includes(
-                id
-              )
-          );
+      if (child.children?.length) {
+        ids = ids.concat(getAllChildIds(child));
       }
-    } else {
-      if (checked) {
-        if (
-          !parentIds.includes(
-            node.id
-          )
-        ) {
-          parentIds.push(
-            node.id
-          );
+    });
+
+    return ids;
+  };
+
+  /*
+  |--------------------------------------------------------------------------
+  | Find Parent Node
+  |--------------------------------------------------------------------------
+  */
+
+  const findParentNode = (items, childId, parent = null) => {
+    for (const item of items || []) {
+      if (item.children?.some((child) => child.id === childId)) {
+        return item;
+      }
+
+      if (item.children?.length) {
+        const found = findParentNode(item.children, childId, item);
+
+        if (found) {
+          return found;
         }
-      } else {
-        parentIds =
-          parentIds.filter(
-            (id) =>
-              id !== node.id
-          );
       }
     }
+
+    return parent;
+  };
+
+  /*
+  |--------------------------------------------------------------------------
+  | Find Node By ID
+  |--------------------------------------------------------------------------
+  */
+
+  const findNodeById = (items, id) => {
+    for (const item of items || []) {
+      if (item.id === id) {
+        return item;
+      }
+
+      if (item.children?.length) {
+        const found = findNodeById(item.children, id);
+
+        if (found) {
+          return found;
+        }
+      }
+    }
+
+    return null;
+  };
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get All Ancestors
+  |--------------------------------------------------------------------------
+  */
+
+  const getAllAncestors = (items, targetId, ancestors = []) => {
+    for (const item of items || []) {
+      if (item.children?.some((child) => child.id === targetId)) {
+        return [...ancestors, item];
+      }
+
+      if (item.children?.length) {
+        const found = getAllAncestors(item.children, targetId, [
+          ...ancestors,
+          item,
+        ]);
+
+        if (found.length) {
+          return found;
+        }
+      }
+    }
+
+    return [];
+  };
+
+  /*
+  |--------------------------------------------------------------------------
+  | Toggle Space Use Node
+  |
+  | IMPORTANT:
+  |
+  | Parent checked:
+  |   - Parent ID -> space_use
+  |   - All child IDs -> space_use_id
+  |
+  | Child checked:
+  |   - Child ID -> space_use
+  |   - Child ID -> space_use_id
+  |
+  | Child unchecked:
+  |   - Child removed from BOTH arrays
+  |   - Parent removed if not all children remain selected
+  |--------------------------------------------------------------------------
+  */
+
+  const toggleNode = (node, checked) => {
+    let parentIds = Array.isArray(filters?.space_use)
+      ? [...filters.space_use]
+      : [];
+
+    let childIds = Array.isArray(filters?.space_use_id)
+      ? [...filters.space_use_id]
+      : [];
+
+    const hasChildren =
+      Array.isArray(node?.children) && node.children.length > 0;
+
+    /*
+    |--------------------------------------------------------------------------
+    | PARENT NODE
+    |--------------------------------------------------------------------------
+    */
+
+    if (hasChildren) {
+      const allChildIds = getAllChildIds(node);
+
+      if (checked) {
+        /*
+        | Add parent
+        */
+        if (!parentIds.includes(node.id)) {
+          parentIds.push(node.id);
+        }
+
+        /*
+        | Add every descendant
+        */
+        allChildIds.forEach((id) => {
+          if (!childIds.includes(id)) {
+            childIds.push(id);
+          }
+
+          if (!parentIds.includes(id)) {
+            parentIds.push(id);
+          }
+        });
+      } else {
+        /*
+        | Remove parent
+        */
+        parentIds = parentIds.filter((id) => id !== node.id);
+
+        /*
+        | Remove all descendants
+        */
+        childIds = childIds.filter((id) => !allChildIds.includes(id));
+
+        parentIds = parentIds.filter((id) => !allChildIds.includes(id));
+      }
+    } else {
+      /*
+    |--------------------------------------------------------------------------
+    | CHILD / LEAF NODE
+    |--------------------------------------------------------------------------
+    */
+      if (checked) {
+        /*
+        | Add child to space_use
+        */
+        if (!parentIds.includes(node.id)) {
+          parentIds.push(node.id);
+        }
+
+        /*
+        | VERY IMPORTANT
+        |
+        | Previously this was missing.
+        | Because of that, unchecking a child could not
+        | properly update space_use_id.
+        */
+        if (!childIds.includes(node.id)) {
+          childIds.push(node.id);
+        }
+      } else {
+        /*
+        | Remove child from BOTH arrays
+        */
+        parentIds = parentIds.filter((id) => id !== node.id);
+
+        childIds = childIds.filter((id) => id !== node.id);
+      }
+
+      /*
+      |--------------------------------------------------------------------------
+      | SYNC PARENT AFTER CHILD CHANGE
+      |--------------------------------------------------------------------------
+      */
+
+      const ancestors = getAllAncestors(spaceUses, node.id);
+
+      ancestors.forEach((ancestor) => {
+        const ancestorChildIds = getAllChildIds(ancestor);
+
+        const allSelected =
+          ancestorChildIds.length > 0 &&
+          ancestorChildIds.every((id) => childIds.includes(id));
+
+        if (allSelected) {
+          /*
+          | All children selected
+          | => parent selected
+          */
+          if (!parentIds.includes(ancestor.id)) {
+            parentIds.push(ancestor.id);
+          }
+        } else {
+          /*
+          | At least one child is not selected
+          | => parent unchecked
+          */
+          parentIds = parentIds.filter((id) => id !== ancestor.id);
+        }
+      });
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE FILTERS
+    |--------------------------------------------------------------------------
+    */
 
     const newFilters = {
       ...filters,
@@ -342,9 +447,7 @@ const SearchBar = ({
       space_use_id: childIds,
     };
 
-    setFilters(
-      newFilters
-    );
+    setFilters(newFilters);
   };
 
   /*
@@ -353,51 +456,31 @@ const SearchBar = ({
   |--------------------------------------------------------------------------
   */
 
-  const buildTree = (
-    data
-  ) => {
+  const buildTree = (data) => {
     const map = {};
     const roots = [];
 
-    data.forEach(
-      (item) => {
-        const id =
-          item._id ||
-          item.id;
+    data.forEach((item) => {
+      const id = item._id || item.id;
 
-        map[id] = {
-          ...item,
-          id,
-          children: [],
-        };
+      map[id] = {
+        ...item,
+        id,
+        children: [],
+      };
+    });
+
+    data.forEach((item) => {
+      const id = item._id || item.id;
+
+      const parent = item.parent_id;
+
+      if (parent && map[parent]) {
+        map[parent].children.push(map[id]);
+      } else {
+        roots.push(map[id]);
       }
-    );
-
-    data.forEach(
-      (item) => {
-        const id =
-          item._id ||
-          item.id;
-
-        const parent =
-          item.parent_id;
-
-        if (
-          parent &&
-          map[parent]
-        ) {
-          map[
-            parent
-          ].children.push(
-            map[id]
-          );
-        } else {
-          roots.push(
-            map[id]
-          );
-        }
-      }
-    );
+    });
 
     return roots;
   };
@@ -408,35 +491,63 @@ const SearchBar = ({
   |--------------------------------------------------------------------------
   */
 
-  const getSelectedLabel =
-    () => {
-      if (
-        selectedParentIds.length ===
-        0
-      ) {
-        return "Property Types";
+  const getSelectedLabel = () => {
+    /*
+    | Nothing selected
+    */
+    if (selectedParentIds.length === 0 && selectedChildIds.length === 0) {
+      return "Property Types";
+    }
+
+    /*
+    | Find selected top-level parents
+    */
+    const selectedTopLevelParents = spaceUses.filter((item) =>
+      selectedParentIds.includes(item.id),
+    );
+
+    /*
+    | If top-level parent selected
+    */
+    if (selectedTopLevelParents.length === 1) {
+      return selectedTopLevelParents[0]?.name || "Property Types";
+    }
+
+    if (selectedTopLevelParents.length > 1) {
+      return `${selectedTopLevelParents.length} Selected`;
+    }
+
+    /*
+    | If only child selections exist
+    */
+    if (selectedChildIds.length > 0) {
+      const selectedNames = [];
+
+      const collectSelectedNames = (items) => {
+        items?.forEach((item) => {
+          if (selectedChildIds.includes(item.id)) {
+            selectedNames.push(item.name);
+          }
+
+          if (item.children?.length) {
+            collectSelectedNames(item.children);
+          }
+        });
+      };
+
+      collectSelectedNames(spaceUses);
+
+      if (selectedNames.length === 1) {
+        return selectedNames[0];
       }
 
-      if (
-        selectedParentIds.length >
-        1
-      ) {
-        return "Multiple Types";
+      if (selectedNames.length > 1) {
+        return `${selectedNames.length} Selected`;
       }
+    }
 
-      const selected =
-        spaceUses.find(
-          (item) =>
-            selectedParentIds.includes(
-              item.id
-            )
-        );
-
-      return (
-        selected?.name ||
-        "Property Types"
-      );
-    };
+    return "Property Types";
+  };
 
   /*
   |--------------------------------------------------------------------------
@@ -444,164 +555,309 @@ const SearchBar = ({
   |--------------------------------------------------------------------------
   */
 
-  const renderTree = (
-    items
-  ) => {
-    return items.map(
-      (item) => {
-        const id = item.id;
+  const renderTree = (items) => {
+    return items.map((item) => {
+      const id = item.id;
 
-        const isOpen =
-          !!openGroups[id];
+      const isOpen = !!openGroups[id];
 
-        const hasChildren =
-          item.children &&
-          item.children.length >
-            0;
+      const hasChildren =
+        Array.isArray(item.children) && item.children.length > 0;
 
-        const isParentChecked =
-          selectedParentIds.includes(
-            id
-          );
+      /*
+      |--------------------------------------------------------------------------
+      | Parent state
+      |--------------------------------------------------------------------------
+      */
 
-        return (
+      const allChildIds = hasChildren ? getAllChildIds(item) : [];
+
+      const allChildrenSelected =
+        hasChildren &&
+        allChildIds.length > 0 &&
+        allChildIds.every((childId) => selectedChildIds.includes(childId));
+
+      const someChildrenSelected =
+        hasChildren &&
+        allChildIds.some((childId) => selectedChildIds.includes(childId));
+
+      const isParentChecked = hasChildren
+        ? allChildrenSelected
+        : selectedChildIds.includes(id);
+
+      return (
+        <div key={id} className="border-b border-slate-100 last:border-0">
+          {/* =====================================================
+              PARENT / MAIN OPTION
+          ====================================================== */}
+
           <div
-            key={id}
-            className="border-b border-slate-100 last:border-0"
+            className={`
+              flex
+              items-center
+              justify-between
+              rounded-xl
+              px-3
+              py-2.5
+              transition-all
+              duration-200
+              ${
+                isParentChecked || someChildrenSelected
+                  ? "bg-sky-50"
+                  : "hover:bg-sky-50"
+              }
+            `}
           >
-            <div
+            <label
               className="
                 flex
+                min-w-0
+                flex-1
+                cursor-pointer
                 items-center
-                justify-between
-                rounded-xl
-                px-3
-                py-2.5
-                transition-all
-                duration-200
-                hover:bg-sky-50
+                gap-3
               "
             >
-              <div className="flex items-center gap-3">
-                <input
-                  type="checkbox"
-                  checked={
+              <input
+                type="checkbox"
+                checked={isParentChecked}
+                onChange={(e) => toggleNode(item, e.target.checked)}
+                className="
+                  h-4
+                  w-4
+                  shrink-0
+                  cursor-pointer
+                  rounded
+                  border-slate-300
+                  accent-sky-600
+                "
+              />
+
+              <span
+                className={`
+                  truncate
+                  text-sm
+                  ${
                     isParentChecked
+                      ? "font-semibold text-sky-700"
+                      : someChildrenSelected
+                        ? "font-medium text-sky-600"
+                        : "font-medium text-slate-700"
                   }
-                  onChange={(e) =>
-                    toggleNode(
-                      item,
-                      e.target.checked
-                    )
-                  }
-                  className="
-                    h-4
-                    w-4
-                    cursor-pointer
-                    accent-sky-600
-                  "
-                />
+                `}
+              >
+                {item.name}
+              </span>
+            </label>
 
-                <span className="text-sm font-medium text-slate-700">
-                  {item.name}
-                </span>
-              </div>
+            {/* =================================================
+                EXPAND / COLLAPSE
+            ================================================== */}
 
-              {hasChildren && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    setOpenGroups(
-                      (prev) => ({
-                        ...prev,
-                        [id]:
-                          !prev[id],
-                      })
-                    )
+            {hasChildren && (
+              <button
+                type="button"
+                onClick={() =>
+                  setOpenGroups((prev) => ({
+                    ...prev,
+                    [id]: !prev[id],
+                  }))
+                }
+                className={`
+                  ml-2
+                  flex
+                  h-7
+                  w-7
+                  shrink-0
+                  items-center
+                  justify-center
+                  rounded-full
+                  transition-all
+                  duration-200
+                  ${
+                    isOpen
+                      ? "bg-sky-100 text-sky-600"
+                      : "bg-slate-100 text-slate-500 hover:bg-sky-100 hover:text-sky-600"
                   }
-                  className="
-                    flex
-                    h-7
-                    w-7
-                    items-center
-                    justify-center
-                    rounded-full
-                    bg-slate-100
-                    text-[10px]
-                    text-slate-500
-                    transition-all
+                `}
+                aria-label={
+                  isOpen ? `Collapse ${item.name}` : `Expand ${item.name}`
+                }
+              >
+                <span
+                  className={`
+                    text-[9px]
+                    transition-transform
                     duration-200
-                    hover:bg-sky-100
-                    hover:text-sky-600
-                  "
+                    ${isOpen ? "rotate-180" : ""}
+                  `}
                 >
-                  {isOpen
-                    ? "▲"
-                    : "▼"}
-                </button>
-              )}
-            </div>
+                  ▼
+                </span>
+              </button>
+            )}
+          </div>
 
-            {isOpen &&
-              hasChildren && (
-                <div className="mx-2 mb-2 rounded-xl bg-slate-50 p-2">
-                  {item.children.map(
-                    (child) => {
-                      const cid =
-                        child.id;
+          {/* =====================================================
+              CHILDREN
+          ====================================================== */}
 
-                      return (
-                        <label
-                          key={cid}
+          {isOpen && hasChildren && (
+            <div className="mx-2 mb-2 rounded-xl border border-slate-100 bg-slate-50 p-2">
+              {item.children.map((child) => {
+                const cid = child.id;
+
+                const childHasChildren =
+                  Array.isArray(child.children) && child.children.length > 0;
+
+                const childAllIds = childHasChildren
+                  ? getAllChildIds(child)
+                  : [];
+
+                const childAllSelected =
+                  childHasChildren &&
+                  childAllIds.length > 0 &&
+                  childAllIds.every((childId) =>
+                    selectedChildIds.includes(childId),
+                  );
+
+                const childSomeSelected =
+                  childHasChildren &&
+                  childAllIds.some((childId) =>
+                    selectedChildIds.includes(childId),
+                  );
+
+                const childChecked = childHasChildren
+                  ? childAllSelected
+                  : selectedChildIds.includes(cid);
+
+                return (
+                  <div key={cid}>
+                    {/* =================================================
+                        CHILD OPTION
+                    ================================================== */}
+
+                    <div
+                      className={`
+                        flex
+                        items-center
+                        justify-between
+                        rounded-lg
+                        transition-all
+                        duration-200
+                        ${
+                          childChecked || childSomeSelected
+                            ? "bg-white"
+                            : "hover:bg-white"
+                        }
+                      `}
+                    >
+                      <label
+                        className="
+                          flex
+                          min-w-0
+                          flex-1
+                          cursor-pointer
+                          items-center
+                          gap-3
+                          px-3
+                          py-2
+                        "
+                      >
+                        <input
+                          type="checkbox"
+                          checked={childChecked}
+                          onChange={(e) => toggleNode(child, e.target.checked)}
                           className="
-                            flex
+                            h-4
+                            w-4
+                            shrink-0
                             cursor-pointer
-                            items-center
-                            gap-3
-                            rounded-lg
-                            px-3
-                            py-2
+                            rounded
+                            border-slate-300
+                            accent-sky-600
+                          "
+                        />
+
+                        <span
+                          className={`
+                            truncate
                             text-sm
-                            text-slate-600
+                            ${
+                              childChecked
+                                ? "font-medium text-sky-700"
+                                : childSomeSelected
+                                  ? "font-medium text-sky-600"
+                                  : "text-slate-600"
+                            }
+                          `}
+                        >
+                          {child.name}
+                        </span>
+                      </label>
+
+                      {/* =================================================
+                          NESTED CHILD EXPAND
+                      ================================================== */}
+
+                      {childHasChildren && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setOpenGroups((prev) => ({
+                              ...prev,
+                              [cid]: !prev[cid],
+                            }))
+                          }
+                          className={`
+                            mr-2
+                            flex
+                            h-6
+                            w-6
+                            shrink-0
+                            items-center
+                            justify-center
+                            rounded-full
+                            text-[9px]
                             transition-all
                             duration-200
-                            hover:bg-white
-                            hover:text-sky-600
-                          "
-                        >
-                          <input
-                            type="checkbox"
-                            checked={selectedChildIds.includes(
-                              cid
-                            )}
-                            onChange={(
-                              e
-                            ) =>
-                              toggleNode(
-                                child,
-                                e
-                                  .target
-                                  .checked
-                              )
+                            ${
+                              openGroups[cid]
+                                ? "bg-sky-100 text-sky-600"
+                                : "bg-slate-100 text-slate-500 hover:bg-sky-100 hover:text-sky-600"
                             }
-                            className="
-                              h-4
-                              w-4
-                              accent-sky-600
-                            "
-                          />
+                          `}
+                        >
+                          <span
+                            className={`
+                              transition-transform
+                              duration-200
+                              ${openGroups[cid] ? "rotate-180" : ""}
+                            `}
+                          >
+                            ▼
+                          </span>
+                        </button>
+                      )}
+                    </div>
 
-                          {child.name}
-                        </label>
-                      );
-                    }
-                  )}
-                </div>
-              )}
-          </div>
-        );
-      }
-    );
+                    {/* =================================================
+                        NESTED CHILDREN
+                    ================================================== */}
+
+                    {childHasChildren && openGroups[cid] && (
+                      <div className="ml-5 mt-1 border-l border-slate-200 pl-2">
+                        {renderTree(child.children)}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      );
+    });
   };
 
   /*
@@ -632,10 +888,10 @@ const SearchBar = ({
 
   return (
     <div className="w-full px-0 sm:px-0">
-
       {/* =====================================================
           OUTER SEARCH CARD
       ====================================================== */}
+
       <div
         className="
           relative
@@ -649,8 +905,8 @@ const SearchBar = ({
           sm:p-2
         "
       >
-
         {/* INNER CARD */}
+
         <div
           className="
             rounded-[22px]
@@ -659,10 +915,10 @@ const SearchBar = ({
             bg-white
           "
         >
-
           {/* =================================================
               HEADER
           ================================================== */}
+
           <div
             className="
               flex
@@ -706,12 +962,7 @@ const SearchBar = ({
                       d="M21 10.5C21 16.5 12 22 12 22S3 16.5 3 10.5a9 9 0 1118 0z"
                     />
 
-                    <circle
-                      cx="12"
-                      cy="10"
-                      r="2.8"
-                      strokeWidth="1.8"
-                    />
+                    <circle cx="12" cy="10" r="2.8" strokeWidth="1.8" />
                   </svg>
                 </div>
 
@@ -728,6 +979,7 @@ const SearchBar = ({
             </div>
 
             {/* SMART SEARCH BADGE */}
+
             <div
               className="
                 hidden
@@ -750,7 +1002,6 @@ const SearchBar = ({
 
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-sky-500" />
               </span>
-
               Smart Property Search
             </div>
           </div>
@@ -758,8 +1009,8 @@ const SearchBar = ({
           {/* =================================================
               SEARCH AREA
           ================================================== */}
-          <div className="p-3 sm:p-5 lg:p-6">
 
+          <div className="p-3 sm:p-5 lg:p-6">
             <div
               className={`grid grid-cols-1 gap-3 ${
                 hideAdvancedFilters
@@ -767,10 +1018,10 @@ const SearchBar = ({
                   : "lg:grid-cols-[1.55fr_1fr_1fr_1fr_1fr]"
               }`}
             >
-
               {/* =================================================
                   LOCATION
               ================================================== */}
+
               <div className="group relative">
                 <div
                   className="
@@ -817,33 +1068,20 @@ const SearchBar = ({
                 </div>
 
                 <Autocomplete
-                  onLoad={(ref) =>
-                    (autoRef.current =
-                      ref)
-                  }
+                  onLoad={(ref) => {
+                    autoRef.current = ref;
+                  }}
                   onPlaceChanged={() => {
-                    const place =
-                      autoRef.current?.getPlace();
+                    const place = autoRef.current?.getPlace();
 
-                    if (
-                      place?.formatted_address
-                    ) {
-                      setFilters(
-                        (prev) => ({
-                          ...prev,
-                          location:
-                            place.formatted_address,
-                          latitude:
-                            place
-                              .geometry
-                              .location.lat(),
-                          longitude:
-                            place
-                              .geometry
-                              .location.lng(),
-                          location_selected: true,
-                        })
-                      );
+                    if (place?.formatted_address) {
+                      setFilters((prev) => ({
+                        ...prev,
+                        location: place.formatted_address,
+                        latitude: place.geometry.location.lat(),
+                        longitude: place.geometry.location.lng(),
+                        location_selected: true,
+                      }));
                     }
                   }}
                 >
@@ -851,21 +1089,13 @@ const SearchBar = ({
                     type="text"
                     placeholder="Search location"
                     className={`${fieldClass} pl-14 pr-4 pt-4 sm:pl-16`}
-                    value={
-                      filters.location ||
-                      ""
-                    }
+                    value={filters?.location || ""}
                     onChange={(e) =>
-                      setFilters(
-                        (prev) => ({
-                          ...prev,
-                          location:
-                            e.target
-                              .value,
-                          location_selected:
-                            false,
-                        })
-                      )
+                      setFilters((prev) => ({
+                        ...prev,
+                        location: e.target.value,
+                        location_selected: false,
+                      }))
                     }
                   />
                 </Autocomplete>
@@ -892,6 +1122,7 @@ const SearchBar = ({
               {/* =================================================
                   PROPERTY TYPE
               ================================================== */}
+
               <div className="group relative">
                 <div
                   className="
@@ -930,62 +1161,37 @@ const SearchBar = ({
                   name="type"
                   id="type"
                   className={`${fieldClass} cursor-pointer appearance-none pl-14 pr-10 pt-4 sm:pl-16`}
-                  value={
-                    filters.type ||
-                    ""
-                  }
+                  value={filters?.type || ""}
                   onChange={async (e) => {
-                    const value =
-                      e.target.value;
+                    const value = e.target.value;
 
-                    const selectedType =
-                      types.find(
-                        (t) =>
-                          (t._id ||
-                            t.id) ===
-                          value
-                      );
-
-                    const updated =
-                      {
-                        ...filters,
-                        type: value,
-                        type_name:
-                          selectedType?.name ||
-                          "",
-                        section_id:
-                          [],
-                      };
-
-                    setFilters(
-                      updated
+                    const selectedType = types.find(
+                      (t) => (t._id || t.id) === value,
                     );
 
-                    await loadSpaceUses(
-                      value
-                    );
+                    const updated = {
+                      ...filters,
+                      type: value,
+                      type_name: selectedType?.name || "",
+                      section_id: [],
+                      space_use: [],
+                      space_use_id: [],
+                    };
+
+                    setFilters(updated);
+
+                    setOpenGroups({});
+
+                    await loadSpaceUses(value);
                   }}
                 >
-                  <option value="">
-                    Property
-                  </option>
+                  <option value="">Property</option>
 
-                  {types.map(
-                    (t) => (
-                      <option
-                        key={
-                          t._id ||
-                          t.id
-                        }
-                        value={
-                          t._id ||
-                          t.id
-                        }
-                      >
-                        {t.name}
-                      </option>
-                    )
-                  )}
+                  {types.map((t) => (
+                    <option key={t._id || t.id} value={t._id || t.id}>
+                      {t.name}
+                    </option>
+                  ))}
                 </select>
 
                 <span
@@ -1033,106 +1239,89 @@ const SearchBar = ({
               {/* =================================================
                   SPACE USE
               ================================================== */}
+
               <div className="relative">
                 <SpaceUseDropdown
-                  spaceUses={
-                    spaceUses
-                  }
-                  renderTree={
-                    renderTree
-                  }
-                  buttonLabel={
-                    getSelectedLabel()
-                  }
+                  spaceUses={spaceUses}
+                  renderTree={renderTree}
+                  buttonLabel={getSelectedLabel()}
                 />
               </div>
 
               {/* =================================================
                   PRICE
               ================================================== */}
-              {!hideAdvancedFilters &&
-                filters.type_name && (
-                  <div className="relative">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowPrice(
-                          !showPrice
-                        );
-                        setShowSize(
-                          false
-                        );
-                      }}
-                      className={`${fieldClass} flex items-center justify-between px-3.5 text-left sm:px-4`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
-                          <svg
-                            className="h-4 w-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M12 8c-2.21 0-4 1.12-4 2.5S9.79 13 12 13s4 1.12 4 2.5S14.21 18 12 18m0-12v12m-4-9H7m10 0h-1"
-                            />
-                          </svg>
-                        </div>
 
-                        <div className="min-w-0">
-                          <span className="block text-[9px] font-bold uppercase tracking-wider text-slate-400">
-                            Budget
-                          </span>
-
-                          <span
-                            className={`block max-w-[130px] truncate text-sm font-semibold ${
-                              filters.min_price ||
-                              filters.max_price
-                                ? "text-slate-800"
-                                : "text-slate-500"
-                            }`}
-                          >
-                            {filters.min_price ||
-                            filters.max_price
-                              ? `${filters.min_price || 0} - ${
-                                  filters.max_price || 0
-                                }`
-                              : filters.type_name
-                                  ?.toLowerCase()
-                                  .includes(
-                                    "sale"
-                                  )
-                              ? "Price"
-                              : "Rent"}
-                          </span>
-                        </div>
+              {!hideAdvancedFilters && filters?.type_name && (
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowPrice(!showPrice);
+                      setShowSize(false);
+                    }}
+                    className={`${fieldClass} flex items-center justify-between px-3.5 text-left sm:px-4`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+                        <svg
+                          className="h-4 w-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M12 8c-2.21 0-4 1.12-4 2.5S9.79 13 12 13s4 1.12 4 2.5S14.21 18 12 18m0-12v12m-4-9H7m10 0h-1"
+                          />
+                        </svg>
                       </div>
 
-                      <svg
-                        className={`h-4 w-4 shrink-0 text-slate-400 transition-transform duration-300 ${
-                          showPrice
-                            ? "rotate-180"
-                            : ""
-                        }`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M19 9l-7 7-7-7"
-                        />
-                      </svg>
-                    </button>
+                      <div className="min-w-0">
+                        <span className="block text-[9px] font-bold uppercase tracking-wider text-slate-400">
+                          Budget
+                        </span>
 
-                    {showPrice && (
-                      <div
-                        className="
+                        <span
+                          className={`block max-w-[130px] truncate text-sm font-semibold ${
+                            filters?.min_price || filters?.max_price
+                              ? "text-slate-800"
+                              : "text-slate-500"
+                          }`}
+                        >
+                          {filters?.min_price || filters?.max_price
+                            ? `${filters?.min_price || 0} - ${
+                                filters?.max_price || 0
+                              }`
+                            : filters?.type_name?.toLowerCase().includes("sale")
+                              ? "Price"
+                              : "Rent"}
+                        </span>
+                      </div>
+                    </div>
+
+                    <svg
+                      className={`h-4 w-4 shrink-0 text-slate-400 transition-transform duration-300 ${
+                        showPrice ? "rotate-180" : ""
+                      }`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </button>
+
+                  {showPrice && (
+                    <div
+                      className="
                           absolute
                           left-0
                           right-0
@@ -1145,103 +1334,86 @@ const SearchBar = ({
                           p-4
                           shadow-[0_20px_50px_rgba(15,23,42,0.18)]
                         "
-                      >
-                        <div className="mb-4">
-                          <h4 className="text-sm font-bold text-slate-800">
-                            Price Range
-                          </h4>
+                    >
+                      <div className="mb-4">
+                        <h4 className="text-sm font-bold text-slate-800">
+                          Price Range
+                        </h4>
 
-                          <p className="mt-0.5 text-xs text-slate-400">
-                            Choose your preferred budget
-                          </p>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-2">
-                          <input
-                            placeholder="Min"
-                            className="
-                              h-11
-                              rounded-xl
-                              border
-                              border-slate-200
-                              bg-slate-50
-                              px-3
-                              text-sm
-                              outline-none
-                              transition-all
-                              focus:border-sky-500
-                              focus:bg-white
-                              focus:ring-4
-                              focus:ring-sky-100
-                            "
-                            value={
-                              filters.min_price ||
-                              ""
-                            }
-                            onChange={(e) =>
-                              setFilters(
-                                {
-                                  ...filters,
-                                  min_price:
-                                    e.target
-                                      .value,
-                                }
-                              )
-                            }
-                          />
-
-                          <input
-                            placeholder="Max"
-                            className="
-                              h-11
-                              rounded-xl
-                              border
-                              border-slate-200
-                              bg-slate-50
-                              px-3
-                              text-sm
-                              outline-none
-                              transition-all
-                              focus:border-sky-500
-                              focus:bg-white
-                              focus:ring-4
-                              focus:ring-sky-100
-                            "
-                            value={
-                              filters.max_price ||
-                              ""
-                            }
-                            onChange={(e) =>
-                              setFilters(
-                                {
-                                  ...filters,
-                                  max_price:
-                                    e.target
-                                      .value,
-                                }
-                              )
-                            }
-                          />
-                        </div>
+                        <p className="mt-0.5 text-xs text-slate-400">
+                          Choose your preferred budget
+                        </p>
                       </div>
-                    )}
-                  </div>
-                )}
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <input
+                          placeholder="Min"
+                          className="
+                              h-11
+                              rounded-xl
+                              border
+                              border-slate-200
+                              bg-slate-50
+                              px-3
+                              text-sm
+                              outline-none
+                              transition-all
+                              focus:border-sky-500
+                              focus:bg-white
+                              focus:ring-4
+                              focus:ring-sky-100
+                            "
+                          value={filters?.min_price || ""}
+                          onChange={(e) =>
+                            setFilters({
+                              ...filters,
+                              min_price: e.target.value,
+                            })
+                          }
+                        />
+
+                        <input
+                          placeholder="Max"
+                          className="
+                              h-11
+                              rounded-xl
+                              border
+                              border-slate-200
+                              bg-slate-50
+                              px-3
+                              text-sm
+                              outline-none
+                              transition-all
+                              focus:border-sky-500
+                              focus:bg-white
+                              focus:ring-4
+                              focus:ring-sky-100
+                            "
+                          value={filters?.max_price || ""}
+                          onChange={(e) =>
+                            setFilters({
+                              ...filters,
+                              max_price: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* =================================================
                   SIZE
               ================================================== */}
+
               {!hideAdvancedFilters && (
                 <div className="relative">
                   <button
                     type="button"
                     onClick={() => {
-                      setShowSize(
-                        !showSize
-                      );
-                      setShowPrice(
-                        false
-                      );
+                      setShowSize(!showSize);
+                      setShowPrice(false);
                     }}
                     className={`${fieldClass} flex items-center justify-between px-3.5 text-left sm:px-4`}
                   >
@@ -1269,20 +1441,16 @@ const SearchBar = ({
 
                         <span
                           className={`block max-w-[130px] truncate text-sm font-semibold ${
-                            filters.building_min_size ||
-                            filters.building_max_size
+                            filters?.building_min_size ||
+                            filters?.building_max_size
                               ? "text-slate-800"
                               : "text-slate-500"
                           }`}
                         >
-                          {filters.building_min_size ||
-                          filters.building_max_size
-                            ? `${
-                                filters.building_min_size ||
-                                0
-                              } - ${
-                                filters.building_max_size ||
-                                0
+                          {filters?.building_min_size ||
+                          filters?.building_max_size
+                            ? `${filters?.building_min_size || 0} - ${
+                                filters?.building_max_size || 0
                               } sqft`
                             : "Building Size"}
                         </span>
@@ -1291,9 +1459,7 @@ const SearchBar = ({
 
                     <svg
                       className={`h-4 w-4 shrink-0 text-slate-400 transition-transform duration-300 ${
-                        showSize
-                          ? "rotate-180"
-                          : ""
+                        showSize ? "rotate-180" : ""
                       }`}
                       fill="none"
                       stroke="currentColor"
@@ -1352,19 +1518,12 @@ const SearchBar = ({
                             focus:ring-4
                             focus:ring-sky-100
                           "
-                          value={
-                            filters.building_min_size ||
-                            ""
-                          }
+                          value={filters?.building_min_size || ""}
                           onChange={(e) =>
-                            setFilters(
-                              {
-                                ...filters,
-                                building_min_size:
-                                  e.target
-                                    .value,
-                              }
-                            )
+                            setFilters({
+                              ...filters,
+                              building_min_size: e.target.value,
+                            })
                           }
                         />
 
@@ -1385,19 +1544,12 @@ const SearchBar = ({
                             focus:ring-4
                             focus:ring-sky-100
                           "
-                          value={
-                            filters.building_max_size ||
-                            ""
-                          }
+                          value={filters?.building_max_size || ""}
                           onChange={(e) =>
-                            setFilters(
-                              {
-                                ...filters,
-                                building_max_size:
-                                  e.target
-                                    .value,
-                              }
-                            )
+                            setFilters({
+                              ...filters,
+                              building_max_size: e.target.value,
+                            })
                           }
                         />
                       </div>
@@ -1410,9 +1562,10 @@ const SearchBar = ({
             {/* =================================================
                 BOTTOM ACTION BAR
             ================================================== */}
-            <div className="mt-3 flex flex-col gap-3 border-t border-slate-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
 
+            <div className="mt-3 flex flex-col gap-3 border-t border-slate-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
               {/* INFO */}
+
               <div className="hidden items-center gap-2 text-xs text-slate-400 sm:flex">
                 <svg
                   className="h-4 w-4 text-slate-300"
@@ -1427,22 +1580,18 @@ const SearchBar = ({
                     d="M13 16h-1v-4h-1m1-8h.01M12 20a8 8 0 100-16 8 8 0 000 16z"
                   />
                 </svg>
-
                 Refine your search using advanced filters
               </div>
 
               {/* BUTTONS */}
-              <div className="flex w-full gap-2 sm:w-auto">
 
+              <div className="flex w-full gap-2 sm:w-auto">
                 {/* ALL FILTERS */}
+
                 {!hideAdvancedFilters && (
                   <button
                     type="button"
-                    onClick={() =>
-                      setShowModal(
-                        true
-                      )
-                    }
+                    onClick={() => setShowModal(true)}
                     className="
                       flex
                       h-12
@@ -1481,64 +1630,42 @@ const SearchBar = ({
                       />
                     </svg>
 
-                    <span>
-                      All Filters
-                    </span>
+                    <span>All Filters</span>
                   </button>
                 )}
 
                 {/* CLEAR */}
+
                 {!hideAdvancedFilters && (
                   <button
                     type="button"
                     onClick={() => {
-                      const resetFilters =
-                        {
-                          location:
-                            "",
-                          type:
-                            "",
-                          type_name:
-                            "",
-                          space_use:
-                            [],
-                          space_use_id:
-                            [],
-                          listing_type:
-                            "",
-                          min_price:
-                            "",
-                          max_price:
-                            "",
-                          land_size_min:
-                            "",
-                          land_size_max:
-                            "",
-                          building_size_min:
-                            "",
-                          building_size_max:
-                            "",
-                          year_built_min:
-                            "",
-                          year_built_max:
-                            "",
-                        };
+                      const resetFilters = {
+                        location: "",
+                        type: "",
+                        type_name: "",
+                        space_use: [],
+                        space_use_id: [],
+                        listing_type: "",
+                        min_price: "",
+                        max_price: "",
+                        land_size_min: "",
+                        land_size_max: "",
+                        building_size_min: "",
+                        building_size_max: "",
+                        year_built_min: "",
+                        year_built_max: "",
+                      };
 
-                      setFilters(
-                        resetFilters
-                      );
+                      setFilters(resetFilters);
 
-                      setSpaceUses(
-                        []
-                      );
+                      setSpaceUses([]);
 
-                      setShowPrice(
-                        false
-                      );
+                      setOpenGroups({});
 
-                      setShowSize(
-                        false
-                      );
+                      setShowPrice(false);
+
+                      setShowSize(false);
                     }}
                     className="
                       flex
@@ -1565,17 +1692,15 @@ const SearchBar = ({
                 )}
 
                 {/* SEARCH */}
+
                 <button
                   type="button"
                   onClick={() => {
-                    navigate(
-                      "/properties",
-                      {
-                        state: {
-                          filters,
-                        },
-                      }
-                    );
+                    navigate("/properties", {
+                      state: {
+                        filters,
+                      },
+                    });
                   }}
                   className="
                     group
@@ -1615,20 +1740,20 @@ const SearchBar = ({
                       d="M21 21l-4.35-4.35m2.35-5.65a8 8 0 11-16 0 8 8 0 0116 0z"
                     />
                   </svg>
-
                   Search Properties
                 </button>
               </div>
             </div>
           </div>
 
-          {/* MOBILE FOOTER */}
+          {/* =================================================
+              MOBILE FOOTER
+          ================================================== */}
+
           <div className="flex items-center justify-center gap-1.5 px-2 pb-3 text-center text-[10px] text-slate-400 sm:hidden">
             <span>⌕</span>
 
-            <span>
-              Search homes, offices, land & more
-            </span>
+            <span>Search homes, offices, land & more</span>
           </div>
         </div>
       </div>
@@ -1636,13 +1761,12 @@ const SearchBar = ({
       {/* =====================================================
           FILTER MODAL
       ====================================================== */}
+
       {showModal && (
         <FilterModal
           filters={filters}
           setFilters={setFilters}
-          onClose={() =>
-            setShowModal(false)
-          }
+          onClose={() => setShowModal(false)}
           onSearch={onSearch}
         />
       )}
