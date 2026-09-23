@@ -53,15 +53,12 @@ const Testimonials = () => {
 
             <h2 className="text-3xl font-extrabold tracking-[-0.03em] text-gray-900 sm:text-4xl lg:text-[42px]">
               Loved by People
-              <span className="block text-sky-500">
-                Who Found Their Place
-              </span>
+              <span className="block text-sky-500">Who Found Their Place</span>
             </h2>
 
             <p className="mt-4 max-w-xl text-xs leading-6 text-gray-500 sm:text-sm sm:leading-7 lg:text-base">
-              Real experiences from clients who trusted Estatein
-              to make their property journey simpler and more
-              successful.
+              Real experiences from clients who trusted Estatein to make their
+              property journey simpler and more successful.
             </p>
           </div>
 
@@ -77,9 +74,7 @@ const Testimonials = () => {
                   4.9
                 </span>
 
-                <span className="text-xs text-gray-400">
-                  / 5.0
-                </span>
+                <span className="text-xs text-gray-400">/ 5.0</span>
               </div>
 
               <p className="text-[10px] font-medium text-gray-500">
@@ -117,9 +112,7 @@ const Testimonials = () => {
                 hover:shadow-[0_22px_50px_rgba(14,165,233,0.12)]
                 sm:p-6
                 ${
-                  index === 1
-                    ? "lg:-translate-y-3 lg:hover:-translate-y-4"
-                    : ""
+                  index === 1 ? "lg:-translate-y-3 lg:hover:-translate-y-4" : ""
                 }
               `}
             >
@@ -231,9 +224,7 @@ const Testimonials = () => {
                     <div className="mt-1 flex items-center gap-1 text-[10px] text-gray-400">
                       <FiMapPin size={11} className="text-sky-500" />
 
-                      <span className="truncate">
-                        {item.location}
-                      </span>
+                      <span className="truncate">{item.location}</span>
                     </div>
                   </div>
                 </div>
@@ -255,15 +246,8 @@ const Testimonials = () => {
           {/* PAGE INFO */}
           <div className="text-center sm:text-left">
             <p className="text-xs font-medium text-gray-400">
-              Showing{" "}
-              <span className="font-bold text-gray-900">
-                3
-              </span>{" "}
-              of{" "}
-              <span className="font-bold text-gray-900">
-                10
-              </span>{" "}
-              client stories
+              Showing <span className="font-bold text-gray-900">3</span> of{" "}
+              <span className="font-bold text-gray-900">10</span> client stories
             </p>
           </div>
 
@@ -296,7 +280,7 @@ const Testimonials = () => {
             </button>
 
             <div className="flex h-11 min-w-[72px] items-center justify-center rounded-xl border border-sky-100 bg-sky-50 px-4 text-xs font-bold text-sky-600">
-              01 / 10
+              01 / 03
             </div>
 
             <button

@@ -9,6 +9,7 @@ import Footer from "../components/Footer";
 import SearchBar from "../components/SearchBar";
 import MultiImageSlider from "../components/MultiImageSlider";
 import MobileNearbyProperties from "../components/MobileNearbyProperties";
+import Agent from "../components/Agent";
 
 const Home = () => {
   const [filters, setFilters] = useState({
@@ -340,6 +341,10 @@ const Home = () => {
 
       <div className="relative bg-white">
         <CTASection />
+      </div>
+
+      <div className="relative bg-white">
+        <Agent />
       </div>
 
       <div className="relative bg-white">
